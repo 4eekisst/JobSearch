@@ -14,5 +14,4 @@ public class Vacancy {
     private Integer authorId;
     private LocalDate createdDate;
     private LocalDate updateTime;
-
 }
