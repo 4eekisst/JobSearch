@@ -1,8 +1,8 @@
-package com.example.jobsearch.service.impl;
+package com.example.jobsearch.services.impl;
 import com.example.jobsearch.dao.UserDao;
 import com.example.jobsearch.dto.UserDto;
 import com.example.jobsearch.exception.UserNotFoundException;
-import com.example.jobsearch.service.UserService;
+import com.example.jobsearch.services.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import com.example.jobsearch.models.User;

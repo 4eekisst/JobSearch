@@ -3,7 +3,7 @@ package com.example.jobsearch.contoller;
 import com.example.jobsearch.dto.UserDto;
 import com.example.jobsearch.exception.UserNotFoundException;
 import com.example.jobsearch.models.User;
-import com.example.jobsearch.service.UserService;
+import com.example.jobsearch.services.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

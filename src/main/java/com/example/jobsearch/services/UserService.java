@@ -1,4 +1,4 @@
-package com.example.jobsearch.service;
+package com.example.jobsearch.services;
 
 import com.example.jobsearch.dto.UserDto;
 import com.example.jobsearch.exception.UserNotFoundException;
