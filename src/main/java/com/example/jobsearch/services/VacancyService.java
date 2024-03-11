@@ -12,5 +12,4 @@ public interface VacancyService {
 
     VacancyDto getVacancyById(Long id) throws VacancyNotFoundException;
 
-    // Другие методы, например, для создания, обновления и удаления вакансий
 }
