@@ -15,8 +15,27 @@ public class UserServiceimpl implements UserService {
     private final UserDao userDao;
 
     @Override
+    public void createUser(User user) {
+        userDao.createUser(user);
+    }
+
+    @Override
     public List<UserDto> getUsers() {
         List<User> users = userDao.getAllUsers();
+        List<UserDto> dtos = new ArrayList<>();
+        users.forEach(e -> dtos.add(getUserDto(e)));
+        return dtos;
+    }
+
+    @Override
+    public Long getUserId(String user) throws UserNotFoundException {
+        User user1 =  userDao.getUserId(user).orElseThrow(() -> new UserNotFoundException("user: " + user + " does not exists"));
+        return user1.getId();
+    }
+
+    @Override
+    public List<UserDto> getUserByName(String name) {
+        List<User> users = userDao.getUserByName(name);
         List<UserDto> dtos = new ArrayList<>();
         users.forEach(e -> dtos.add(getUserDto(e)));
         return dtos;
@@ -29,28 +48,9 @@ public class UserServiceimpl implements UserService {
     }
 
     @Override
-    public void createUser(User user) {
-        userDao.createUser(user);
-    }
-
-    @Override
-    public List<UserDto> getUserByName(String name) {
-        List<User> users = userDao.getUserByName(name);
-        List<UserDto> dtos = new ArrayList<>();
-        users.forEach(e -> dtos.add(getUserDto(e)));
-        return dtos;
-    }
-
-    @Override
     public UserDto getUserByPhone(String phone) throws UserNotFoundException {
         User user = userDao.getUserByPhone(phone).orElseThrow(() -> new UserNotFoundException("cannot find user with phone number: " + phone));
         return getUserDto(user);
-    }
-
-    @Override
-    public Long getUserId(String user) throws UserNotFoundException {
-        User user1 =  userDao.getUserId(user).orElseThrow(() -> new UserNotFoundException("user: " + user + " does not exists"));
-        return user1.getId();
     }
 
     private UserDto getUserDto(User user) {
