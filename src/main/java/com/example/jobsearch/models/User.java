@@ -1,5 +1,11 @@
 package com.example.jobsearch.models;
 
+import lombok.Getter;
+import lombok.Setter;
+
+@Getter
+@Setter
+
 public class User {
     private Long id;
     private String name;
@@ -7,7 +13,7 @@ public class User {
     private Integer age;
     private String email;
     private String password;
-    private Integer phoneNumber;
+    private String phoneNumber;
     private String avatar;
     private String accountType;
 }
