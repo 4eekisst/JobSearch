@@ -13,7 +13,7 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-public class ResumeServiceimpl implements ResumeService {
+public class ResumeServiceImpl implements ResumeService {
     private final ResumeDao resumeDao;
 
     @Override
