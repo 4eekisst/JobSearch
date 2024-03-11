@@ -6,7 +6,7 @@ public class User {
     private String surname;
     private Integer age;
     private String email;
-    private Integer password;
+    private String password;
     private Integer phoneNumber;
     private String avatar;
     private String accountType;
