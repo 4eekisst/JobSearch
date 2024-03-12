@@ -42,6 +42,7 @@ public class UserServiceImpl implements UserService {
         return dtos;
     }
 
+
     @Override
     public UserDto getUserByEmail(String email) throws UserNotFoundException {
         User user = userDao.getUserByEmail(email).orElseThrow(() -> new UserNotFoundException("user with email: " + email+" does not exists"));

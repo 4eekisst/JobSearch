@@ -40,3 +40,5 @@ public class VacancyController {
         return ResponseEntity.ok(vacancies);
     }
 }
+
+

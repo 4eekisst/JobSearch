@@ -49,7 +49,7 @@ public class UserDao {
                 .addValue("password",user.getPassword())
                 .addValue("phoneNumber",user.getPhoneNumber())
                 .addValue("avatar",user.getAvatar())
-                .addValue("accType",user.getAccountType())
+                .addValue("accountType",user.getAccountType())
         );
     }
 
