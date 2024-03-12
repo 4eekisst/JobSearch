@@ -1,5 +1,6 @@
 package com.example.jobsearch.contoller;
 
+import com.example.jobsearch.dto.ResumeDto;
 import com.example.jobsearch.dto.UserDto;
 import com.example.jobsearch.exception.UserNotFoundException;
 import com.example.jobsearch.models.User;

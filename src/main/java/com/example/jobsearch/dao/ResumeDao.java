@@ -34,6 +34,11 @@ public class ResumeDao {
         return jdbcTemplate.query(sql, new BeanPropertyRowMapper<>(Resume.class), applicantId);
     }
 
+    public List<Resume> getResumesByCategory(Integer categoryId) {
+        String sql = "SELECT * FROM resumes WHERE category_id = ?";
+        return jdbcTemplate.query(sql, new BeanPropertyRowMapper<>(Resume.class), categoryId);
+    }
+
     public void createResume(Resume resume) {
         String sql = "INSERT INTO resumes (applicant_id, name, category_id, salary, is_active, created_date, update_time) " +
                 "VALUES (:applicantId, :name, :categoryId, :salary, :isActive, :createdDate, :updateTime)";

@@ -27,13 +27,13 @@ create table if not exists resumes
     );
 
 
--- Создание таблицы вакансий (vacancies)
+--vacancies
 CREATE TABLE IF NOT EXISTS vacancies
 (
-    id SERIAL PRIMARY KEY,
-    name TEXT NOT NULL,
-    description TEXT,
-    category_id INTEGER NOT NULL,
+    id SERIAL primary key,
+    name TEXT not null,
+    description text,
+    category_id integer not null,
     salary DOUBLE PRECISION,
     exp_from INTEGER,
     exp_to INTEGER,
@@ -49,8 +49,8 @@ CREATE TABLE IF NOT EXISTS vacancies
 
 INSERT INTO users (name, surname, age, email, password, phone_number, avatar, account_type)
 VALUES
-    ('Илья', 'Беликов',20, 'ilia@example.com', 'hashed_password', '+1234567890', 'http://example.com/avatar.jpg', 'standard'),
-    ('Александр', 'Крайнюков', 20, 'alexander@example.com', 'hashed_password', NULL, NULL, 'premium');
+    ('Илья', 'Беликов',20, 'ilia@example.com', 'qwerty', '+1234567890', 'http://example.com/avatar.jpg', 'standard'),
+    ('Александр', 'Крайнюков', 20, 'alexander@example.com', 'qwerty', NULL, NULL, 'premium');
 
 
 INSERT INTO resumes (applicant_id, name, category_id, salary, is_active, created_date, update_time)

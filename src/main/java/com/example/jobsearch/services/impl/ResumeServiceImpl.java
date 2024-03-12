@@ -43,6 +43,14 @@ public class ResumeServiceImpl implements ResumeService {
         resumeDao.createResume(resume);
     }
 
+    @Override
+    public List<ResumeDto> getResumesByCategory(Integer categoryId) {
+        List<Resume> resumes = resumeDao.getResumesByCategory(categoryId);
+        List<ResumeDto> dtos = new ArrayList<>();
+        resumes.forEach(e -> dtos.add(getResumeDto(e)));
+        return dtos;
+    }
+
     private ResumeDto getResumeDto(Resume resume) {
         return ResumeDto.builder()
                 .id(resume.getId())

@@ -15,4 +15,6 @@ public interface ResumeService {
     List<ResumeDto> getResumesByApplicantId(Long applicantId);
 
     void createResume(Resume resume);
+
+    List<ResumeDto> getResumesByCategory(Integer categoryId);
 }

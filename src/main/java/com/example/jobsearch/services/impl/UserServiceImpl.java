@@ -11,6 +11,7 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
+
 public class UserServiceImpl implements UserService {
     private final UserDao userDao;
 
@@ -32,6 +33,8 @@ public class UserServiceImpl implements UserService {
         User user1 =  userDao.getUserId(user).orElseThrow(() -> new UserNotFoundException("user: " + user + " does not exists"));
         return user1.getId();
     }
+
+
 
     @Override
     public List<UserDto> getUserByName(String name) {
