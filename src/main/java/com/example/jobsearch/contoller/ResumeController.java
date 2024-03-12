@@ -36,4 +36,10 @@ public class ResumeController {
         resumeService.createResume(resume);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
+
+    @GetMapping("/resumes/category/{categoryId}")
+    public ResponseEntity<List<ResumeDto>> getResumesByCategory(@PathVariable Integer categoryId) {
+        List<ResumeDto> resumes = resumeService.getResumesByCategory(categoryId);
+        return ResponseEntity.ok(resumes);
+    }
 }

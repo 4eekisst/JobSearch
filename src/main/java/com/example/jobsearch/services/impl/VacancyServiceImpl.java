@@ -30,6 +30,14 @@ public class VacancyServiceImpl implements VacancyService {
         return getVacancyDto(vacancy);
     }
 
+    @Override
+    public List<VacancyDto> getVacanciesAppliedByUserId(Long userId) {
+        List<Vacancy> vacancies = vacancyDao.getVacanciesAppliedByUserId(userId);
+        List<VacancyDto> dtos = new ArrayList<>();
+        vacancies.forEach(vacancy -> dtos.add(getVacancyDto(vacancy)));
+        return dtos;
+    }
+
     private VacancyDto getVacancyDto(Vacancy vacancy) {
         return VacancyDto.builder()
                 .id(vacancy.getId())

@@ -11,4 +11,6 @@ public interface VacancyService {
     List<VacancyDto> getAllVacancies();
 
     VacancyDto getVacancyById(Long id) throws VacancyNotFoundException;
+
+    List<VacancyDto> getVacanciesAppliedByUserId(Long userId);
 }

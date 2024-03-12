@@ -23,4 +23,10 @@ public class VacancyDao {
         String sql = "SELECT * FROM vacancies WHERE id = ?";
         return jdbcTemplate.query(sql, new BeanPropertyRowMapper<>(Vacancy.class), id).stream().findAny();
     }
-}
+
+    public List<Vacancy> getVacanciesAppliedByUserId(Long userId) {
+        String sql = "SELECT * FROM vacancies WHERE id IN (SELECT vacancy_id FROM responded_applicant WHERE applicant_id = ?)";
+        return jdbcTemplate.query(sql, new BeanPropertyRowMapper<>(Vacancy.class), userId);
+        }
+    }
+

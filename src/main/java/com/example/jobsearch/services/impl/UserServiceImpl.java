@@ -34,8 +34,6 @@ public class UserServiceImpl implements UserService {
         return user1.getId();
     }
 
-
-
     @Override
     public List<UserDto> getUserByName(String name) {
         List<User> users = userDao.getUserByName(name);
