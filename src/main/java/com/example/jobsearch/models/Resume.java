@@ -1,6 +1,11 @@
 package com.example.jobsearch.models;
 
+import lombok.Getter;
+import lombok.Setter;
+
 import java.time.LocalDate;
+@Getter
+@Setter
 
 public class Resume {
     private Long id;
