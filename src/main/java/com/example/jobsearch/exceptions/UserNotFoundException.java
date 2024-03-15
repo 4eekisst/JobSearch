@@ -1,6 +1,6 @@
-package com.example.jobsearch.exception;
+package com.example.jobsearch.exceptions;
 
-public class UserNotFoundException extends Exception {
+public class UserNotFoundException extends Exception{
     public UserNotFoundException() {
     }
 

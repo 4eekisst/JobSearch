@@ -1,22 +1,20 @@
 package com.example.jobsearch.models;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
 
-import java.time.LocalDate;
-@Getter
-@Setter
+import java.time.LocalDateTime;
 
+@Data
 public class Vacancy {
     private Long id;
     private String name;
     private String description;
-    private Integer categoryId;
+    private Long categoryId;
+    private Long authorId;
     private Double salary;
     private Integer expFrom;
-    private Integer getExpTo;
+    private Integer expTo;
     private Boolean isActive;
-    private Integer authorId;
-    private LocalDate createdDate;
-    private LocalDate updateTime;
+    private LocalDateTime createdDate;
+    private LocalDateTime updateTime;
 }

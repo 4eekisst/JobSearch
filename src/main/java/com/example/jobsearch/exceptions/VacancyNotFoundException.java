@@ -1,4 +1,4 @@
-package com.example.jobsearch.exception;
+package com.example.jobsearch.exceptions;
 
 public class VacancyNotFoundException extends Exception{
     public VacancyNotFoundException() {

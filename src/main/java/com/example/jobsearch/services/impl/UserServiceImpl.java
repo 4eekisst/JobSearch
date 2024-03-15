@@ -1,24 +1,22 @@
 package com.example.jobsearch.services.impl;
+
 import com.example.jobsearch.dao.UserDao;
 import com.example.jobsearch.dto.UserDto;
-import com.example.jobsearch.exception.UserNotFoundException;
+import com.example.jobsearch.models.User;
+import com.example.jobsearch.exceptions.UserNotFoundException;
 import com.example.jobsearch.services.UserService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import com.example.jobsearch.models.User;
+
 import java.util.ArrayList;
 import java.util.List;
 
 @Service
+@Slf4j
 @RequiredArgsConstructor
-
 public class UserServiceImpl implements UserService {
     private final UserDao userDao;
-
-    @Override
-    public void createUser(User user) {
-        userDao.createUser(user);
-    }
 
     @Override
     public List<UserDto> getUsers() {
@@ -29,9 +27,31 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Long getUserId(String user) throws UserNotFoundException {
-        User user1 =  userDao.getUserId(user).orElseThrow(() -> new UserNotFoundException("user: " + user + " does not exists"));
-        return user1.getId();
+    public UserDto getUserByEmail(String email) {
+        try {
+            User user = userDao.getUserByEmail(email).orElseThrow(UserNotFoundException::new);
+            return getUserDto(user);
+        } catch (UserNotFoundException e) {
+            log.error("user with email: {} does not exists", email);
+        }
+        return null;
+    }
+
+
+    @Override
+    public UserDto getUserById(Long id) {
+        try {
+            User user = userDao.getUserById(id).orElseThrow(UserNotFoundException::new);
+            return getUserDto(user);
+        } catch (UserNotFoundException e) {
+            log.error("User with {} not found", id);
+        }
+        return null;
+    }
+
+    @Override
+    public void createUser(User user) {
+        userDao.createUser(user);
     }
 
     @Override
@@ -42,18 +62,39 @@ public class UserServiceImpl implements UserService {
         return dtos;
     }
 
-
     @Override
-    public UserDto getUserByEmail(String email) throws UserNotFoundException {
-        User user = userDao.getUserByEmail(email).orElseThrow(() -> new UserNotFoundException("user with email: " + email+" does not exists"));
-        return getUserDto(user);
+    public UserDto getUserByPhone(String phone) {
+        try {
+            User user = userDao.getUserByPhone(phone).orElseThrow(UserNotFoundException::new);
+            return getUserDto(user);
+
+        } catch (UserNotFoundException e) {
+            log.error("cannot find user with phone number: {}", phone);
+        }
+        return null;
     }
 
     @Override
-    public UserDto getUserByPhone(String phone) throws UserNotFoundException {
-        User user = userDao.getUserByPhone(phone).orElseThrow(() -> new UserNotFoundException("cannot find user with phone number: " + phone));
-        return getUserDto(user);
+    public Long getUserId(String email) {
+        try {
+            User user1 = userDao.getUserByEmail(email).orElseThrow(UserNotFoundException::new);
+            return user1.getId();
+        } catch (UserNotFoundException e) {
+            log.error("user with email: {} does not exists", email);
+        }
+        return null;
     }
+
+    @Override
+    public Boolean checkIfUserExists(String email) {
+        return userDao.getUserByEmail(email).isPresent();
+    }
+
+    @Override
+    public void editUser(User user) {
+        userDao.editUser(user);
+    }
+
 
     private UserDto getUserDto(User user) {
         return UserDto.builder()
@@ -64,7 +105,7 @@ public class UserServiceImpl implements UserService {
                 .email(user.getEmail())
                 .phoneNumber(user.getPhoneNumber())
                 .avatar(user.getAvatar())
-                .accountType(user.getAccountType())
+                .accType(user.getAccType())
                 .build();
     }
 }

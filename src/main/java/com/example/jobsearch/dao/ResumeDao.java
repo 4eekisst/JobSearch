@@ -1,6 +1,8 @@
 package com.example.jobsearch.dao;
 
+import com.example.jobsearch.dto.ResumeDto;
 import com.example.jobsearch.models.Resume;
+import com.example.jobsearch.exceptions.ResumeNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.support.DataAccessUtils;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
@@ -9,46 +11,91 @@ import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Component;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
 @Component
 @RequiredArgsConstructor
 public class ResumeDao {
-    private final JdbcTemplate jdbcTemplate;
-    private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
+    private final JdbcTemplate template;
+    private final NamedParameterJdbcTemplate namedParameter;
+
+    public List<Resume> getAllResumesByCategoryId(Long id) {
+        String sql = """
+                select * from RESUMES
+                where CATEGORY_ID = ?
+                """;
+        return template.query(sql, new BeanPropertyRowMapper<>(Resume.class), id);
+    }
 
     public List<Resume> getAllResumes() {
-        String sql = "SELECT * FROM resumes";
-        return jdbcTemplate.query(sql, new BeanPropertyRowMapper<>(Resume.class));
+        String sql = """
+                select * from RESUMES
+                """;
+        return template.query(sql, new BeanPropertyRowMapper<>(Resume.class));
+    }
+
+    public List<Resume> getAllResumesByUserId(Long id) throws ResumeNotFoundException {
+        String sql = """
+                select * from RESUMES
+                where APPLICANT_ID = ?
+                """;
+        List<Resume> resumes = template.query(sql, new BeanPropertyRowMapper<>(Resume.class), id);
+        if (resumes.isEmpty()) {
+            throw new ResumeNotFoundException("resumes by this user not found!");
+        }
+        return resumes;
     }
 
     public Optional<Resume> getResumeById(Long id) {
-        String sql = "SELECT * FROM resumes WHERE id = ?";
-        return Optional.ofNullable(DataAccessUtils.singleResult(jdbcTemplate.query(sql, new BeanPropertyRowMapper<>(Resume.class), id)));
+        String sql = """
+                select * from RESUMES
+                where id = ?
+                """;
+        return Optional.ofNullable(
+                DataAccessUtils.singleResult(
+                        template.query(sql, new BeanPropertyRowMapper<>(Resume.class), id)
+                )
+        );
     }
 
-    public List<Resume> getResumesByApplicantId(Long applicantId) {
-        String sql = "SELECT * FROM resumes WHERE applicant_id = ?";
-        return jdbcTemplate.query(sql, new BeanPropertyRowMapper<>(Resume.class), applicantId);
-    }
-
-    public List<Resume> getResumesByCategory(Integer categoryId) {
-        String sql = "SELECT * FROM resumes WHERE category_id = ?";
-        return jdbcTemplate.query(sql, new BeanPropertyRowMapper<>(Resume.class), categoryId);
-    }
-
-    public void createResume(Resume resume) {
-        String sql = "INSERT INTO resumes (applicant_id, name, category_id, salary, is_active, created_date, update_time) " +
-                "VALUES (:applicantId, :name, :categoryId, :salary, :isActive, :createdDate, :updateTime)";
-        namedParameterJdbcTemplate.update(sql, new MapSqlParameterSource()
-                .addValue("applicantId", resume.getApplicantId())
+    public void createResume(ResumeDto resume) {
+        String sql = """
+                insert into RESUMES(name, category_id, applicant_id, salary, is_active, created_date, update_date)\s
+                values (:name, :categoryId, :applicantId, :salary, :isActive, :createdDate, :updateTime);
+                """;
+        namedParameter.update(sql, new MapSqlParameterSource()
                 .addValue("name", resume.getName())
                 .addValue("categoryId", resume.getCategoryId())
+                .addValue("applicantId", resume.getUserId())
                 .addValue("salary", resume.getSalary())
-                .addValue("isActive", resume.isActive())
-                .addValue("createdDate", resume.getCreatedDate())
-                .addValue("updateTime", resume.getUpdateTime()));
+                .addValue("isActive", true)
+                .addValue("createdDate", LocalDateTime.now())
+                .addValue("updateTime", LocalDateTime.now())
+        );
+    }
+
+    public void deleteResumeById(Long id) {
+        String sql = """
+                DELETE FROM RESUMES WHERE id = :id;
+                """;
+        namedParameter.update(sql,new MapSqlParameterSource().addValue("id",id));
+    }
+
+    public void editResume( ResumeDto resume) {
+        String sql = """
+            UPDATE Resumes
+            SET name = :name, category_id = :categoryId, salary = :salary, is_active = :isActive, update_date = :updateTime
+            WHERE id = :id;
+            """;
+        namedParameter.update(sql, new MapSqlParameterSource()
+                .addValue("name",resume.getName())
+                .addValue("categoryId", resume.getCategoryId())
+                .addValue("salary", resume.getSalary())
+                .addValue("isActive", resume.getIsActive())
+                .addValue("updateTime", LocalDateTime.now())
+                .addValue("id",resume.getId())
+        );
     }
 }

@@ -1,5 +1,6 @@
 package com.example.jobsearch.dto;
 
+import com.example.jobsearch.models.Category;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -12,5 +13,5 @@ import lombok.NoArgsConstructor;
 public class CategoryDto {
     private Long id;
     private String name;
-    private Integer parentId;
+    private Long categoryId;
 }
