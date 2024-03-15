@@ -2,65 +2,108 @@ package com.example.jobsearch.services.impl;
 
 import com.example.jobsearch.dao.ResumeDao;
 import com.example.jobsearch.dto.ResumeDto;
-import com.example.jobsearch.exception.ResumeNotFoundException;
+import com.example.jobsearch.models.Category;
 import com.example.jobsearch.models.Resume;
+import com.example.jobsearch.exceptions.CategoryNotFoundException;
+import com.example.jobsearch.exceptions.ResumeNotFoundException;
+import com.example.jobsearch.exceptions.UserNotFoundException;
+import com.example.jobsearch.services.CategoryService;
 import com.example.jobsearch.services.ResumeService;
+import com.example.jobsearch.services.UserService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Service
+@Slf4j
 @RequiredArgsConstructor
 public class ResumeServiceImpl implements ResumeService {
-    private final ResumeDao resumeDao;
+    private final CategoryService category;
+    private final ResumeDao dao;
+    private final UserService userService;
 
     @Override
-    public List<ResumeDto> getAllResumes() {
-        List<Resume> resumes = resumeDao.getAllResumes();
-        List<ResumeDto> dtos = new ArrayList<>();
-        resumes.forEach(e -> dtos.add(getResumeDto(e)));
-        return dtos;
+    public List<ResumeDto> getResumeByCategory(String categoryName) throws CategoryNotFoundException {
+        Category categoryId = category.getCategoryIdByName(categoryName);
+        if (categoryId == null){
+            throw new CategoryNotFoundException();
+        }
+        List<Resume> resumes = dao.getAllResumesByCategoryId(categoryId.getId());
+        return getResumeDtos(resumes);
     }
 
     @Override
-    public ResumeDto getResumeById(Long id) throws ResumeNotFoundException {
-        Resume resume = resumeDao.getResumeById(id).orElseThrow(() -> new ResumeNotFoundException("Resume with id: " + id + " not found"));
-        return getResumeDto(resume);
+    public List<ResumeDto> getResumes() {
+        List<Resume> resumes = dao.getAllResumes();
+        return getResumeDtos(resumes);
     }
 
     @Override
-    public List<ResumeDto> getResumesByApplicantId(Long applicantId) {
-        List<Resume> resumes = resumeDao.getResumesByApplicantId(applicantId);
-        List<ResumeDto> dtos = new ArrayList<>();
-        resumes.forEach(e -> dtos.add(getResumeDto(e)));
-        return dtos;
+    public List<ResumeDto> getResumeByUserEmail(String email) throws UserNotFoundException {
+        try {
+            Long id = userService.getUserId(email);
+            if (id == null){
+                log.error("user with email {} not found",email);
+                throw new UserNotFoundException();
+            }
+            List<Resume> resumes = dao.getAllResumesByUserId(id);
+            return getResumeDtos(resumes);
+        } catch (ResumeNotFoundException e) {
+            log.error("Resumes by user with email:{} not found",email);
+        }
+        return null;
     }
 
     @Override
-    public void createResume(Resume resume) {
-        resumeDao.createResume(resume);
-    }
-
-    @Override
-    public List<ResumeDto> getResumesByCategory(Integer categoryId) {
-        List<Resume> resumes = resumeDao.getResumesByCategory(categoryId);
-        List<ResumeDto> dtos = new ArrayList<>();
-        resumes.forEach(e -> dtos.add(getResumeDto(e)));
-        return dtos;
-    }
-
-    private ResumeDto getResumeDto(Resume resume) {
+    public ResumeDto getResumeById(Long id) {
+        try {
+        Resume r = dao.getResumeById(id).orElseThrow(ResumeNotFoundException::new);
         return ResumeDto.builder()
-                .id(resume.getId())
-                .applicantId(resume.getApplicantId())
-                .name(resume.getName())
-                .categoryId(resume.getCategoryId())
-                .salary(resume.getSalary())
-                .isActive(resume.isActive())
-                .createdDate(resume.getCreatedDate())
-                .updateTime(resume.getUpdateTime())
+                .id(r.getId())
+                .name(r.getName())
+                .categoryId(r.getCategoryId())
+                .userId(r.getApplicantId())
+                .salary(r.getSalary())
+                .isActive(r.getIsActive())
+                .createdDate(r.getCreatedDate())
+                .updateTime(r.getUpdateTime())
                 .build();
+        }catch (ResumeNotFoundException e){
+            log.error("Resume by id: {} not found",id);
+        }
+        return null;
+    }
+
+    @Override
+    public void createResume(ResumeDto resume) {
+        dao.createResume(resume);
+    }
+
+    @Override
+    public void deleteResumeById(Long id) {
+        dao.deleteResumeById(id);
+    }
+
+    @Override
+    public void editResume( ResumeDto resume) {
+        dao.editResume(resume);
+    }
+
+    private List<ResumeDto> getResumeDtos(List<Resume> resumes) {
+        List<ResumeDto> dtos = new ArrayList<>();
+        resumes.forEach(r -> dtos.add(ResumeDto.builder()
+                .id(r.getId())
+                .name(r.getName())
+                .categoryId(r.getCategoryId())
+                .userId(r.getApplicantId())
+                .salary(r.getSalary())
+                .isActive(r.getIsActive())
+                .createdDate(r.getCreatedDate())
+                .updateTime(r.getUpdateTime())
+                .build()));
+        return dtos;
     }
 }

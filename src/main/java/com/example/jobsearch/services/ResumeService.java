@@ -1,20 +1,20 @@
 package com.example.jobsearch.services;
 
 import com.example.jobsearch.dto.ResumeDto;
-import com.example.jobsearch.exception.ResumeNotFoundException;
-import com.example.jobsearch.models.Resume;
+import com.example.jobsearch.exceptions.CategoryNotFoundException;
+import com.example.jobsearch.exceptions.UserNotFoundException;
 
 import java.util.List;
 
 public interface ResumeService {
+    List<ResumeDto> getResumeByCategory(String name) throws CategoryNotFoundException;
+    List<ResumeDto> getResumes();
+    List<ResumeDto> getResumeByUserEmail(String user) throws UserNotFoundException;
+    ResumeDto getResumeById(Long id);
 
-    List<ResumeDto> getAllResumes();
+    void createResume(ResumeDto resume);
 
-    ResumeDto getResumeById(Long id) throws ResumeNotFoundException;
+    void deleteResumeById(Long id);
 
-    List<ResumeDto> getResumesByApplicantId(Long applicantId);
-
-    void createResume(Resume resume);
-
-    List<ResumeDto> getResumesByCategory(Integer categoryId);
+    void editResume( ResumeDto resume);
 }

@@ -5,27 +5,19 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
 public class ResumeDto {
-
     private Long id;
-
-    private Integer applicantId;
-
     private String name;
-
-    private Integer categoryId;
-
+    private Long userId;
+    private Long categoryId;
     private Double salary;
-
-    private boolean isActive;
-
-    private LocalDate createdDate;
-
-    private LocalDate updateTime;
+    private Boolean isActive;
+    private LocalDateTime createdDate;
+    private LocalDateTime updateTime;
 }

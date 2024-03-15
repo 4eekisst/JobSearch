@@ -1,19 +1,17 @@
 package com.example.jobsearch.models;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
 
-import java.time.LocalDate;
-@Getter
-@Setter
+import java.time.LocalDateTime;
 
+@Data
 public class Resume {
     private Long id;
-    private Integer applicantId;
     private String name;
-    private Integer categoryId;
+    private Long applicantId;
+    private Long categoryId;
     private Double salary;
-    private boolean isActive;
-    private LocalDate createdDate;
-    private LocalDate updateTime;
+    private Boolean isActive;
+    private LocalDateTime createdDate;
+    private LocalDateTime updateTime;
 }

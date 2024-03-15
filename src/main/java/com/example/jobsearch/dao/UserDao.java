@@ -1,5 +1,6 @@
 package com.example.jobsearch.dao;
 
+
 import com.example.jobsearch.models.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.support.DataAccessUtils;
@@ -19,74 +20,100 @@ public class UserDao {
     private final JdbcTemplate template;
     private final NamedParameterJdbcTemplate namedParameter;
 
-    public List<User> getAllUsers(){
+    public List<User> getAllUsers() {
         String sql = "SELECT * FROM USERS";
         return template.query(sql, new BeanPropertyRowMapper<>(User.class));
     }
 
-    public Optional<User> getUserByEmail(String email){
+    public Optional<User> getUserByEmail(String email) {
         String sql = """
-              select * from users
-              where email =?
-              """;
+                select * from users
+                where email ilike ?
+                """;
         return Optional.ofNullable(
                 DataAccessUtils.singleResult(
-                        template.query(sql,new BeanPropertyRowMapper<>(User.class),email)
+                        template.query(sql, new BeanPropertyRowMapper<>(User.class), email)
                 )
         );
     }
 
     public void createUser(User user) {
         String sql = """
-                insert into users(name, surname, age, email, password, phone_number, avatar, account_type)\s
+                insert into users(name, surname, age, email, password, phone_number, avatar, acc_type)\s
                 values (:name, :surname, :age, :email, :password, :phoneNumber, :avatar, :accType);
                 """;
         namedParameter.update(sql, new MapSqlParameterSource()
-                .addValue("name",user.getName())
-                .addValue("surname",user.getSurname())
-                .addValue("age",user.getAge())
-                .addValue("email",user.getEmail())
-                .addValue("password",user.getPassword())
-                .addValue("phoneNumber",user.getPhoneNumber())
-                .addValue("avatar",user.getAvatar())
-                .addValue("accountType",user.getAccountType())
+                .addValue("name", user.getName())
+                .addValue("surname", user.getSurname())
+                .addValue("age", user.getAge())
+                .addValue("email", user.getEmail())
+                .addValue("password", user.getPassword())
+                .addValue("phoneNumber", user.getPhoneNumber())
+                .addValue("avatar", user.getAvatar())
+                .addValue("accType", user.getAccType())
         );
+
     }
 
     public List<User> getUserByName(String name) {
         String sql = """
-              select * from users
-              where name = ?
-              """;
-        return template.query(sql,new BeanPropertyRowMapper<>(User.class),name);
+                select * from users
+                where name ilike ?
+                """;
+        return template.query(sql, new BeanPropertyRowMapper<>(User.class), name);
     }
 
     public Optional<User> getUserByPhone(String phone) {
         String sql = """
-              select * from users
-              where PHONE_NUMBER = ?
-              """;
+                select * from users
+                where PHONE_NUMBER ilike ?
+                """;
         return Optional.ofNullable(
                 DataAccessUtils.singleResult(
-                        template.query(sql,new BeanPropertyRowMapper<>(User.class),phone)
+                        template.query(sql, new BeanPropertyRowMapper<>(User.class), phone)
                 )
         );
     }
 
-    public Optional<User> getUserId(String user) {
-        String[] parts = user.split(" ");
+    public List<User> getAllUsersByVacancyId(Long id) {
+        String sql = """
+                SELECT u.*
+                FROM users u
+                INNER JOIN responded_applicants r ON u.id = r.resume_id
+                WHERE r.vacancy_id = ?
+                """;
+        return template.query(sql, new BeanPropertyRowMapper<>(User.class), id);
+    }
 
-        String name = parts[0];
-        String surname = parts[1];
-
+    public Optional<User> getUserById(Long id) {
         String sql = """
                 select * from users
-                where name = ? and surname = ?
+                where ID = ?
                 """;
         return Optional.ofNullable(
                 DataAccessUtils.singleResult(
-                        template.query(sql,new BeanPropertyRowMapper<>(User.class),name,surname)
+                        template.query(sql, new BeanPropertyRowMapper<>(User.class), id)
                 )
         );
+    }
+
+    public void editUser(User user) {
+        String sql = """
+                UPDATE USERS
+            SET NAME = :name, SURNAME = :surname,AGE = :age,email = :email, password = :password, phone_number = :phoneNumber, avatar = :avatar , acc_type = :accType
+            WHERE id = :id;
+            """;
+        namedParameter.update(sql, new MapSqlParameterSource()
+                .addValue("name", user.getName())
+                .addValue("surname", user.getSurname())
+                .addValue("age", user.getAge())
+                .addValue("email", user.getEmail())
+                .addValue("password", user.getPassword())
+                .addValue("phoneNumber", user.getPhoneNumber())
+                .addValue("avatar", user.getAvatar())
+                .addValue("accType", user.getAccType())
+                .addValue("id",user.getId())
+        );
+
     }
 }

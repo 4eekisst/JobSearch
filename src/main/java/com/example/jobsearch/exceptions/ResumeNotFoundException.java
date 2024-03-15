@@ -1,6 +1,6 @@
-package com.example.jobsearch.exception;
+package com.example.jobsearch.exceptions;
 
-public class ResumeNotFoundException extends Exception {
+public class ResumeNotFoundException extends Exception{
     public ResumeNotFoundException() {
     }
 
