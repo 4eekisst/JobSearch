@@ -33,3 +33,4 @@ build/
 .vscode/
 /db/jobSearch.mv.db
 /db/
+/logs/
