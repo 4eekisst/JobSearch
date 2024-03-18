@@ -44,5 +44,4 @@ public class RespApplServiceImpl implements RespondedApplicantsService {
                 .build()));
         return dtos;
     }
-
 }

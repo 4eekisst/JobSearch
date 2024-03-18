@@ -3,6 +3,7 @@ package com.example.jobsearch.controllers;
 import com.example.jobsearch.dto.VacancyDto;
 import com.example.jobsearch.exceptions.CategoryNotFoundException;
 import com.example.jobsearch.exceptions.UserNotFoundException;
+import com.example.jobsearch.exceptions.VacancyNotFoundException;
 import com.example.jobsearch.services.VacancyService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -39,5 +40,11 @@ public class VacancyController {
         }catch (CategoryNotFoundException e){
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }
+    }
+
+    @DeleteMapping("/{vacancyId}")
+    public ResponseEntity<?> deleteVacancy(@PathVariable Long vacancyId) {
+        service.deleteVacancy(vacancyId);
+        return ResponseEntity.ok("Vacancy deleted successfully");
     }
 }

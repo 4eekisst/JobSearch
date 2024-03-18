@@ -39,7 +39,7 @@ public class VacancyDao {
                 SELECT v.*
                 FROM vacancies v
                 INNER JOIN responded_applicants ra ON v.id = ra.resume_id
-                WHERE ra.vacancy_id = ?
+                WHERE ra.vacancy_id = ?xq
                 """;
         return template.query(sql, new BeanPropertyRowMapper<>(Vacancy.class), id);
     }
@@ -51,4 +51,10 @@ public class VacancyDao {
                 """;
         return template.query(sql, new BeanPropertyRowMapper<>(Vacancy.class), id);
     }
+
+    public void deleteVacancyById(Long id) {
+        String sql = "DELETE FROM vacancies WHERE id = ?";
+        template.update(sql, id);
+    }
+
 }

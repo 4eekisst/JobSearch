@@ -15,4 +15,6 @@ public interface VacancyService {
     List<VacancyDto> getVacanciesOfCategory(String strip) throws CategoryNotFoundException;
 
     VacancyDto getVacancyById(Long vacancyId);
+    void deleteVacancy(Long vacancyId);
+
 }

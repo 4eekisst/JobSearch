@@ -52,7 +52,6 @@ public class UserDao {
                 .addValue("avatar", user.getAvatar())
                 .addValue("accType", user.getAccType())
         );
-
     }
 
     public List<User> getUserByName(String name) {

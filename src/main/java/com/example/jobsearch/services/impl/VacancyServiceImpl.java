@@ -45,6 +45,13 @@ public class VacancyServiceImpl implements VacancyService {
         return getVacancyDtos(vacancies);
     }
 
+
+    @Override
+    public void deleteVacancy(Long vacancyId) {
+        dao.deleteVacancyById(vacancyId);
+    }
+
+
     @Override
     public VacancyDto getVacancyById(Long vacancyId) {
         try {

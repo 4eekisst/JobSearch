@@ -14,6 +14,5 @@ public interface UserService {
     UserDto getUserByPhone(String phone);
     Long getUserId(String user);
     Boolean checkIfUserExists(String email);
-
     void editUser(User user);
 }
