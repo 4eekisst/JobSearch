@@ -42,9 +42,27 @@ public class VacancyController {
         }
     }
 
+    @PostMapping("/create")
+    public ResponseEntity<VacancyDto> createVacancy(@RequestBody VacancyDto vacancyDto) {
+        VacancyDto createdVacancyDto = service.createVacancy(vacancyDto);
+        return ResponseEntity.status(HttpStatus.CREATED).body(createdVacancyDto);
+    }
+
+
     @DeleteMapping("/{vacancyId}")
     public ResponseEntity<?> deleteVacancy(@PathVariable Long vacancyId) {
         service.deleteVacancy(vacancyId);
         return ResponseEntity.ok("Vacancy deleted successfully");
+    }
+
+    @PutMapping("/{vacancyId}")
+    public ResponseEntity<?> updateVacancy(@PathVariable Long vacancyId, @RequestBody VacancyDto updatedVacancy) {
+        VacancyDto updatedDto;
+        try {
+            updatedDto = service.updateVacancy(vacancyId, updatedVacancy);
+        } catch (VacancyNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        }
+        return ResponseEntity.ok(updatedDto);
     }
 }

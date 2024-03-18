@@ -11,8 +11,10 @@ import com.example.jobsearch.services.UserService;
 import com.example.jobsearch.services.VacancyService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -45,6 +47,29 @@ public class VacancyServiceImpl implements VacancyService {
         return getVacancyDtos(vacancies);
     }
 
+    @Override
+    public VacancyDto createVacancy(VacancyDto vacancyDto) {
+        Vacancy vacancy = new Vacancy();
+        BeanUtils.copyProperties(vacancyDto, vacancy);
+        vacancy.setCreatedDate(LocalDateTime.now());
+        vacancy.setUpdateTime(LocalDateTime.now());
+        dao.createVacancy(vacancy);
+        return VacancyDto.builder()
+                .id(vacancy.getId())
+                .name(vacancy.getName())
+                .description(vacancy.getDescription())
+                .categoryId(vacancy.getCategoryId())
+                .authorId(vacancy.getAuthorId())
+                .salary(vacancy.getSalary())
+                .expFrom(vacancy.getExpFrom())
+                .expTo(vacancy.getExpTo())
+                .isActive(vacancy.getIsActive())
+                .createdDate(vacancy.getCreatedDate())
+                .updateTime(vacancy.getUpdateTime())
+                .build();
+    }
+
+
 
     @Override
     public void deleteVacancy(Long vacancyId) {
@@ -76,6 +101,7 @@ public class VacancyServiceImpl implements VacancyService {
     }
 
 
+
     private List<VacancyDto> getVacancyDtos(List<Vacancy> vacancies) {
         List<VacancyDto> dtos = new ArrayList<>();
         vacancies.forEach(e -> dtos.add(VacancyDto.builder()
@@ -92,5 +118,21 @@ public class VacancyServiceImpl implements VacancyService {
                 .categoryId(e.getAuthorId())
                 .build()));
         return dtos;
+    }
+
+
+    @Override
+    public VacancyDto updateVacancy(Long vacancyId, VacancyDto updatedVacancy) throws VacancyNotFoundException {
+        Vacancy existingVacancy = dao.getVacancyById(vacancyId)
+                .orElseThrow(() -> new VacancyNotFoundException("Вакансия с id: " + vacancyId + " не найдена"));
+
+        BeanUtils.copyProperties(updatedVacancy, existingVacancy, "id", "createdDate", "updateTime");
+        existingVacancy.setUpdateTime(LocalDateTime.now());
+        dao.updateVacancy(existingVacancy);
+        return VacancyDto.builder()
+                .id(existingVacancy.getId())
+                .createdDate(existingVacancy.getCreatedDate())
+                .updateTime(existingVacancy.getUpdateTime())
+                .build();
     }
 }
