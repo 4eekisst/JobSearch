@@ -1,6 +1,7 @@
 package com.example.jobsearch.services;
 
 
+import com.example.jobsearch.dto.ResumeDto;
 import com.example.jobsearch.dto.VacancyDto;
 import com.example.jobsearch.exceptions.CategoryNotFoundException;
 import com.example.jobsearch.exceptions.UserNotFoundException;
@@ -22,4 +23,5 @@ public interface VacancyService {
     void deleteVacancy(Long vacancyId);
 
     VacancyDto updateVacancy(Long vacancyId, VacancyDto updatedVacancy) throws VacancyNotFoundException;
+    List<ResumeDto> getRespondedApplicants(Long vacancyId);
 }

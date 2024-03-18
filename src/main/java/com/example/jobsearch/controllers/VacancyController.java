@@ -1,5 +1,6 @@
 package com.example.jobsearch.controllers;
 
+import com.example.jobsearch.dto.ResumeDto;
 import com.example.jobsearch.dto.VacancyDto;
 import com.example.jobsearch.exceptions.CategoryNotFoundException;
 import com.example.jobsearch.exceptions.UserNotFoundException;
@@ -64,5 +65,14 @@ public class VacancyController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }
         return ResponseEntity.ok(updatedDto);
+    }
+
+    @GetMapping("/{vacancyId}/applicants")
+    public ResponseEntity<?> getRespondedApplicants(@PathVariable Long vacancyId) {
+        List<ResumeDto> respondedApplicants = service.getRespondedApplicants(vacancyId);
+        if (respondedApplicants.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No applicants responded to vacancy with id: " + vacancyId);
+        }
+        return ResponseEntity.ok(respondedApplicants);
     }
 }

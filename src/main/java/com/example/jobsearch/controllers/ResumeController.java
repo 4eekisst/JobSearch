@@ -39,7 +39,7 @@ public class ResumeController {
         }
         return ResponseEntity.ok(resumes);
     }
-    
+
     @GetMapping("/category/{category}")
     public ResponseEntity<?> getResumesByCategory(@PathVariable(name = "category") String category) {
         try {

@@ -1,5 +1,6 @@
 package com.example.jobsearch.dao;
 
+import com.example.jobsearch.models.Resume;
 import com.example.jobsearch.models.Vacancy;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.support.DataAccessUtils;
@@ -88,4 +89,15 @@ public class VacancyDao {
         String sql = "UPDATE vacancies SET name=?, description=?, category_id=?, author_id=?, salary=?, exp_from=?, exp_to=?, is_active=?, update_time=? WHERE id=?";
         template.update(sql, vacancy.getName(), vacancy.getDescription(), vacancy.getCategoryId(), vacancy.getAuthorId(), vacancy.getSalary(), vacancy.getExpFrom(), vacancy.getExpTo(), vacancy.getIsActive(), vacancy.getUpdateTime(), vacancy.getId());
     }
+
+    public List<Resume> getRespondedApplicantsForVacancy(Long vacancyId) {
+        String sql = """
+            SELECT r.*
+            FROM resumes r
+            INNER JOIN responded_applicants ra ON r.id = ra.resume_id
+            WHERE ra.vacancy_id = ?
+            """;
+        return template.query(sql, new BeanPropertyRowMapper<>(Resume.class), vacancyId);
+    }
+
 }

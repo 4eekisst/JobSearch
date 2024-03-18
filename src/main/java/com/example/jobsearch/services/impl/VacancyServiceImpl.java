@@ -1,10 +1,12 @@
 package com.example.jobsearch.services.impl;
 
 import com.example.jobsearch.dao.VacancyDao;
+import com.example.jobsearch.dto.ResumeDto;
 import com.example.jobsearch.dto.UserDto;
 import com.example.jobsearch.dto.VacancyDto;
 import com.example.jobsearch.models.Category;
 import com.example.jobsearch.exceptions.VacancyNotFoundException;
+import com.example.jobsearch.models.Resume;
 import com.example.jobsearch.models.Vacancy;
 import com.example.jobsearch.services.CategoryService;
 import com.example.jobsearch.services.UserService;
@@ -131,6 +133,27 @@ public class VacancyServiceImpl implements VacancyService {
                 .id(existingVacancy.getId())
                 .createdDate(existingVacancy.getCreatedDate())
                 .updateTime(existingVacancy.getUpdateTime())
+                .build();
+    }
+
+    @Override
+    public List<ResumeDto> getRespondedApplicants(Long vacancyId) {
+        List<Resume> respondedResumes = dao.getRespondedApplicantsForVacancy(vacancyId);
+        List<ResumeDto> respondedApplicantsDto = new ArrayList<>();
+        respondedResumes.forEach(resume -> respondedApplicantsDto.add(mapResumeToDto(resume)));
+        return respondedApplicantsDto;
+    }
+
+    private ResumeDto mapResumeToDto(Resume resume) {
+        return ResumeDto.builder()
+                .id(resume.getId())
+                .name(resume.getName())
+                .categoryId(resume.getCategoryId())
+                .userId(resume.getApplicantId())
+                .salary(resume.getSalary())
+                .isActive(resume.getIsActive())
+                .createdDate(resume.getCreatedDate())
+                .updateTime(resume.getUpdateTime())
                 .build();
     }
 }
