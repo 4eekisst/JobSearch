@@ -31,6 +31,15 @@ public class ResumeController {
                 :ResponseEntity.ok(dto);
     }
 
+    @GetMapping("/name/{name}")
+    public ResponseEntity<?> getResumesByName(@PathVariable(name = "name") String name) {
+        List<ResumeDto> resumes = service.getResumesByName(name);
+        if (resumes.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Resumes with name: " + name + " not found");
+        }
+        return ResponseEntity.ok(resumes);
+    }
+    
     @GetMapping("/category/{category}")
     public ResponseEntity<?> getResumesByCategory(@PathVariable(name = "category") String category) {
         try {

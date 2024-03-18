@@ -20,4 +20,5 @@ public interface ResumeService {
     void deleteResumeById(Long id);
 
     void editResume( ResumeDto resume);
+    List<ResumeDto> getResumesByName(String name);
 }
