@@ -69,8 +69,6 @@ public class VacancyServiceImpl implements VacancyService {
                 .build();
     }
 
-
-
     @Override
     public void deleteVacancy(Long vacancyId) {
         dao.deleteVacancyById(vacancyId);

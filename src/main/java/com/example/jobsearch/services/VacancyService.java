@@ -22,5 +22,4 @@ public interface VacancyService {
     void deleteVacancy(Long vacancyId);
 
     VacancyDto updateVacancy(Long vacancyId, VacancyDto updatedVacancy) throws VacancyNotFoundException;
-
 }
