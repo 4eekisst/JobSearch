@@ -156,4 +156,6 @@ public class VacancyServiceImpl implements VacancyService {
                 .updateTime(resume.getUpdateTime())
                 .build();
     }
+
+
 }

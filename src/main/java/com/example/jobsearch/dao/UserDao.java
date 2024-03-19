@@ -113,6 +113,11 @@ public class UserDao {
                 .addValue("accType", user.getAccType())
                 .addValue("id",user.getId())
         );
-
     }
+
+    public List<User> getUsersByAccountType(String accountType) {
+        String sql = "SELECT * FROM users WHERE acc_type = ?";
+        return template.query(sql, new BeanPropertyRowMapper<>(User.class), accountType);
+    }
+
 }

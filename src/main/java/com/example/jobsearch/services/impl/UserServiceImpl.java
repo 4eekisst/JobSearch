@@ -108,4 +108,25 @@ public class UserServiceImpl implements UserService {
                 .accType(user.getAccType())
                 .build();
     }
+
+    @Override
+    public List<UserDto> getApplicantsByAccountType(String accountType) {
+        List<User> applicants = userDao.getUsersByAccountType(accountType);
+        List<UserDto> applicantDtos = new ArrayList<>();
+        applicants.forEach(applicant -> applicantDtos.add(mapUserToDto(applicant)));
+        return applicantDtos;
+    }
+
+    private UserDto mapUserToDto(User user) {
+        return UserDto.builder()
+                .id(user.getId())
+                .name(user.getName())
+                .surname(user.getSurname())
+                .age(user.getAge())
+                .email(user.getEmail())
+                .phoneNumber(user.getPhoneNumber())
+                .avatar(user.getAvatar())
+                .accType(user.getAccType())
+                .build();
+    }
 }

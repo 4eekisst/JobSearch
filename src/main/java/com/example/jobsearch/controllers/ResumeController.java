@@ -65,7 +65,7 @@ public class ResumeController {
         }
     }
 
-    @PostMapping()
+    @PostMapping("/create")
     public HttpStatus createResume(@RequestBody ResumeDto resume) {
         service.createResume(resume);
         return HttpStatus.OK;
@@ -77,7 +77,7 @@ public class ResumeController {
         return HttpStatus.OK;
     }
 
-    @PostMapping("/edit")
+    @PutMapping("/edit")
     public HttpStatus editResume(@RequestBody ResumeDto resume) {
         service.editResume(resume);
         return HttpStatus.OK;

@@ -49,4 +49,9 @@ public class  UserController {
         service.createUser(user);
         return HttpStatus.OK;
     }
+
+    @GetMapping("/applicants")
+    public ResponseEntity<List<UserDto>> getApplicantsByAccountType(@RequestParam(name = "accountType") String accountType) {
+        return ResponseEntity.ok(service.getApplicantsByAccountType(accountType.strip()));
+    }
 }
