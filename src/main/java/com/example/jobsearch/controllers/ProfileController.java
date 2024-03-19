@@ -21,5 +21,4 @@ public class ProfileController {
         service.editUser(mercer);
         return HttpStatus.OK;
     }
-    //TODO спросить у саппортов про User не должен ли быть UserDto?
 }

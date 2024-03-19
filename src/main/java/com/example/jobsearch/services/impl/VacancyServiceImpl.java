@@ -52,24 +52,34 @@ public class VacancyServiceImpl implements VacancyService {
     @Override
     public VacancyDto createVacancy(VacancyDto vacancyDto) {
         Vacancy vacancy = new Vacancy();
-        BeanUtils.copyProperties(vacancyDto, vacancy);
+        vacancy.setName(vacancyDto.getName());
+        vacancy.setDescription(vacancyDto.getDescription());
+        vacancy.setCategoryId(vacancyDto.getCategoryId());
+        vacancy.setAuthorId(vacancyDto.getAuthorId());
+        vacancy.setSalary(vacancyDto.getSalary());
+        vacancy.setExpFrom(vacancyDto.getExpFrom());
+        vacancy.setExpTo(vacancyDto.getExpTo());
+        vacancy.setIsActive(vacancyDto.getIsActive());
         vacancy.setCreatedDate(LocalDateTime.now());
         vacancy.setUpdateTime(LocalDateTime.now());
-        dao.createVacancy(vacancy);
-        return VacancyDto.builder()
-                .id(vacancy.getId())
-                .name(vacancy.getName())
-                .description(vacancy.getDescription())
-                .categoryId(vacancy.getCategoryId())
-                .authorId(vacancy.getAuthorId())
-                .salary(vacancy.getSalary())
-                .expFrom(vacancy.getExpFrom())
-                .expTo(vacancy.getExpTo())
-                .isActive(vacancy.getIsActive())
-                .createdDate(vacancy.getCreatedDate())
-                .updateTime(vacancy.getUpdateTime())
-                .build();
+
+        Long vacancyId = dao.createVacancy(vacancy);
+
+        return new VacancyDto(
+                vacancyId,
+                vacancy.getName(),
+                vacancy.getDescription(),
+                vacancy.getCategoryId(),
+                vacancy.getAuthorId(),
+                vacancy.getSalary(),
+                vacancy.getExpFrom(),
+                vacancy.getExpTo(),
+                vacancy.getIsActive(),
+                vacancy.getCreatedDate(),
+                vacancy.getUpdateTime()
+        );
     }
+
 
     @Override
     public void deleteVacancy(Long vacancyId) {
@@ -156,6 +166,4 @@ public class VacancyServiceImpl implements VacancyService {
                 .updateTime(resume.getUpdateTime())
                 .build();
     }
-
-
 }
