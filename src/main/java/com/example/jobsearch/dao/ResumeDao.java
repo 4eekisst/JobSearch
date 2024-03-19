@@ -60,6 +60,12 @@ public class ResumeDao {
         );
     }
 
+    public List<Resume> getResumesByName(String name) {
+        String sql = "SELECT * FROM RESUMES WHERE name LIKE ?";
+        return template.query(sql, new BeanPropertyRowMapper<>(Resume.class), "%" + name + "%");
+    }
+
+
     public void createResume(ResumeDto resume) {
         String sql = """
                 insert into RESUMES(name, category_id, applicant_id, salary, is_active, created_date, update_date)\s

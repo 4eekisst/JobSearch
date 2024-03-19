@@ -31,6 +31,15 @@ public class ResumeController {
                 :ResponseEntity.ok(dto);
     }
 
+    @GetMapping("/name/{name}")
+    public ResponseEntity<?> getResumesByName(@PathVariable(name = "name") String name) {
+        List<ResumeDto> resumes = service.getResumesByName(name);
+        if (resumes.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Resumes with name: " + name + " not found");
+        }
+        return ResponseEntity.ok(resumes);
+    }
+
     @GetMapping("/category/{category}")
     public ResponseEntity<?> getResumesByCategory(@PathVariable(name = "category") String category) {
         try {
@@ -56,7 +65,7 @@ public class ResumeController {
         }
     }
 
-    @PostMapping()
+    @PostMapping("/create")
     public HttpStatus createResume(@RequestBody ResumeDto resume) {
         service.createResume(resume);
         return HttpStatus.OK;
@@ -68,7 +77,7 @@ public class ResumeController {
         return HttpStatus.OK;
     }
 
-    @PostMapping("/edit")
+    @PutMapping("/edit")
     public HttpStatus editResume(@RequestBody ResumeDto resume) {
         service.editResume(resume);
         return HttpStatus.OK;

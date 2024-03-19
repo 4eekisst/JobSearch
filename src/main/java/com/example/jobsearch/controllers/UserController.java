@@ -13,7 +13,7 @@ import java.util.List;
 @RestController
 @RequestMapping("users")
 @RequiredArgsConstructor
-public class UserController {
+public class  UserController {
     private final UserService service;
 
     @GetMapping()
@@ -44,9 +44,25 @@ public class UserController {
     }
 
 
-    @PostMapping()
+    @PostMapping("/create")
     public HttpStatus createUser(User user) {
         service.createUser(user);
         return HttpStatus.OK;
+    }
+
+    @GetMapping("/applicants")
+    public ResponseEntity<List<UserDto>> getApplicantsByAccountType(@RequestParam(name = "accountType") String accountType) {
+        return ResponseEntity.ok(service.getApplicantsByAccountType(accountType.strip()));
+    }
+
+
+    @GetMapping("/employers")
+    public ResponseEntity<?> getEmployers() {
+        try {
+            List<UserDto> employers = service.getEmployersByAccountType("employer");
+            return ResponseEntity.ok(employers);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to get employers: " + e.getMessage());
+        }
     }
 }

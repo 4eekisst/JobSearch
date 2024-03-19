@@ -1,18 +1,22 @@
 package com.example.jobsearch.services.impl;
 
 import com.example.jobsearch.dao.VacancyDao;
+import com.example.jobsearch.dto.ResumeDto;
 import com.example.jobsearch.dto.UserDto;
 import com.example.jobsearch.dto.VacancyDto;
 import com.example.jobsearch.models.Category;
 import com.example.jobsearch.exceptions.VacancyNotFoundException;
+import com.example.jobsearch.models.Resume;
 import com.example.jobsearch.models.Vacancy;
 import com.example.jobsearch.services.CategoryService;
 import com.example.jobsearch.services.UserService;
 import com.example.jobsearch.services.VacancyService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -46,6 +50,34 @@ public class VacancyServiceImpl implements VacancyService {
     }
 
     @Override
+    public VacancyDto createVacancy(VacancyDto vacancyDto) {
+        Vacancy vacancy = new Vacancy();
+        BeanUtils.copyProperties(vacancyDto, vacancy);
+        vacancy.setCreatedDate(LocalDateTime.now());
+        vacancy.setUpdateTime(LocalDateTime.now());
+        dao.createVacancy(vacancy);
+        return VacancyDto.builder()
+                .id(vacancy.getId())
+                .name(vacancy.getName())
+                .description(vacancy.getDescription())
+                .categoryId(vacancy.getCategoryId())
+                .authorId(vacancy.getAuthorId())
+                .salary(vacancy.getSalary())
+                .expFrom(vacancy.getExpFrom())
+                .expTo(vacancy.getExpTo())
+                .isActive(vacancy.getIsActive())
+                .createdDate(vacancy.getCreatedDate())
+                .updateTime(vacancy.getUpdateTime())
+                .build();
+    }
+
+    @Override
+    public void deleteVacancy(Long vacancyId) {
+        dao.deleteVacancyById(vacancyId);
+    }
+
+
+    @Override
     public VacancyDto getVacancyById(Long vacancyId) {
         try {
             Vacancy e = dao.getVacancyById(vacancyId).orElseThrow(VacancyNotFoundException::new);
@@ -69,6 +101,7 @@ public class VacancyServiceImpl implements VacancyService {
     }
 
 
+
     private List<VacancyDto> getVacancyDtos(List<Vacancy> vacancies) {
         List<VacancyDto> dtos = new ArrayList<>();
         vacancies.forEach(e -> dtos.add(VacancyDto.builder()
@@ -86,4 +119,43 @@ public class VacancyServiceImpl implements VacancyService {
                 .build()));
         return dtos;
     }
+
+
+    @Override
+    public VacancyDto updateVacancy(Long vacancyId, VacancyDto updatedVacancy) throws VacancyNotFoundException {
+        Vacancy existingVacancy = dao.getVacancyById(vacancyId)
+                .orElseThrow(() -> new VacancyNotFoundException("Вакансия с id: " + vacancyId + " не найдена"));
+
+        BeanUtils.copyProperties(updatedVacancy, existingVacancy, "id", "createdDate", "updateTime");
+        existingVacancy.setUpdateTime(LocalDateTime.now());
+        dao.updateVacancy(existingVacancy);
+        return VacancyDto.builder()
+                .id(existingVacancy.getId())
+                .createdDate(existingVacancy.getCreatedDate())
+                .updateTime(existingVacancy.getUpdateTime())
+                .build();
+    }
+
+    @Override
+    public List<ResumeDto> getRespondedApplicants(Long vacancyId) {
+        List<Resume> respondedResumes = dao.getRespondedApplicantsForVacancy(vacancyId);
+        List<ResumeDto> respondedApplicantsDto = new ArrayList<>();
+        respondedResumes.forEach(resume -> respondedApplicantsDto.add(mapResumeToDto(resume)));
+        return respondedApplicantsDto;
+    }
+
+    private ResumeDto mapResumeToDto(Resume resume) {
+        return ResumeDto.builder()
+                .id(resume.getId())
+                .name(resume.getName())
+                .categoryId(resume.getCategoryId())
+                .userId(resume.getApplicantId())
+                .salary(resume.getSalary())
+                .isActive(resume.getIsActive())
+                .createdDate(resume.getCreatedDate())
+                .updateTime(resume.getUpdateTime())
+                .build();
+    }
+
+
 }

@@ -10,6 +10,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 @Service
@@ -97,6 +98,35 @@ public class UserServiceImpl implements UserService {
 
 
     private UserDto getUserDto(User user) {
+        return UserDto.builder()
+                .id(user.getId())
+                .name(user.getName())
+                .surname(user.getSurname())
+                .age(user.getAge())
+                .email(user.getEmail())
+                .phoneNumber(user.getPhoneNumber())
+                .avatar(user.getAvatar())
+                .accType(user.getAccType())
+                .build();
+    }
+
+    @Override
+    public List<UserDto> getApplicantsByAccountType(String accountType) {
+        List<User> applicants = userDao.getUsersByAccountType(accountType);
+        List<UserDto> applicantDtos = new ArrayList<>();
+        applicants.forEach(applicant -> applicantDtos.add(mapUserToDto(applicant)));
+        return applicantDtos;
+    }
+
+    @Override
+    public List<UserDto> getEmployersByAccountType(String accountType) {
+        List<User> employers = userDao.getEmployersByAccountType(accountType);
+        List<UserDto> employerDtos = new ArrayList<>();
+        employers.forEach(employer -> employerDtos.add(mapUserToDto(employer)));
+        return employerDtos;
+    }
+
+    private UserDto mapUserToDto(User user) {
         return UserDto.builder()
                 .id(user.getId())
                 .name(user.getName())

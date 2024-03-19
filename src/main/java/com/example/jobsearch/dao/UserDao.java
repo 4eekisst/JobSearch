@@ -52,7 +52,6 @@ public class UserDao {
                 .addValue("avatar", user.getAvatar())
                 .addValue("accType", user.getAccType())
         );
-
     }
 
     public List<User> getUserByName(String name) {
@@ -114,6 +113,16 @@ public class UserDao {
                 .addValue("accType", user.getAccType())
                 .addValue("id",user.getId())
         );
-
     }
+
+    public List<User> getUsersByAccountType(String accountType) {
+        String sql = "SELECT * FROM users WHERE acc_type = ?";
+        return template.query(sql, new BeanPropertyRowMapper<>(User.class), accountType);
+    }
+
+    public List<User> getEmployersByAccountType(String accountType) {
+        String sql = "SELECT * FROM users WHERE accType = ?";
+        return template.query(sql, new BeanPropertyRowMapper<>(User.class), accountType);
+    }
+
 }
