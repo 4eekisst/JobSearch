@@ -120,4 +120,9 @@ public class UserDao {
         return template.query(sql, new BeanPropertyRowMapper<>(User.class), accountType);
     }
 
+    public List<User> getEmployersByAccountType(String accountType) {
+        String sql = "SELECT * FROM users WHERE accType = ?";
+        return template.query(sql, new BeanPropertyRowMapper<>(User.class), accountType);
+    }
+
 }

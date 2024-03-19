@@ -16,4 +16,6 @@ public interface UserService {
     Boolean checkIfUserExists(String email);
     void editUser(User user);
     List<UserDto> getApplicantsByAccountType(String accountType);
+    List<UserDto> getEmployersByAccountType(String accountType);
+
 }
