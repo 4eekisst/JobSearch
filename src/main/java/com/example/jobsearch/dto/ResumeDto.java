@@ -4,6 +4,8 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import java.util.List;
+
 
 import java.time.LocalDateTime;
 
@@ -20,4 +22,7 @@ public class ResumeDto {
     private Boolean isActive;
     private LocalDateTime createdDate;
     private LocalDateTime updateTime;
+    private List<EducationDto> educations; // Добавлен геттер для educations
+    private List<WorkExperienceDto> workExperiences; // Добавлен геттер для workExperiences
+    private List<ContactDto> contacts; // Добавлен геттер для contacts
 }

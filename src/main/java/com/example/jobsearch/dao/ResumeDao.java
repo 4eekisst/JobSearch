@@ -23,35 +23,35 @@ public class ResumeDao {
 
     public List<Resume> getAllResumesByCategoryId(Long id) {
         String sql = """
-                select * from RESUMES
-                where CATEGORY_ID = ?
+                SELECT * FROM RESUMES
+                WHERE CATEGORY_ID = ?
                 """;
         return template.query(sql, new BeanPropertyRowMapper<>(Resume.class), id);
     }
 
     public List<Resume> getAllResumes() {
         String sql = """
-                select * from RESUMES
+                SELECT * FROM RESUMES
                 """;
         return template.query(sql, new BeanPropertyRowMapper<>(Resume.class));
     }
 
     public List<Resume> getAllResumesByUserId(Long id) throws ResumeNotFoundException {
         String sql = """
-                select * from RESUMES
-                where APPLICANT_ID = ?
+                SELECT * FROM RESUMES
+                WHERE APPLICANT_ID = ?
                 """;
         List<Resume> resumes = template.query(sql, new BeanPropertyRowMapper<>(Resume.class), id);
         if (resumes.isEmpty()) {
-            throw new ResumeNotFoundException("resumes by this user not found!");
+            throw new ResumeNotFoundException("Resumes by this user not found!");
         }
         return resumes;
     }
 
     public Optional<Resume> getResumeById(Long id) {
         String sql = """
-                select * from RESUMES
-                where id = ?
+                SELECT * FROM RESUMES
+                WHERE ID = ?
                 """;
         return Optional.ofNullable(
                 DataAccessUtils.singleResult(
@@ -61,15 +61,19 @@ public class ResumeDao {
     }
 
     public List<Resume> getResumesByName(String name) {
-        String sql = "SELECT * FROM RESUMES WHERE name LIKE ?";
+        String sql = "SELECT * FROM RESUMES WHERE NAME LIKE ?";
         return template.query(sql, new BeanPropertyRowMapper<>(Resume.class), "%" + name + "%");
     }
 
+    public Long getResumeIdByName(String name) {
+        String sql = "SELECT ID FROM RESUMES WHERE NAME = ?";
+        return template.queryForObject(sql, Long.class, name);
+    }
 
     public void createResume(ResumeDto resume) {
         String sql = """
-                insert into RESUMES(name, category_id, applicant_id, salary, is_active, created_date, update_date)\s
-                values (:name, :categoryId, :applicantId, :salary, :isActive, :createdDate, :updateTime);
+                INSERT INTO RESUMES(NAME, CATEGORY_ID, APPLICANT_ID, SALARY, IS_ACTIVE, CREATED_DATE, UPDATE_DATE)
+                VALUES (:name, :categoryId, :applicantId, :salary, :isActive, :createdDate, :updateTime)
                 """;
         namedParameter.update(sql, new MapSqlParameterSource()
                 .addValue("name", resume.getName())
@@ -84,16 +88,16 @@ public class ResumeDao {
 
     public void deleteResumeById(Long id) {
         String sql = """
-                DELETE FROM RESUMES WHERE id = :id;
+                DELETE FROM RESUMES WHERE ID = :id
                 """;
         namedParameter.update(sql,new MapSqlParameterSource().addValue("id",id));
     }
 
-    public void editResume( ResumeDto resume) {
+    public void editResume(ResumeDto resume) {
         String sql = """
-            UPDATE Resumes
-            SET name = :name, category_id = :categoryId, salary = :salary, is_active = :isActive, update_date = :updateTime
-            WHERE id = :id;
+            UPDATE RESUMES
+            SET NAME = :name, CATEGORY_ID = :categoryId, SALARY = :salary, IS_ACTIVE = :isActive, UPDATE_DATE = :updateTime
+            WHERE ID = :id
             """;
         namedParameter.update(sql, new MapSqlParameterSource()
                 .addValue("name",resume.getName())
