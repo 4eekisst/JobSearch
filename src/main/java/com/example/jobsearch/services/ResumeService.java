@@ -29,4 +29,5 @@ public interface ResumeService {
     void activateResume(Long id);
 
     void deactivateResume(Long id);
+    void deleteResumeAndRelatedEntitiesById(Long id);
 }

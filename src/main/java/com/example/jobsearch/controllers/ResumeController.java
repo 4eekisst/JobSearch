@@ -107,4 +107,9 @@ public class ResumeController {
         return HttpStatus.OK;
     }
 
+    @PostMapping("/deleteCascade/{id}")
+    public HttpStatus deleteResumeAndRelatedEntitiesById(@PathVariable(name = "id") Long id){
+        service.deleteResumeAndRelatedEntitiesById(id);
+        return HttpStatus.OK;
+    }
 }

@@ -129,4 +129,26 @@ public class ResumeDao {
         return template.query(sql, new BeanPropertyRowMapper<>(Resume.class));
     }
 
+    public void deleteResumeAndRelatedEntitiesById(Long id) {
+        deleteContactsByResumeId(id);
+        deleteWorkExperiencesByResumeId(id);
+        deleteEducationsByResumeId(id);
+        deleteResumeById(id);
+    }
+
+    private void deleteContactsByResumeId(Long resumeId) {
+        String sql = "DELETE FROM contacts WHERE resume_id = ?";
+        template.update(sql, resumeId);
+    }
+
+    private void deleteWorkExperiencesByResumeId(Long resumeId) {
+        String sql = "DELETE FROM work_experience WHERE resume_id = ?";
+        template.update(sql, resumeId);
+    }
+
+    private void deleteEducationsByResumeId(Long resumeId) {
+        String sql = "DELETE FROM education WHERE resume_id = ?";
+        template.update(sql, resumeId);
+    }
+
 }

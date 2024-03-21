@@ -87,8 +87,6 @@ public class ResumeServiceImpl implements ResumeService {
         return getResumeDtos(resumes);
     }
 
-
-
     @Override
     public void createResume(ResumeDto resumeDto) {
         dao.createResume(resumeDto);
@@ -149,6 +147,12 @@ public class ResumeServiceImpl implements ResumeService {
     public void deactivateResume(Long id) {
         dao.deactivateResume(id);
     }
+
+    @Override
+    public void deleteResumeAndRelatedEntitiesById(Long id) {
+        dao.deleteResumeAndRelatedEntitiesById(id);
+    }
+
 
     private List<ResumeDto> getResumeDtos(List<Resume> resumes) {
         List<ResumeDto> dtos = new ArrayList<>();

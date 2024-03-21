@@ -60,8 +60,7 @@ public class VacancyServiceImpl implements VacancyService {
         vacancy.setExpFrom(vacancyDto.getExpFrom());
         vacancy.setExpTo(vacancyDto.getExpTo());
         vacancy.setIsActive(vacancyDto.getIsActive());
-        vacancy.setCreatedDate(LocalDateTime.now());
-        vacancy.setUpdateTime(LocalDateTime.now());
+        vacancy.setCreatedDate(LocalDateTime.now());vacancy.setUpdateTime(LocalDateTime.now());
 
         Long vacancyId = dao.createVacancy(vacancy);
 

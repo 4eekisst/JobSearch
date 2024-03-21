@@ -75,4 +75,13 @@ public class VacancyController {
         }
         return ResponseEntity.ok(respondedApplicants);
     }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<?> getVacancyById(@PathVariable(name = "id") Long id) {
+        VacancyDto dto = service.getVacancyById(id);
+        return dto == null ?
+                ResponseEntity.status(HttpStatus.NOT_FOUND).body("Vacancy by Id: " + id + " not found")
+                : ResponseEntity.ok(dto);
+    }
 }
+
