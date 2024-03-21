@@ -74,7 +74,9 @@ public class VacancyDao {
             ps.setInt(7, vacancy.getExpTo());
             ps.setBoolean(8, vacancy.getIsActive());
             ps.setObject(9, vacancy.getCreatedDate());
-            ps.setObject(10, vacancy.getUpdateTime());
+            ps.setObject(9, LocalDateTime.now());
+            
+
             return ps;
         }, keyHolder);
         return Objects.requireNonNull(keyHolder.getKey()).longValue();
@@ -99,5 +101,7 @@ public class VacancyDao {
             """;
         return template.query(sql, new BeanPropertyRowMapper<>(Resume.class), vacancyId);
     }
+
+
 
 }

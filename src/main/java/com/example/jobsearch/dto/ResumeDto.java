@@ -22,7 +22,7 @@ public class ResumeDto {
     private Boolean isActive;
     private LocalDateTime createdDate;
     private LocalDateTime updateTime;
-    private List<EducationDto> educations; // Добавлен геттер для educations
-    private List<WorkExperienceDto> workExperiences; // Добавлен геттер для workExperiences
-    private List<ContactDto> contacts; // Добавлен геттер для contacts
+    private List<EducationDto> educations;
+    private List<WorkExperienceDto> workExperiences;
+    private List<ContactDto> contacts;
 }

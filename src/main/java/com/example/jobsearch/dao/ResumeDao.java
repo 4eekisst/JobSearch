@@ -104,7 +104,7 @@ public class ResumeDao {
                 .addValue("categoryId", resume.getCategoryId())
                 .addValue("salary", resume.getSalary())
                 .addValue("isActive", resume.getIsActive())
-                .addValue("updateTime", LocalDateTime.now())
+                .addValue("updateTime", resume.getUpdateTime())
                 .addValue("id",resume.getId())
         );
     }
