@@ -23,18 +23,12 @@ import java.util.List;
 @RequiredArgsConstructor
 
 public class ResumeServiceImpl implements ResumeService {
-
-
     private final CategoryService category;
     private final ResumeDao dao;
     private final UserService userService;
     private final EducationService educationService;
     private final WorkExperienceService workExperienceService;
     private final ContactService contactService;
-
-
-
-
     @Override
     public List<ResumeDto> getResumeByCategory(String categoryName) throws CategoryNotFoundException {
         Category categoryId = category.getCategoryIdByName(categoryName);
@@ -79,7 +73,7 @@ public class ResumeServiceImpl implements ResumeService {
                 .salary(r.getSalary())
                 .isActive(r.getIsActive())
                 .createdDate(r.getCreatedDate())
-                .updateTime(r.getUpdateTime())
+                .updateTime(r.getUpdateDate())
                 .build();
         }catch (ResumeNotFoundException e){
             log.error("Resume by id: {} not found",id);
@@ -123,9 +117,6 @@ public class ResumeServiceImpl implements ResumeService {
         }
     }
 
-
-
-
     @Override
     public void deleteResumeById(Long id) {
         dao.deleteResumeById(id);
@@ -135,6 +126,31 @@ public class ResumeServiceImpl implements ResumeService {
     public void editResume( ResumeDto resume) {
         dao.editResume(resume);
     }
+
+
+    @Override
+    public List<ResumeDto> getActiveResumes() {
+        List<Resume> resumes = dao.getActiveResumes();
+        return getResumeDtos(resumes);
+    }
+
+    @Override
+    public List<ResumeDto> getInactiveResumes() {
+        List<Resume> resumes = dao.getInactiveResumes();
+        return getResumeDtos(resumes);
+    }
+
+    @Override
+    public void activateResume(Long id) {
+        dao.activateResume(id);
+    }
+
+    @Override
+    public void deactivateResume(Long id) {
+        dao.deactivateResume(id);
+    }
+
+
 
     private List<ResumeDto> getResumeDtos(List<Resume> resumes) {
         List<ResumeDto> dtos = new ArrayList<>();
@@ -146,7 +162,7 @@ public class ResumeServiceImpl implements ResumeService {
                 .salary(r.getSalary())
                 .isActive(r.getIsActive())
                 .createdDate(r.getCreatedDate())
-                .updateTime(r.getUpdateTime())
+                .updateTime(r.getUpdateDate())
                 .build()));
         return dtos;
     }

@@ -75,7 +75,7 @@ public class VacancyDao {
             ps.setBoolean(8, vacancy.getIsActive());
             ps.setObject(9, vacancy.getCreatedDate());
             ps.setObject(9, LocalDateTime.now());
-            
+
 
             return ps;
         }, keyHolder);

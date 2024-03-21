@@ -108,4 +108,25 @@ public class ResumeDao {
                 .addValue("id",resume.getId())
         );
     }
+
+    public void activateResume(Long id) {
+        String sql = "UPDATE RESUMES SET IS_ACTIVE = TRUE WHERE ID = ?";
+        template.update(sql, id);
+    }
+
+    public void deactivateResume(Long id) {
+        String sql = "UPDATE RESUMES SET IS_ACTIVE = FALSE WHERE ID = ?";
+        template.update(sql, id);
+    }
+
+    public List<Resume> getActiveResumes() {
+        String sql = "SELECT * FROM RESUMES WHERE IS_ACTIVE = TRUE";
+        return template.query(sql, new BeanPropertyRowMapper<>(Resume.class));
+    }
+
+    public List<Resume> getInactiveResumes() {
+        String sql = "SELECT * FROM RESUMES WHERE IS_ACTIVE = FALSE";
+        return template.query(sql, new BeanPropertyRowMapper<>(Resume.class));
+    }
+
 }

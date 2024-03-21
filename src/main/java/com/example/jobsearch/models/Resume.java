@@ -14,10 +14,10 @@ import java.time.LocalDateTime;
 public class Resume {
     private Long id;
     private String name;
-    private Long applicantId;
     private Long categoryId;
+    private Long applicantId;
     private Double salary;
     private Boolean isActive;
     private LocalDateTime createdDate;
-    private LocalDateTime updateTime;
+    private LocalDateTime updateDate;
 }

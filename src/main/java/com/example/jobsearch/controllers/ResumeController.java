@@ -82,4 +82,29 @@ public class ResumeController {
         service.editResume(resume);
         return HttpStatus.OK;
     }
+
+    @GetMapping("/active")
+    public ResponseEntity<List<ResumeDto>> getActiveResumes() {
+        var resumes = service.getActiveResumes();
+        return ResponseEntity.ok(resumes);
+    }
+
+    @GetMapping("/inactive")
+    public ResponseEntity<List<ResumeDto>> getInactiveResumes() {
+        var resumes = service.getInactiveResumes();
+        return ResponseEntity.ok(resumes);
+    }
+
+    @PostMapping("/activate/{id}")
+    public HttpStatus activateResume(@PathVariable(name = "id") Long id) {
+        service.activateResume(id);
+        return HttpStatus.OK;
+    }
+
+    @PostMapping("/deactivate/{id}")
+    public HttpStatus deactivateResume(@PathVariable(name = "id") Long id) {
+        service.deactivateResume(id);
+        return HttpStatus.OK;
+    }
+
 }
