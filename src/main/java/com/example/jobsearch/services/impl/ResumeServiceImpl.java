@@ -150,8 +150,6 @@ public class ResumeServiceImpl implements ResumeService {
         dao.deactivateResume(id);
     }
 
-
-
     private List<ResumeDto> getResumeDtos(List<Resume> resumes) {
         List<ResumeDto> dtos = new ArrayList<>();
         resumes.forEach(r -> dtos.add(ResumeDto.builder()

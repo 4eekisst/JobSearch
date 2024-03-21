@@ -163,7 +163,7 @@ public class VacancyServiceImpl implements VacancyService {
                 .salary(resume.getSalary())
                 .isActive(resume.getIsActive())
                 .createdDate(resume.getCreatedDate())
-                .updateTime(resume.getUpdateTime())
+                .updateTime(resume.getUpdateDate())
                 .build();
     }
 }
