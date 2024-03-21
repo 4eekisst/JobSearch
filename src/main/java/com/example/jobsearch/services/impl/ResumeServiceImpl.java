@@ -29,6 +29,7 @@ public class ResumeServiceImpl implements ResumeService {
     private final EducationService educationService;
     private final WorkExperienceService workExperienceService;
     private final ContactService contactService;
+
     @Override
     public List<ResumeDto> getResumeByCategory(String categoryName) throws CategoryNotFoundException {
         Category categoryId = category.getCategoryIdByName(categoryName);
