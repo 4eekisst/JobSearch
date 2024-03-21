@@ -7,6 +7,8 @@ import com.example.jobsearch.services.WorkExperienceService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class WorkExperienceServiceImpl implements WorkExperienceService {
@@ -30,5 +32,10 @@ public class WorkExperienceServiceImpl implements WorkExperienceService {
     @Override
     public WorkExperienceDto getWorkExperienceById(Long id) throws WorkExperienceNotFoundException {
         return workExperienceDao.getWorkExperienceById(id);
+    }
+
+    @Override
+    public List<WorkExperienceDto> getAllWorkExperiencesByResumeId(Long resumeId) {
+        return workExperienceDao.getAllWorkExperiencesByResumeId(resumeId);
     }
 }

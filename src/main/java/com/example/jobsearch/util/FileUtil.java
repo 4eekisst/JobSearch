@@ -16,8 +16,6 @@ import java.util.UUID;
 @Slf4j
 
 public class FileUtil {
-
-
     private static final String UPLOAD_DIR = "data/";
 
     @SneakyThrows

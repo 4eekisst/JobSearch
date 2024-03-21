@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 public class UserImageController {
     private final UserImageService userImageService;
-    
+
     @PostMapping
     public ResponseEntity<Void> upload(UserImageDto userImageDto) {
         userImageService.upload(userImageDto);

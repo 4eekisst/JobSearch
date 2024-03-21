@@ -7,6 +7,8 @@ import com.example.jobsearch.services.EducationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class EducationServiceImpl implements EducationService {
@@ -30,5 +32,10 @@ public class EducationServiceImpl implements EducationService {
     @Override
     public EducationDto getEducationById(Long id) throws EducationNotFoundException {
         return educationDao.getEducationById(id);
+    }
+
+    @Override
+    public List<EducationDto> getAllEducationsByResumeId(Long resumeId) throws EducationNotFoundException {
+        return educationDao.getAllEducationsByResumeId(resumeId);
     }
 }

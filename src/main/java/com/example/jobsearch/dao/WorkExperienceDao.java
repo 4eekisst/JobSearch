@@ -17,7 +17,7 @@ public class WorkExperienceDao {
     private final JdbcTemplate template;
 
     public void createWorkExperience(WorkExperienceDto workExperience) {
-        String sql = "INSERT INTO work_experience (resume_id, years, company_name, position, responsibilities) " +
+        String sql = "INSERT INTO WORK_EXPERIENCE_INFO (resume_id, years, company_name, position, responsibilities) " +
                 "VALUES (:resumeId, :years, :companyName, :position, :responsibilities)";
         template.update(sql, new MapSqlParameterSource()
                 .addValue("resumeId", workExperience.getResumeId())
@@ -29,7 +29,7 @@ public class WorkExperienceDao {
     }
 
     public void deleteWorkExperienceById(Long id) throws WorkExperienceNotFoundException {
-        String sql = "DELETE FROM work_experience WHERE id = ?";
+        String sql = "DELETE FROM WORK_EXPERIENCE_INFO WHERE id = ?";
         int affectedRows = template.update(sql, id);
         if (affectedRows == 0) {
             throw new WorkExperienceNotFoundException("Work experience with id " + id + " not found");
@@ -37,7 +37,7 @@ public class WorkExperienceDao {
     }
 
     public void editWorkExperience(WorkExperienceDto workExperience) throws WorkExperienceNotFoundException {
-        String sql = "UPDATE work_experience SET resume_id = :resumeId, years = :years, company_name = :companyName, " +
+        String sql = "UPDATE WORK_EXPERIENCE_INFO SET resume_id = :resumeId, years = :years, company_name = :companyName, " +
                 "position = :position, responsibilities = :responsibilities WHERE id = :id";
         int affectedRows = template.update(sql, new MapSqlParameterSource()
                 .addValue("resumeId", workExperience.getResumeId())
@@ -53,7 +53,7 @@ public class WorkExperienceDao {
     }
 
     public WorkExperienceDto getWorkExperienceById(Long id) throws WorkExperienceNotFoundException {
-        String sql = "SELECT * FROM work_experience WHERE id = ?";
+        String sql = "SELECT * FROM WORK_EXPERIENCE_INFO WHERE id = ?";
         try {
             return template.queryForObject(sql, new BeanPropertyRowMapper<>(WorkExperienceDto.class), id);
         } catch (EmptyResultDataAccessException e) {
@@ -62,7 +62,7 @@ public class WorkExperienceDao {
     }
 
     public List<WorkExperienceDto> getAllWorkExperiencesByResumeId(Long resumeId) {
-        String sql = "SELECT * FROM work_experience WHERE resume_id = ?";
+        String sql = "SELECT * FROM WORK_EXPERIENCE_INFO WHERE resume_id = ?";
         return template.query(sql, new BeanPropertyRowMapper<>(WorkExperienceDto.class), resumeId);
     }
 }

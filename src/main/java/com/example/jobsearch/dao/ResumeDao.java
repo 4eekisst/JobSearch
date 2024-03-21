@@ -137,17 +137,17 @@ public class ResumeDao {
     }
 
     private void deleteContactsByResumeId(Long resumeId) {
-        String sql = "DELETE FROM contacts WHERE resume_id = ?";
+        String sql = "DELETE FROM CONTACTS_INFO WHERE resume_id = ?";
         template.update(sql, resumeId);
     }
 
     private void deleteWorkExperiencesByResumeId(Long resumeId) {
-        String sql = "DELETE FROM work_experience WHERE resume_id = ?";
+        String sql = "DELETE FROM WORK_EXPERIENCE_INFO WHERE resume_id = ?";
         template.update(sql, resumeId);
     }
 
     private void deleteEducationsByResumeId(Long resumeId) {
-        String sql = "DELETE FROM education WHERE resume_id = ?";
+        String sql = "DELETE FROM EDUCATION_INFO WHERE resume_id = ?";
         template.update(sql, resumeId);
     }
 

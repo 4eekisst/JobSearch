@@ -17,7 +17,7 @@ public class EducationDao {
     private final JdbcTemplate template;
 
     public void createEducation(EducationDto education) {
-        String sql = "INSERT INTO education (resume_id, institution, program, start_date, end_date, degree) " +
+        String sql = "INSERT INTO EDUCATION_INFO (resume_id, institution, program, start_date, end_date, degree) " +
                 "VALUES (:resumeId, :institution, :program, :startDate, :endDate, :degree)";
         template.update(sql, new MapSqlParameterSource()
                 .addValue("resumeId", education.getResumeId())
@@ -30,7 +30,7 @@ public class EducationDao {
     }
 
     public void deleteEducationById(Long id) throws EducationNotFoundException {
-        String sql = "DELETE FROM education WHERE id = ?";
+        String sql = "DELETE FROM EDUCATION_INFO WHERE id = ?";
         int affectedRows = template.update(sql, id);
         if (affectedRows == 0) {
             throw new EducationNotFoundException("Education with id " + id + " not found");
@@ -38,7 +38,7 @@ public class EducationDao {
     }
 
     public void editEducation(EducationDto education) throws EducationNotFoundException {
-        String sql = "UPDATE education SET resume_id = :resumeId, institution = :institution, program = :program, " +
+        String sql = "UPDATE EDUCATION_INFO SET resume_id = :resumeId, institution = :institution, program = :program, " +
                 "start_date = :startDate, end_date = :endDate, degree = :degree WHERE id = :id";
         int affectedRows = template.update(sql, new MapSqlParameterSource()
                 .addValue("resumeId", education.getResumeId())
@@ -55,7 +55,7 @@ public class EducationDao {
     }
 
     public EducationDto getEducationById(Long id) throws EducationNotFoundException {
-        String sql = "SELECT * FROM education WHERE id = ?";
+        String sql = "SELECT * FROM EDUCATION_INFO WHERE id = ?";
         try {
             return template.queryForObject(sql, new BeanPropertyRowMapper<>(EducationDto.class), id);
         } catch (EmptyResultDataAccessException e) {
@@ -64,7 +64,7 @@ public class EducationDao {
     }
 
     public List<EducationDto> getAllEducationsByResumeId(Long resumeId) {
-        String sql = "SELECT * FROM education WHERE resume_id = ?";
+        String sql = "SELECT * FROM EDUCATION_INFO WHERE resume_id = ?";
         return template.query(sql, new BeanPropertyRowMapper<>(EducationDto.class), resumeId);
     }
 }

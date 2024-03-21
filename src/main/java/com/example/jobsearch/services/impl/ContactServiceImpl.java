@@ -7,6 +7,8 @@ import com.example.jobsearch.services.ContactService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class ContactServiceImpl implements ContactService {
@@ -30,5 +32,10 @@ public class ContactServiceImpl implements ContactService {
     @Override
     public ContactDto getContactById(Long id) throws ContactNotFoundException {
         return contactDao.getContactById(id);
+    }
+
+    @Override
+    public List<ContactDto> getAllContactsByResumeId(Long resumeId) throws ContactNotFoundException {
+        return contactDao.getAllContactsByResumeId(resumeId);
     }
 }

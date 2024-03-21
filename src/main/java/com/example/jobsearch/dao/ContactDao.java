@@ -17,7 +17,7 @@ public class ContactDao {
     private final JdbcTemplate template;
 
     public void createContact(ContactDto contact) {
-        String sql = "INSERT INTO contacts (type_id, resume_id, info_value) VALUES (:typeId, :resumeId, :infoValue)";
+        String sql = "INSERT INTO CONTACTS_INFO (type_id, resume_id, info_value) VALUES (:typeId, :resumeId, :infoValue)";
         template.update(sql, new MapSqlParameterSource()
                 .addValue("typeId", contact.getTypeId())
                 .addValue("resumeId", contact.getResumeId())
@@ -26,7 +26,7 @@ public class ContactDao {
     }
 
     public void deleteContactById(Long id) throws ContactNotFoundException {
-        String sql = "DELETE FROM contacts WHERE id = ?";
+        String sql = "DELETE FROM CONTACTS_INFO WHERE id = ?";
         int affectedRows = template.update(sql, id);
         if (affectedRows == 0) {
             throw new ContactNotFoundException("Contact with id " + id + " not found");
@@ -34,7 +34,7 @@ public class ContactDao {
     }
 
     public void editContact(ContactDto contact) throws ContactNotFoundException {
-        String sql = "UPDATE contacts SET type_id = :typeId, resume_id = :resumeId, info_value = :infoValue WHERE id = :id";
+        String sql = "UPDATE CONTACTS_INFO SET type_id = :typeId, resume_id = :resumeId, info_value = :infoValue WHERE id = :id";
         int affectedRows = template.update(sql, new MapSqlParameterSource()
                 .addValue("typeId", contact.getTypeId())
                 .addValue("resumeId", contact.getResumeId())
@@ -47,7 +47,7 @@ public class ContactDao {
     }
 
     public ContactDto getContactById(Long id) throws ContactNotFoundException {
-        String sql = "SELECT * FROM contacts WHERE id = ?";
+        String sql = "SELECT * FROM CONTACTS_INFO WHERE id = ?";
         try {
             return template.queryForObject(sql, new BeanPropertyRowMapper<>(ContactDto.class), id);
         } catch (EmptyResultDataAccessException e) {
@@ -56,7 +56,7 @@ public class ContactDao {
     }
 
     public List<ContactDto> getAllContactsByResumeId(Long resumeId) {
-        String sql = "SELECT * FROM contacts WHERE resume_id = ?";
+        String sql = "SELECT * FROM CONTACTS_INFO WHERE resume_id = ?";
         return template.query(sql, new BeanPropertyRowMapper<>(ContactDto.class), resumeId);
     }
 }

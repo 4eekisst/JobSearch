@@ -17,5 +17,7 @@ public interface UserService {
     void editUser(User user);
     List<UserDto> getApplicantsByAccountType(String accountType);
     List<UserDto> getEmployersByAccountType(String accountType);
+    List<UserDto> getAllUsersByVacancyId(Long id);
+
 
 }
