@@ -51,9 +51,9 @@ public class VacancyController {
 
 
     @DeleteMapping("/{vacancyId}")
-    public ResponseEntity<?> deleteVacancy(@PathVariable Long vacancyId) {
+    public ResponseEntity<HttpStatus> deleteVacancy(@PathVariable Long vacancyId) {
         service.deleteVacancy(vacancyId);
-        return ResponseEntity.ok("Vacancy deleted successfully");
+        return ResponseEntity.ok(HttpStatus.OK);
     }
 
     @PutMapping("/{vacancyId}")
@@ -84,4 +84,3 @@ public class VacancyController {
                 : ResponseEntity.ok(dto);
     }
 }
-

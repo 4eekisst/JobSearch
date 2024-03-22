@@ -11,8 +11,6 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("images")
 @RequiredArgsConstructor
-
-
 public class UserImageController {
     private final UserImageService userImageService;
 
@@ -22,5 +20,3 @@ public class UserImageController {
         return ResponseEntity.ok().build();
     }
 }
-
-
