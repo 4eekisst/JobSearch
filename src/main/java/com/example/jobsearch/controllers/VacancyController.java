@@ -25,30 +25,33 @@ public class VacancyController {
     }
 
     @GetMapping("/vacancy")
-    public ResponseEntity<?> getVacanciesOfRespondedApplicantEmail(@RequestParam(name = "email",defaultValue = "") String email){
+    public ResponseEntity<?> getVacanciesOfRespondedApplicantEmail(@RequestParam(name = "email", defaultValue = "") String email) {
         try {
             return ResponseEntity.ok(service.getVacanciesOfRespondedApplicant(email.strip()));
-        }catch (UserNotFoundException e){
+        } catch (UserNotFoundException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }
     }
 
     @GetMapping("/category")
-    public ResponseEntity<?> getVacanciesOfCategory(@RequestParam(name = "category",defaultValue = "") String category){
+    public ResponseEntity<?> getVacanciesOfCategory(@RequestParam(name = "category", defaultValue = "") String category) {
         try {
             String categoryStriped = category.strip();
             return ResponseEntity.ok(service.getVacanciesOfCategory(categoryStriped));
-        }catch (CategoryNotFoundException e){
+        } catch (CategoryNotFoundException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }
     }
 
     @PostMapping("/create")
-    public ResponseEntity<VacancyDto> createVacancy(@RequestBody VacancyDto vacancyDto) {
-        VacancyDto createdVacancyDto = service.createVacancy(vacancyDto);
-        return ResponseEntity.status(HttpStatus.CREATED).body(createdVacancyDto);
+    public ResponseEntity<String> createVacancy(@RequestBody VacancyDto vacancyDto) {
+        try {
+            VacancyDto createdVacancyDto = service.createVacancy(vacancyDto);
+            return ResponseEntity.status(HttpStatus.CREATED).body(String.valueOf(createdVacancyDto));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to create vacancy: " + e.getMessage());
+        }
     }
-
 
     @DeleteMapping("/{vacancyId}")
     public ResponseEntity<HttpStatus> deleteVacancy(@PathVariable Long vacancyId) {
@@ -58,13 +61,14 @@ public class VacancyController {
 
     @PutMapping("/{vacancyId}")
     public ResponseEntity<?> updateVacancy(@PathVariable Long vacancyId, @RequestBody VacancyDto updatedVacancy) {
-        VacancyDto updatedDto;
         try {
-            updatedDto = service.updateVacancy(vacancyId, updatedVacancy);
+            VacancyDto updatedDto = service.updateVacancy(vacancyId, updatedVacancy);
+            return ResponseEntity.ok(updatedDto);
         } catch (VacancyNotFoundException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to update vacancy: " + e.getMessage());
         }
-        return ResponseEntity.ok(updatedDto);
     }
 
     @GetMapping("/{vacancyId}/applicants")
