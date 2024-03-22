@@ -1,5 +1,6 @@
 package com.example.jobsearch.dto;
 
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -36,9 +37,12 @@ public class ResumeDto {
 
     private LocalDateTime updateTime;
 
+    @Valid
     private List<EducationDto> educations;
 
+    @Valid
     private List<WorkExperienceDto> workExperiences;
 
+    @Valid
     private List<ContactDto> contacts;
 }
