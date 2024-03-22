@@ -24,11 +24,11 @@ public class ResumeController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<?> getResumeById(@PathVariable(name = "id")Long id){
+    public ResponseEntity<?> getResumeById(@PathVariable(name = "id") Long id) {
         ResumeDto dto = service.getResumeById(id);
         return dto == null ?
-                ResponseEntity.status(HttpStatus.NOT_FOUND).body("Resume by Id: "+id+" not found")
-                :ResponseEntity.ok(dto);
+                ResponseEntity.status(HttpStatus.NOT_FOUND).body("Resume by Id: " + id + " not found")
+                : ResponseEntity.ok(dto);
     }
 
     @GetMapping("/name/{name}")
@@ -57,29 +57,59 @@ public class ResumeController {
         try {
             List<ResumeDto> resumes = service.getResumeByUserEmail(email.strip());
             if (resumes.isEmpty()) {
-                ResponseEntity.status(HttpStatus.NOT_FOUND).body("Resumes by user with email: " + email + " not found");
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Resumes by user with email: " + email + " not found");
             }
             return ResponseEntity.ok(resumes);
-        }catch (UserNotFoundException e){
-           return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User with email: "+email+" not found");
+        } catch (UserNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User with email: " + email + " not found");
         }
     }
 
     @PostMapping("/create")
-    public HttpStatus createResume(@RequestBody ResumeDto resume) {
+    public ResponseEntity<HttpStatus> createResume(@RequestBody ResumeDto resume) {
         service.createResume(resume);
-        return HttpStatus.OK;
+        return ResponseEntity.ok(HttpStatus.OK);
     }
 
     @PostMapping("/delete/{id}")
-    public HttpStatus deleteResumeById(@PathVariable(name = "id") Long id){
+    public ResponseEntity<HttpStatus> deleteResumeById(@PathVariable(name = "id") Long id) {
         service.deleteResumeById(id);
-        return HttpStatus.OK;
+        return ResponseEntity.ok(HttpStatus.OK);
     }
 
     @PutMapping("/edit")
-    public HttpStatus editResume(@RequestBody ResumeDto resume) {
+    public ResponseEntity<HttpStatus> editResume(@RequestBody ResumeDto resume) {
         service.editResume(resume);
+        return ResponseEntity.ok(HttpStatus.OK);
+    }
+
+    @GetMapping("/active")
+    public ResponseEntity<List<ResumeDto>> getActiveResumes() {
+        var resumes = service.getActiveResumes();
+        return ResponseEntity.ok(resumes);
+    }
+
+    @GetMapping("/inactive")
+    public ResponseEntity<List<ResumeDto>> getInactiveResumes() {
+        var resumes = service.getInactiveResumes();
+        return ResponseEntity.ok(resumes);
+    }
+
+    @PostMapping("/activate/{id}")
+    public ResponseEntity<HttpStatus> activateResume(@PathVariable(name = "id") Long id) {
+        service.activateResume(id);
+        return ResponseEntity.ok(HttpStatus.OK);
+    }
+
+    @PostMapping("/deactivate/{id}")
+    public ResponseEntity<HttpStatus> deactivateResume(@PathVariable(name = "id") Long id) {
+        service.deactivateResume(id);
+        return ResponseEntity.ok(HttpStatus.OK);
+    }
+
+    @PostMapping("/deleteCascade/{id}")
+    public HttpStatus deleteResumeAndRelatedEntitiesById(@PathVariable(name = "id") Long id) {
+        service.deleteResumeAndRelatedEntitiesById(id);
         return HttpStatus.OK;
     }
 }

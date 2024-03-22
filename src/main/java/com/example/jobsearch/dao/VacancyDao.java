@@ -47,7 +47,7 @@ public class VacancyDao {
                 SELECT v.*
                 FROM vacancies v
                 INNER JOIN responded_applicants ra ON v.id = ra.resume_id
-                WHERE ra.vacancy_id = ?xq
+                WHERE ra.vacancy_id = ?
                 """;
         return template.query(sql, new BeanPropertyRowMapper<>(Vacancy.class), id);
     }
@@ -61,7 +61,7 @@ public class VacancyDao {
     }
 
     public Long createVacancy(Vacancy vacancy) {
-        String sql = "INSERT INTO vacancies (name, description, category_id, author_id, salary, exp_from, exp_to, is_active, created_date, update_time) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO vacancies (name, description, category_id, author_id, salary, exp_from, exp_to, is_active, created_date, UPDATE_DATE) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         GeneratedKeyHolder keyHolder = new GeneratedKeyHolder();
         template.update(connection -> {
             PreparedStatement ps = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
@@ -74,7 +74,9 @@ public class VacancyDao {
             ps.setInt(7, vacancy.getExpTo());
             ps.setBoolean(8, vacancy.getIsActive());
             ps.setObject(9, vacancy.getCreatedDate());
-            ps.setObject(10, vacancy.getUpdateTime());
+            ps.setObject(9, LocalDateTime.now());
+
+
             return ps;
         }, keyHolder);
         return Objects.requireNonNull(keyHolder.getKey()).longValue();
@@ -86,7 +88,7 @@ public class VacancyDao {
     }
 
     public void updateVacancy(Vacancy vacancy) {
-        String sql = "UPDATE vacancies SET name=?, description=?, category_id=?, author_id=?, salary=?, exp_from=?, exp_to=?, is_active=?, update_time=? WHERE id=?";
+        String sql = "UPDATE vacancies SET name=?, description=?, category_id=?, author_id=?, salary=?, exp_from=?, exp_to=?, is_active=?, UPDATE_DATE=? WHERE id=?";
         template.update(sql, vacancy.getName(), vacancy.getDescription(), vacancy.getCategoryId(), vacancy.getAuthorId(), vacancy.getSalary(), vacancy.getExpFrom(), vacancy.getExpTo(), vacancy.getIsActive(), vacancy.getUpdateTime(), vacancy.getId());
     }
 
@@ -99,5 +101,4 @@ public class VacancyDao {
             """;
         return template.query(sql, new BeanPropertyRowMapper<>(Resume.class), vacancyId);
     }
-
 }

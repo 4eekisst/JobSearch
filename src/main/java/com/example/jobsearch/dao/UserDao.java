@@ -121,7 +121,7 @@ public class UserDao {
     }
 
     public List<User> getEmployersByAccountType(String accountType) {
-        String sql = "SELECT * FROM users WHERE accType = ?";
+        String sql = "SELECT * FROM users WHERE ACC_TYPE = ?";
         return template.query(sql, new BeanPropertyRowMapper<>(User.class), accountType);
     }
 

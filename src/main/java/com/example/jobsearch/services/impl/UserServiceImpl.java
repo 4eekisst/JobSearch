@@ -126,6 +126,15 @@ public class UserServiceImpl implements UserService {
         return employerDtos;
     }
 
+    @Override
+    public List<UserDto> getAllUsersByVacancyId(Long id) {
+        List<User> users = userDao.getAllUsersByVacancyId(id);
+        List<UserDto> dtos = new ArrayList<>();
+        users.forEach(user -> dtos.add(mapUserToDto(user)));
+        return dtos;
+    }
+
+
     private UserDto mapUserToDto(User user) {
         return UserDto.builder()
                 .id(user.getId())
