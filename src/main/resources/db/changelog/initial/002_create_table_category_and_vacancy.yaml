@@ -24,6 +24,8 @@ databaseChangeLog:
                   constraints:
                     foreignKeyName: fk_categories_parent_id
                     references: categories(id)
+
+
   - changeSet:
       id: create-vacancies-table
       author: Adil
