@@ -13,6 +13,7 @@ import jakarta.validation.constraints.Size;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
+
 public class ContactDto {
     private Long id;
 

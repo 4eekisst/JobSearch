@@ -68,4 +68,3 @@ databaseChangeLog:
                   type: text
                   constraints:
                     nullable: false
-
