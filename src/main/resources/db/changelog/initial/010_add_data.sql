@@ -2,11 +2,11 @@
 --changeset Adil:add_data
 
 -- Вставка данных пользователей
-INSERT INTO users (name, surname, age, email, password, phone_number, avatar, acc_type)
+INSERT INTO users (name, surname, age, email, password, phone_number, avatar, ENABLED, ROLE_ID)
 VALUES
-    ('David', 'Brown', 29, 'david.brown@example.com', 'newpassword123', '1112223333', 'david_avatar.jpg', 'employer'),
-    ('Emma', 'Davis', 35, 'emma.davis@example.com', 'newpassword456', '4445556666', 'emma_avatar.png', 'employee'),
-    ('Frank', 'Wilson', 45, 'frank.wilson@example.com', 'newpassword789', '7778889999', NULL, 'employer');
+    ('David', 'Brown', 29, 'david.brown@example.com', 'newpassword123', '1112223333', 'david_avatar.jpg'),
+    ('Emma', 'Davis', 35, 'emma.davis@example.com', 'newpassword456', '4445556666', 'emma_avatar.png'),
+    ('Frank', 'Wilson', 45, 'frank.wilson@example.com', 'newpassword789', '7778889999', 'frank_avatar.png');
 
 -- Вставка данных контактов
 INSERT INTO contact_types (type)
@@ -67,3 +67,21 @@ VALUES ((SELECT id FROM resumes WHERE name = 'David Brown Resume' LIMIT 1), 8, '
         'Developing and executing marketing strategies'),
        ((SELECT id FROM resumes WHERE name = 'Frank Wilson Resume' LIMIT 1), 15, 'Finance Group', 'Senior Financial Analyst',
         'Leading financial analysis projects and teams');
+
+-- Вставка ролей в таблицу authorities
+INSERT INTO authorities (role) VALUES ('employee'), ('employer');
+
+-- Вставка данных в таблицу user_authority для пользователей с ролями "employer"
+INSERT INTO user_authority (user_id, authority_id)
+SELECT u.id, a.id
+FROM users u
+         JOIN authorities a ON a.role = 'employer'
+WHERE u.name IN ('David', 'Frank');
+
+-- Вставка данных в таблицу user_authority для пользователей с ролью "employee"
+INSERT INTO user_authority (user_id, authority_id)
+SELECT u.id, a.id
+FROM users u
+         JOIN authorities a ON a.role = 'employee'
+WHERE u.name = 'Emma';
+

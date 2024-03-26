@@ -1,6 +1,6 @@
 databaseChangeLog:
   - changeSet:
-      id: added_table_for_user_image
+      id: added-table-for-user-image
       author: Adil
       changes:
         - createTable:
