@@ -1,4 +1,4 @@
-package com.example.jobsearch.controllers;
+package com.example.jobsearch.api;
 
 import com.example.jobsearch.models.User;
 import com.example.jobsearch.services.UserService;
@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("profile")
+@RequestMapping("api/profile")
 public class ProfileController {
     private final UserService service;
 

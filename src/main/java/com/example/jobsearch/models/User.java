@@ -1,13 +1,12 @@
 package com.example.jobsearch.models;
 
-import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
-@NoArgsConstructor(access = AccessLevel.PRIVATE)
-@AllArgsConstructor(access = AccessLevel.PRIVATE)
+@NoArgsConstructor
+@AllArgsConstructor
 
 public class User {
     private Long id;
@@ -18,5 +17,6 @@ public class User {
     private String password;
     private String phoneNumber;
     private String avatar;
-    private String accType;
+    private boolean enabled;
+    private Long roleId;
 }

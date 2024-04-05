@@ -57,11 +57,11 @@ public class SecurityConfig {
                 .logout(AbstractHttpConfigurer::disable)
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers("/users/create").permitAll()
-                        .requestMatchers("/vacancies").permitAll()
-                        .requestMatchers("/resumes/**").hasAuthority("USER")
-                        .requestMatchers("/vacancies/**").hasAuthority("EMPLOYER")
-                        .anyRequest().authenticated()
+                        .requestMatchers("api/users/create").permitAll()
+                        .requestMatchers("api/vacancies").permitAll()
+                        .requestMatchers("api/resumes/**").hasAuthority("EMPLOYEE")
+                        .requestMatchers("api/vacancies/**").hasAuthority("EMPLOYER")
+                        .anyRequest().permitAll()
                 );
         return http.build();
     }

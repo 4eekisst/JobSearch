@@ -18,6 +18,4 @@ public interface UserService {
     List<UserDto> getApplicantsByAccountType(String accountType);
     List<UserDto> getEmployersByAccountType(String accountType);
     List<UserDto> getAllUsersByVacancyId(Long id);
-
-
 }

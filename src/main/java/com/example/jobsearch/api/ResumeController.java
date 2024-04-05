@@ -1,4 +1,4 @@
-package com.example.jobsearch.controllers;
+package com.example.jobsearch.api;
 
 import com.example.jobsearch.dto.ResumeDto;
 import com.example.jobsearch.exceptions.CategoryNotFoundException;
