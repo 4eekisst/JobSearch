@@ -69,15 +69,15 @@ VALUES ((SELECT id FROM resumes WHERE name = 'David Brown Resume' LIMIT 1), 8, '
         'Leading financial analysis projects and teams');
 
 -- user_authority for "employer"
-INSERT INTO user_authority (user_id, authority_id)
-SELECT u.id, a.id
+INSERT INTO user_authority (EMAIL, authority_id)
+SELECT u.EMAIL, a.id
 FROM users u
          JOIN authorities a ON a.role = 'employer'
 WHERE u.name IN ('David', 'Frank');
 
 -- user_authority for "employee"
-INSERT INTO user_authority (user_id, authority_id)
-SELECT u.id, a.id
+INSERT INTO user_authority (EMAIL, authority_id)
+SELECT u.EMAIL, a.id
 FROM users u
          JOIN authorities a ON a.role = 'employee'
 WHERE u.name = 'Emma';

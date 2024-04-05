@@ -4,9 +4,12 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
@@ -21,34 +24,48 @@ public class SecurityConfig {
 
     private final PasswordEncoder encoder;
 
-    private final DataSource source;
+    private final DataSource dataSource;
+
     @Autowired
     public SecurityConfig(DataSource source, PasswordEncoder encoder) {
-        this.source = source;
+        this.dataSource = source;
         this.encoder = encoder;
     }
 
+    private static final String USER_QUERY = "select EMAIL, PASSWORD, ENABLED from USERS where EMAIL =?;";
+    private static final String AUTHORITIES_QUERY = """
+            select ua.EMAIL, a.role from USER_AUTHORITY ua, AUTHORITIES a
+            where ua.AUTHORITY_ID = a.ID
+            and ua.EMAIL = ?;
+            """;
+
     @Autowired
     public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
-        String USER_QUERY = "SELECT USERS.EMAIL, USERS.PASSWORD, USERS.ENABLED FROM USERS WHERE EMAIL = ?";
-        String USER_ROLE = "SELECT USERS.EMAIL, AUTHORITIES.ROLE FROM USERS JOIN USER_AUTHORITY ON USERS.ID = USER_AUTHORITY.USER_ID JOIN AUTHORITIES ON USER_AUTHORITY.AUTHORITY_ID = AUTHORITIES.ID WHERE USERS.EMAIL = ?";
-
         auth.jdbcAuthentication()
-                .dataSource(source)
+                .dataSource(dataSource)
                 .usersByUsernameQuery(USER_QUERY)
-                .authoritiesByUsernameQuery(USER_ROLE)
-                .passwordEncoder(encoder);
+                .authoritiesByUsernameQuery(AUTHORITIES_QUERY)
+                .passwordEncoder(new BCryptPasswordEncoder());
     }
 
-//        @Bean
-//        public SecurityFilterChain filterChain (HttpSecurity http) throws Exception {
-//            http
-//                    .authorizeHttpRequests(authorize -> {
-//
-//                    });
-//            return http.build();
-//        }
+    @Bean
+    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+        http
+                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .httpBasic(Customizer.withDefaults())
+                .formLogin(AbstractHttpConfigurer::disable)
+                .logout(AbstractHttpConfigurer::disable)
+                .csrf(AbstractHttpConfigurer::disable)
+                .authorizeHttpRequests(authorize -> authorize
+                        .requestMatchers("api/users/create").permitAll()
+                        .requestMatchers("api/vacancies").permitAll()
+                        .requestMatchers("api/resumes/**").hasAuthority("EMPLOYEE")
+                        .requestMatchers("api/vacancies/**").hasAuthority("EMPLOYER")
+                        .anyRequest().permitAll()
+                );
+        return http.build();
     }
+}
 
 
 

@@ -1,4 +1,4 @@
-package com.example.jobsearch.controllers;
+package com.example.jobsearch.controllers.api;
 
 import com.example.jobsearch.dto.RespondedApplicantDto;
 import com.example.jobsearch.services.RespondedApplicantsService;
@@ -9,9 +9,9 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@RestController
+@RestController("responsesRest")
 @RequiredArgsConstructor
-@RequestMapping("responses")
+@RequestMapping("api/responses")
 public class RespondsController {
     private final RespondedApplicantsService service;
 

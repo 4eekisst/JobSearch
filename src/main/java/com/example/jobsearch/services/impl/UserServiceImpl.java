@@ -106,7 +106,8 @@ public class UserServiceImpl implements UserService {
                 .email(user.getEmail())
                 .phoneNumber(user.getPhoneNumber())
                 .avatar(user.getAvatar())
-                .accType(user.getAccType())
+                .enabled(user.isEnabled())
+                .roleId(user.getRoleId())
                 .build();
     }
 
@@ -144,7 +145,8 @@ public class UserServiceImpl implements UserService {
                 .email(user.getEmail())
                 .phoneNumber(user.getPhoneNumber())
                 .avatar(user.getAvatar())
-                .accType(user.getAccType())
+                .enabled(user.isEnabled())
+                .roleId(user.getRoleId())
                 .build();
     }
 }

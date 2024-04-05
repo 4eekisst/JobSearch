@@ -1,4 +1,4 @@
-package com.example.jobsearch.controllers;
+package com.example.jobsearch.controllers.api;
 
 import com.example.jobsearch.dto.ResumeDto;
 import com.example.jobsearch.exceptions.CategoryNotFoundException;
@@ -11,9 +11,9 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@RestController
+@RestController("resumeRest")
 @RequiredArgsConstructor
-@RequestMapping("resumes")
+@RequestMapping("api/resumes")
 public class ResumeController {
     private final ResumeService service;
 
