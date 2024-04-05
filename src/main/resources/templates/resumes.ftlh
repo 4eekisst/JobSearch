@@ -8,7 +8,7 @@
 </head>
 <body>
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
-    <a class="navbar-brand" href="#">Job Search</a>
+    <a class="navbar-brand" href="/register">Job Search</a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
             aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
@@ -16,13 +16,14 @@
     <div class="collapse navbar-collapse" id="navbarNav">
         <ul class="navbar-nav">
             <li class="nav-item active">
-                <a class="nav-link" href="/register">Форма регистрации<span class="sr-only">(current)</span></a>
+                <a class="nav-link" href="/register">Registration Form
+                    <span class="sr-only">(current)</span></a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="/vacancies">Список вакансий</a>
+                <a class="nav-link" href="/vacancies">List of vacancies</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="/resumes">Список резюме</a>
+                <a class="nav-link" href="/resumes">List of resumes</a>
             </li>
         </ul>
     </div>
