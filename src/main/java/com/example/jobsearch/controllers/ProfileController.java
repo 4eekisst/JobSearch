@@ -16,7 +16,7 @@ import java.security.Principal;
 @Controller
 @RequestMapping("/profile")
 @RequiredArgsConstructor
-public class UserProfileController {
+public class ProfileController {
 
     private final UserService userService;
     private final UserImageService userImageService;
@@ -41,4 +41,5 @@ public class UserProfileController {
         }
         return "redirect:/profile/" + userId;
     }
+
 }

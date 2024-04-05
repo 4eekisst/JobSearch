@@ -14,7 +14,7 @@ import java.util.List;
 @RequestMapping("/vacancies")
 @RequiredArgsConstructor
 
-public class ViewAllVacancies {
+public class VacanciesController {
     private final VacancyService vacancyService;
 
     @GetMapping()

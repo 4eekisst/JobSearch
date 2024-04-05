@@ -1,4 +1,4 @@
-package com.example.jobsearch.api;
+package com.example.jobsearch.controllers.api;
 
 import com.example.jobsearch.dto.UserImageDto;
 import com.example.jobsearch.services.UserImageService;
@@ -14,8 +14,8 @@ import org.springframework.web.multipart.MultipartFile;
 import java.util.Arrays;
 import java.util.List;
 
-@RestController
-@RequestMapping("images")
+@RestController("imageRest")
+@RequestMapping("api/images")
 @RequiredArgsConstructor
 public class UserImageController {
     private final UserImageService userImageService;

@@ -131,5 +131,4 @@ public class UserDao {
         String sql = "SELECT * FROM users WHERE role_id = ?";
         return template.query(sql, new BeanPropertyRowMapper<>(User.class), employerRoleId);
     }
-
 }
