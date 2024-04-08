@@ -81,7 +81,7 @@
                 <div class="card mt-3">
                     <div class="card-body">
                         <h5 class="card-title">Добавить вакансию:</h5>
-                        <form action="/profile/vacancy" method="post">
+                        <form action="/profile/vacancy/create" method="get">
                             <button type="submit" class="btn btn-primary">Submit</button>
                         </form>
                     </div>

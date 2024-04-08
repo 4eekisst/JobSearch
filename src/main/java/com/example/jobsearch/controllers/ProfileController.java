@@ -63,4 +63,8 @@ public class ProfileController {
         model.addAttribute("resumeDto", new ResumeDto());
         return "create_resume";
     }
+    @GetMapping("/vacancy/create")
+    public String showCreateVacancyForm() {
+        return "create_vacancy";
+    }
 }
