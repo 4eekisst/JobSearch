@@ -28,15 +28,12 @@
     </div>
 </nav>
 <div class="container">
-    <h2>Список вакансий:</h2>
+    <h2>List of Vacancies:</h2>
     <#if vacancies?has_content>
         <#list vacancies as vacancy>
             <div class="card mb-3" style="max-width: 18rem;">
                 <div class="card-header">${vacancy.name}</div>
                 <div class="card-body">
-                    <p class="card-text">${vacancy.description}</p>
-                    <p class="card-text">Category: ${vacancy.class}</p>
-                    <p class="card-text">Salary: ${vacancy.salary}</p>
                     <a href="/vacancies/${vacancy.id}" class="btn btn-primary">View Details</a>
                 </div>
             </div>

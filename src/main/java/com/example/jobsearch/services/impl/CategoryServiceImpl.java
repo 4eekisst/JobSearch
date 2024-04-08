@@ -9,6 +9,9 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Service
 @Slf4j
 @RequiredArgsConstructor
@@ -41,5 +44,19 @@ public class CategoryServiceImpl implements CategoryService {
             log.error("category with id:{} not found",id);
         }
         return null;
+    }
+    @Override
+    public List<CategoryDto> getAllCategories() {
+        List<Category> categories = dao.findAll();
+        return categories.stream()
+                .map(this::convertToDto)
+                .collect(Collectors.toList());
+    }
+
+    private CategoryDto convertToDto(Category category) {
+        return CategoryDto.builder()
+                .id(category.getId())
+                .name(category.getName())
+                .build();
     }
 }

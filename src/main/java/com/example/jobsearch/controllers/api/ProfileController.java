@@ -1,5 +1,6 @@
 package com.example.jobsearch.controllers.api;
 
+import com.example.jobsearch.dto.UserDto;
 import com.example.jobsearch.models.User;
 import com.example.jobsearch.services.UserService;
 import lombok.RequiredArgsConstructor;
@@ -16,8 +17,8 @@ public class ProfileController {
     private final UserService service;
 
     @PostMapping("/edit")
-    public HttpStatus editProfile(@RequestBody User user) {
-        User mercer = user;
+    public HttpStatus editProfile(@RequestBody UserDto userDto) {
+        UserDto mercer = userDto;
         service.editUser(mercer);
         return HttpStatus.OK;
     }

@@ -92,10 +92,9 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void editUser(User user) {
-        userDao.editUser(user);
+    public void editUser(UserDto userDto) {
+        userDao.editUser(userDto);
     }
-
 
     private UserDto getUserDto(User user) {
         return UserDto.builder()

@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.util.List;
@@ -22,5 +23,12 @@ public class ResumesController {
         List<ResumeDto> allResumes = resumeService.getResumes();
         model.addAttribute("resumes", allResumes);
         return "resumes";
+    }
+
+    @GetMapping("/{id}")
+    public String viewResumeDetails(@PathVariable("id") Long id, Model model) {
+        ResumeDto resume = resumeService.getResumeById(id);
+        model.addAttribute("resume", resume);
+        return "resume_details";
     }
 }

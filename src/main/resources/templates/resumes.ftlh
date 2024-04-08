@@ -35,10 +35,6 @@
         <tr>
             <th scope="col">#</th>
             <th scope="col">Name</th>
-            <th scope="col">Category ID</th>
-            <th scope="col">Salary</th>
-            <th scope="col">Created Date</th>
-            <th scope="col">Update Time</th>
         </tr>
         </thead>
         <tbody>
@@ -46,10 +42,7 @@
             <tr>
                 <th scope="row">${resume.id}</th>
                 <td>${resume.name}</td>
-                <td>${resume.categoryId}</td>
-                <td>${resume.salary}</td>
-                <td>${resume.createdDate}</td>
-                <td>${resume.updateTime}</td>
+                <td><a href="/resumes/${resume.id}" class="btn btn-primary">View Details</a></td>
             </tr>
         </#list>
         </tbody>
