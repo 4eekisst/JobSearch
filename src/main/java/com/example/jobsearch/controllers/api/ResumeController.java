@@ -17,11 +17,11 @@ import java.util.List;
 public class ResumeController {
     private final ResumeService service;
 
-    @GetMapping()
-    public ResponseEntity<List<ResumeDto>> getResumes() {
-        var resumes = service.getResumes();
-        return ResponseEntity.ok(resumes);
-    }
+//    @GetMapping()
+//    public ResponseEntity<List<ResumeDto>> getResumes() {
+//        var resumes = service.getResumes();
+//        return ResponseEntity.ok(resumes);
+//    }
 
     @GetMapping("/{id}")
     public ResponseEntity<?> getResumeById(@PathVariable(name = "id") Long id) {

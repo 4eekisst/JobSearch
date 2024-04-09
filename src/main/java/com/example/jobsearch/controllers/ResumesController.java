@@ -8,6 +8,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
 
@@ -18,12 +19,21 @@ public class ResumesController {
 
     private final ResumeService resumeService;
 
-    @GetMapping
-    public String viewAllResumes(Model model) {
-        List<ResumeDto> allResumes = resumeService.getResumes();
+    @GetMapping()
+    public String viewAllResumes(Model model,
+                                 @RequestParam(defaultValue = "0") int page,
+                                 @RequestParam(defaultValue = "5") int pageSize) {
+        List<ResumeDto> allResumes = resumeService.getResumes(page, pageSize);
+        int totalResumes = resumeService.getTotalResumesCount();
+        int totalPages = (int) Math.ceil((double) totalResumes / pageSize);
+
         model.addAttribute("resumes", allResumes);
+        model.addAttribute("currentPage", page);
+        model.addAttribute("totalPages", totalPages);
+
         return "resumes";
     }
+
 
     @GetMapping("/{id}")
     public String viewResumeDetails(@PathVariable("id") Long id, Model model) {

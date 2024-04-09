@@ -29,13 +29,15 @@ public class ResumeDao {
         return template.query(sql, new BeanPropertyRowMapper<>(Resume.class), id);
     }
 
-    public List<Resume> getAllResumes() {
-        String sql = """
-                SELECT * FROM RESUMES
-                """;
-        return template.query(sql, new BeanPropertyRowMapper<>(Resume.class));
+    public List<Resume> getResumes(int offset, int pageSize) {
+        String sql = "SELECT * FROM RESUMES LIMIT ?, ?";
+        return template.query(sql, new BeanPropertyRowMapper<>(Resume.class), offset, pageSize);
     }
 
+    public int getTotalResumesCount() {
+        String sql = "SELECT COUNT(*) FROM RESUMES";
+        return template.queryForObject(sql, Integer.class);
+    }
     public List<Resume> getAllResumesByUserId(Long id) throws ResumeNotFoundException {
         String sql = """
                 SELECT * FROM RESUMES

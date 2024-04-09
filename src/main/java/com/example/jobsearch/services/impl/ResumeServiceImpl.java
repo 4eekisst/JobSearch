@@ -41,9 +41,15 @@ public class ResumeServiceImpl implements ResumeService {
     }
 
     @Override
-    public List<ResumeDto> getResumes() {
-        List<Resume> resumes = dao.getAllResumes();
+    public List<ResumeDto> getResumes(int page, int pageSize) {
+        int offset = page * pageSize;
+        List<Resume> resumes = dao.getResumes(offset, pageSize);
         return getResumeDtos(resumes);
+    }
+
+    @Override
+    public int getTotalResumesCount() {
+        return dao.getTotalResumesCount();
     }
 
     @Override
