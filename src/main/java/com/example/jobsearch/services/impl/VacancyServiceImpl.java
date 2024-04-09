@@ -44,6 +44,18 @@ public class VacancyServiceImpl implements VacancyService {
     }
 
     @Override
+    public List<VacancyDto> getVacanciesByCategory(String category, int page, int pageSize) {
+        int offset = page * pageSize;
+        List<Vacancy> vacancies = dao.getVacanciesByCategory(category, offset, pageSize);
+        return getVacancyDtos(vacancies);
+    }
+
+    @Override
+    public int getTotalVacanciesCountByCategory(String category) {
+        return dao.getTotalVacanciesCountByCategory(category);
+    }
+
+    @Override
     public List<VacancyDto> getVacanciesOfRespondedApplicant(String userEmail) {
         UserDto applicant = userService.getUserByEmail(userEmail);
         Long id = applicant.getId();

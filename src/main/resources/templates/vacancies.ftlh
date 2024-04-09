@@ -27,6 +27,7 @@
         </ul>
     </div>
 </nav>
+
 <div class="container">
     <h2>List of Vacancies:</h2>
     <#if vacancies?has_content>
@@ -38,6 +39,21 @@
                 </div>
             </div>
         </#list>
+
+        <form action="/vacancies" method="get">
+            <div class="form-group">
+                <label for="category">Фильтр по категории:</label>
+                <select class="form-control" id="category" name="category">
+                    <option value="">Все категории</option>
+                    <option value="IT">IT</option>
+                    <option value="Маркетинг">Маркетинг</option>
+                    <option value="Finance">Financ</option>
+
+                </select>
+            </div>
+            <button type="submit" class="btn btn-primary">Применить фильтр</button>
+        </form>
+
         <nav aria-label="Page navigation">
             <ul class="pagination justify-content-center">
                 <li class="page-item<#if currentPage == 0><#else> active</#if>">
@@ -56,7 +72,6 @@
                         <span aria-hidden="true">&raquo;</span>
                         <span class="sr-only">Next</span>
                     </a>
-                </li>
             </ul>
         </nav>
     <#else>

@@ -34,6 +34,18 @@ public class VacancyDao {
         return template.queryForObject(sql, Integer.class);
     }
 
+    public List<Vacancy> getVacanciesByCategory(String category, int offset, int pageSize) {
+        String sql = "SELECT * FROM VACANCIES WHERE CATEGORY_ID = ? OFFSET ? ROWS FETCH NEXT ? ROWS ONLY";
+        return template.query(sql, new BeanPropertyRowMapper<>(Vacancy.class), category, offset, pageSize);
+    }
+
+
+
+    public int getTotalVacanciesCountByCategory(String category) {
+        String sql = "SELECT COUNT(*) FROM VACANCIES WHERE CATEGORY_ID = ?";
+        return template.queryForObject(sql, Integer.class, category);
+    }
+
     public Optional<Vacancy> getVacancyById(Long id){
         String sql = """
               select * from VACANCIES

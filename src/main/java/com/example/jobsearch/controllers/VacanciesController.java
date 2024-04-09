@@ -22,10 +22,39 @@ public class VacanciesController {
     @GetMapping
     public String getAllVacancies(Model model,
                                   @RequestParam(defaultValue = "0") int page,
-                                  @RequestParam(defaultValue = "5") int pageSize) {
+                                  @RequestParam(defaultValue = "5") int pageSize,
+                                  @RequestParam(required = false) String category) {
 
-        List<VacancyDto> vacancies = vacancyService.getAllVacancies(page, pageSize);
-        int totalVacancies = vacancyService.getTotalVacanciesCount();
+        List<VacancyDto> vacancies;
+        int totalVacancies;
+        int totalPages;
+
+        if (category != null && !category.isEmpty()) {
+            vacancies = vacancyService.getVacanciesByCategory(category, page, pageSize);
+            totalVacancies = vacancyService.getTotalVacanciesCountByCategory(category);
+        } else {
+            vacancies = vacancyService.getAllVacancies(page, pageSize);
+            totalVacancies = vacancyService.getTotalVacanciesCount();
+        }
+
+        totalPages = (int) Math.ceil((double) totalVacancies / pageSize);
+
+        model.addAttribute("vacancies", vacancies);
+        model.addAttribute("currentPage", page);
+        model.addAttribute("totalPages", totalPages);
+        model.addAttribute("selectedCategory", category);
+
+        return "vacancies";
+    }
+
+    @GetMapping(params = "category")
+    public String getVacanciesByCategory(@RequestParam("category") String category,
+                                         Model model,
+                                         @RequestParam(defaultValue = "0") int page,
+                                         @RequestParam(defaultValue = "5") int pageSize) {
+
+        List<VacancyDto> vacancies = vacancyService.getVacanciesByCategory(category, page, pageSize);
+        int totalVacancies = vacancyService.getTotalVacanciesCountByCategory(category);
         int totalPages = (int) Math.ceil((double) totalVacancies / pageSize);
 
         model.addAttribute("vacancies", vacancies);
