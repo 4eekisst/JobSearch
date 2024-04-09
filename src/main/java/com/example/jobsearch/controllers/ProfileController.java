@@ -31,7 +31,7 @@ public class ProfileController {
         boolean isApplicant = user.getRoleId() == 1;
         boolean isEmployer = user.getRoleId() == 2;
 
-        List<VacancyDto> vacancies = vacancyService.getAllVacancies();
+        List<VacancyDto> vacancies = vacancyService.getAllVacancies(0, 5); // Example: Page 0, Page size 5
         List<ResumeDto> resumes = resumeService.getResumes();
         model.addAttribute("user", user);
         model.addAttribute("isApplicant", isApplicant);

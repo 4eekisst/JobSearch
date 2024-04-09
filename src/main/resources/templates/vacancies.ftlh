@@ -38,6 +38,27 @@
                 </div>
             </div>
         </#list>
+        <nav aria-label="Page navigation">
+            <ul class="pagination justify-content-center">
+                <li class="page-item<#if currentPage == 0><#else> active</#if>">
+                    <a class="page-link" href="/vacancies?page=${currentPage - 1}" aria-label="Previous">
+                        <span aria-hidden="true">&laquo;</span>
+                        <span class="sr-only">Previous</span>
+                    </a>
+                </li>
+                <#list 0..(totalPages - 1) as page>
+                    <li class="page-item<#if currentPage == page><#else> active</#if>">
+                        <a class="page-link" href="/vacancies?page=${page}">${page + 1}</a>
+                    </li>
+                </#list>
+                <li class="page-item<#if currentPage == (totalPages - 1)><#else> active</#if>">
+                    <a class="page-link" href="/vacancies?page=${currentPage + 1}" aria-label="Next">
+                        <span aria-hidden="true">&raquo;</span>
+                        <span class="sr-only">Next</span>
+                    </a>
+                </li>
+            </ul>
+        </nav>
     <#else>
         <p>No vacancies available</p>
     </#if>

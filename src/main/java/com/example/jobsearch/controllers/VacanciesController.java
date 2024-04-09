@@ -8,6 +8,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
 
@@ -18,10 +19,19 @@ import java.util.List;
 public class VacanciesController {
     private final VacancyService vacancyService;
 
-    @GetMapping()
-    public String viewAllVacancies(Model model) {
-        List<VacancyDto> allVacancies = vacancyService.getAllVacancies();
-        model.addAttribute("vacancies", allVacancies);
+    @GetMapping
+    public String getAllVacancies(Model model,
+                                  @RequestParam(defaultValue = "0") int page,
+                                  @RequestParam(defaultValue = "5") int pageSize) {
+
+        List<VacancyDto> vacancies = vacancyService.getAllVacancies(page, pageSize);
+        int totalVacancies = vacancyService.getTotalVacanciesCount();
+        int totalPages = (int) Math.ceil((double) totalVacancies / pageSize);
+
+        model.addAttribute("vacancies", vacancies);
+        model.addAttribute("currentPage", page);
+        model.addAttribute("totalPages", totalPages);
+
         return "vacancies";
     }
 

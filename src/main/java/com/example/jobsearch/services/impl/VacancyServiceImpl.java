@@ -29,9 +29,18 @@ public class VacancyServiceImpl implements VacancyService {
     private final UserService userService;
 
     @Override
-    public List<VacancyDto> getAllVacancies() {
-        List<Vacancy> vacancies = dao.getAllVacancies();
+    public List<VacancyDto> getAllVacancies(int page, int pageSize) {
+        int offset = page * pageSize;
+
+        List<Vacancy> vacancies = dao.getAllVacancies(offset, pageSize);
+
         return getVacancyDtos(vacancies);
+    }
+
+    @Override
+    public int getTotalVacanciesCount() {
+
+        return dao.getTotalVacanciesCount();
     }
 
     @Override

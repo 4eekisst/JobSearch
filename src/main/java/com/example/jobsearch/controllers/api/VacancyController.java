@@ -19,10 +19,10 @@ import java.util.List;
 public class VacancyController {
     private final VacancyService service;
 
-    @GetMapping()
-    public ResponseEntity<List<VacancyDto>> getVacancies() {
-        return ResponseEntity.ok(service.getAllVacancies());
-    }
+//    @GetMapping()
+//    public ResponseEntity<List<VacancyDto>> getVacancies() {
+//        return ResponseEntity.ok(service.getAllVacancies();
+//    }
 
     @GetMapping("/vacancy")
     public ResponseEntity<?> getVacanciesOfRespondedApplicantEmail(@RequestParam(name = "email", defaultValue = "") String email) {
