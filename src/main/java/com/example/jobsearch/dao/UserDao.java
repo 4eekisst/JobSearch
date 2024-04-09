@@ -1,6 +1,7 @@
 package com.example.jobsearch.dao;
 
 
+import com.example.jobsearch.dto.UserDto;
 import com.example.jobsearch.models.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.support.DataAccessUtils;
@@ -11,6 +12,7 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 
@@ -55,9 +57,6 @@ public class UserDao {
         );
     }
 
-
-
-
     public List<User> getUserByName(String name) {
         String sql = """
                 select * from users
@@ -100,26 +99,27 @@ public class UserDao {
         );
     }
 
-    public void editUser(User user) {
+    public void editUser(UserDto userDto) {
         String sql = """
-            UPDATE USERS
-            SET NAME = :name, SURNAME = :surname, AGE = :age, email = :email, password = :password, 
-            phone_number = :phoneNumber, avatar = :avatar, enabled = :enabled, role_id = :roleId
-            WHERE id = :id;
-            """;
+        UPDATE USERS
+        SET NAME = :name, SURNAME = :surname, AGE = :age, email = :email, password = :password, 
+        phone_number = :phoneNumber, avatar = :avatar, enabled = :enabled, role_id = :roleId
+        WHERE id = :id;
+        """;
         namedParameter.update(sql, new MapSqlParameterSource()
-                .addValue("name", user.getName())
-                .addValue("surname", user.getSurname())
-                .addValue("age", user.getAge())
-                .addValue("email", user.getEmail())
-                .addValue("password", user.getPassword())
-                .addValue("phoneNumber", user.getPhoneNumber())
-                .addValue("avatar", user.getAvatar())
-                .addValue("enabled", user.isEnabled())
-                .addValue("roleId", user.getRoleId())
-                .addValue("id", user.getId())
+                .addValue("name", userDto.getName())
+                .addValue("surname", userDto.getSurname())
+                .addValue("age", userDto.getAge())
+                .addValue("email", userDto.getEmail())
+                .addValue("password", userDto.getPassword())
+                .addValue("phoneNumber", userDto.getPhoneNumber())
+                .addValue("avatar", userDto.getAvatar())
+                .addValue("enabled", userDto.getEnabled())
+                .addValue("roleId", userDto.getRoleId())
+                .addValue("id", userDto.getId())
         );
     }
+
 
     public List<User> getUsersByAccountType(String accountType) {
         String sql = "SELECT * FROM users WHERE enabled = ?";

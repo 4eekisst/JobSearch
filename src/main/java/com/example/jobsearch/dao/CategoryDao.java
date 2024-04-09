@@ -7,6 +7,7 @@ import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
 import java.util.Optional;
 
 @Component
@@ -24,6 +25,11 @@ public class CategoryDao {
                         template.query(sql,new BeanPropertyRowMapper<>(Category.class),name)
                 )
         );
+    }
+
+    public List<Category> findAll() {
+        String sql = "SELECT * FROM CATEGORIES";
+        return template.query(sql, new BeanPropertyRowMapper<>(Category.class));
     }
 
     public Optional<Category> getCategoryById(Long id){

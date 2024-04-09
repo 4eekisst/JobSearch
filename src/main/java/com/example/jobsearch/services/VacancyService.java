@@ -10,8 +10,11 @@ import com.example.jobsearch.exceptions.VacancyNotFoundException;
 import java.util.List;
 
 public interface VacancyService {
-    List<VacancyDto> getAllVacancies();
+    List<VacancyDto> getAllVacancies(int page, int pageSize);
+    int getTotalVacanciesCount();
+    List<VacancyDto> getVacanciesByCategory(String category, int page, int pageSize);
 
+    int getTotalVacanciesCountByCategory(String category);
     List<VacancyDto> getVacanciesOfRespondedApplicant(String email) throws UserNotFoundException;
 
     List<VacancyDto> getVacanciesOfCategory(String strip) throws CategoryNotFoundException;

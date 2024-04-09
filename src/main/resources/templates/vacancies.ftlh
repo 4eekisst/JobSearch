@@ -27,20 +27,53 @@
         </ul>
     </div>
 </nav>
+
 <div class="container">
-    <h2>Список вакансий:</h2>
+    <h2>List of Vacancies:</h2>
     <#if vacancies?has_content>
         <#list vacancies as vacancy>
             <div class="card mb-3" style="max-width: 18rem;">
                 <div class="card-header">${vacancy.name}</div>
                 <div class="card-body">
-                    <p class="card-text">${vacancy.description}</p>
-                    <p class="card-text">Category: ${vacancy.class}</p>
-                    <p class="card-text">Salary: ${vacancy.salary}</p>
                     <a href="/vacancies/${vacancy.id}" class="btn btn-primary">View Details</a>
                 </div>
             </div>
         </#list>
+
+        <form action="/vacancies" method="get">
+            <div class="form-group">
+                <label for="category">Фильтр по категории:</label>
+                <select class="form-control" id="category" name="category">
+                    <option value="">Все категории</option>
+                    <option value="IT">IT</option>
+                    <option value="Маркетинг">Маркетинг</option>
+                    <option value="Finance">Financ</option>
+
+                </select>
+            </div>
+            <button type="submit" class="btn btn-primary">Применить фильтр</button>
+        </form>
+
+        <nav aria-label="Page navigation">
+            <ul class="pagination justify-content-center">
+                <li class="page-item<#if currentPage == 0><#else> active</#if>">
+                    <a class="page-link" href="/vacancies?page=${currentPage - 1}" aria-label="Previous">
+                        <span aria-hidden="true">&laquo;</span>
+                        <span class="sr-only">Previous</span>
+                    </a>
+                </li>
+                <#list 0..(totalPages - 1) as page>
+                    <li class="page-item<#if currentPage == page><#else> active</#if>">
+                        <a class="page-link" href="/vacancies?page=${page}">${page + 1}</a>
+                    </li>
+                </#list>
+                <li class="page-item<#if currentPage == (totalPages - 1)><#else> active</#if>">
+                    <a class="page-link" href="/vacancies?page=${currentPage + 1}" aria-label="Next">
+                        <span aria-hidden="true">&raquo;</span>
+                        <span class="sr-only">Next</span>
+                    </a>
+            </ul>
+        </nav>
     <#else>
         <p>No vacancies available</p>
     </#if>
