@@ -57,7 +57,6 @@ public class RegistrationController {
     @PostMapping("/submit")
     public String registerUser(@ModelAttribute User user) {
         userService.createUser(user);
-        Long userId = user.getId();
-        return "redirect:/profile/" + userId;
+        return "redirect:/profile/" + user.getRoleId();
     }
 }

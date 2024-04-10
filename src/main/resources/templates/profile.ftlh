@@ -70,9 +70,8 @@
             <#if isApplicant>
                 <div class="card mt-3">
                     <div class="card-body">
-                        <h5 class="card-title">Добавить резюме:</h5>
                         <form action="/profile/resume/create" method="get">
-                            <button type="submit" class="btn btn-primary">Создать резюме</button>
+                            <button type="submit" class="btn btn-primary">Создать резюме:</button>
                         </form>
                     </div>
                 </div>
@@ -81,9 +80,8 @@
             <#if isEmployer>
                 <div class="card mt-3">
                     <div class="card-body">
-                        <h5 class="card-title">Добавить вакансию:</h5>
                         <form action="/profile/vacancy/create" method="get">
-                            <button type="submit" class="btn btn-primary">Submit</button>
+                            <button type="submit" class="btn btn-primary">Добавить вакансию:</button>
                         </form>
                     </div>
                 </div>

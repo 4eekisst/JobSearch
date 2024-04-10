@@ -23,7 +23,6 @@ public class ProfileController {
     private final VacancyService vacancyService;
     private final CategoryService categoryService;
 
-
     @GetMapping("/{userId}")
     public String viewProfile(@PathVariable Long userId, Model model, Principal principal) {
         UserDto user = userService.getUserById(userId);
@@ -63,14 +62,15 @@ public class ProfileController {
         model.addAttribute("resumeDto", new ResumeDto());
         return "create_resume";
     }
+
     @GetMapping("/vacancy/create")
     public String showCreateVacancyForm() {
         return "create_vacancy";
     }
 
-    @PostMapping("/vacancy/create")
-    public String createVacancy(@ModelAttribute VacancyDto vacancyDto, Principal principal) {
+    @PostMapping("/vacancies/create")
+    public String createVacancy(VacancyDto vacancyDto) {
         vacancyService.createVacancy(vacancyDto);
-        return "redirect:/profile/" + userService.getUserById(vacancyDto.getId());
+        return "redirect:/vacancies";
     }
 }

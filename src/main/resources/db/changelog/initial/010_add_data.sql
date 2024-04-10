@@ -4,9 +4,12 @@ INSERT INTO authorities (id, role) VALUES (1, 'employee'), (2, 'employer');
 -- users
 INSERT INTO users (name, surname, age, email, password, phone_number, avatar, ENABLED, ROLE_ID)
 VALUES
-    ('David', 'Brown', 29, 'david.brown@example.com', 'newpassword123', '1112223333', 'david_avatar.jpg', true, 2),
-    ('Emma', 'Davis', 35, 'emma.davis@example.com', 'newpassword456', '4445556666', 'emma_avatar.png', true, 1),
-    ('Frank', 'Wilson', 45, 'frank.wilson@example.com', 'newpassword789', '7778889999', 'frank_avatar.png', true, 1);
+    ('David', 'Brown', 29, 'david.brown@example.com', '$2a$12$Bu3ARLNkNiNdoEIJ0DUSIuwQJrEarHLr52K3u/9FE.nZKzb9K3so2
+', '1112223333', 'david_avatar.jpg', true, 2),
+    ('Emma', 'Davis', 35, 'emma.davis@example.com', '$2a$12$yY2Q654/Th2zYAasJ.sAqOo.POTRVN7C2h58vaVxocTHJMEYhuCBa
+', '4445556666', 'emma_avatar.png', true, 1),
+    ('Frank', 'Wilson', 45, 'frank.wilson@example.com', '$2a$12$4CuQU6Ybk.VWYJ8R/wbCa.7.ENAt2kIKjavKMqTy8RB5JOx2.9ZXG
+', '7778889999', 'frank_avatar.png', true, 1);
 
 -- contact_types
 INSERT INTO contact_types (type)

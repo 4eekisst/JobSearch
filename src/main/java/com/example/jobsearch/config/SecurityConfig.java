@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -50,22 +51,25 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        http
-                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+        http.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .httpBasic(Customizer.withDefaults())
                 .formLogin(AbstractHttpConfigurer::disable)
                 .logout(AbstractHttpConfigurer::disable)
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers("api/users/create").permitAll()
-                        .requestMatchers("api/vacancies").permitAll()
-                        .requestMatchers("api/resumes/**").hasAuthority("EMPLOYEE")
-                        .requestMatchers("api/vacancies/**").hasAuthority("EMPLOYER")
-                        .anyRequest().permitAll()
-                );
+//                        .requestMatchers(HttpMethod.GET,"vacancies").permitAll()
+//                        .requestMatchers(HttpMethod.GET,"employer/**","vacancies/create").hasAuthority("employer")
+//                        .requestMatchers(HttpMethod.GET,"/register/submit","/login").permitAll()
+//                        .requestMatchers(HttpMethod.POST,"/register/submit","/login").permitAll()
+//                        .requestMatchers(HttpMethod.POST,"employer/*","/employer/**").hasAuthority("employer")
+//                        .requestMatchers(HttpMethod.POST,"employee/*","/employee/**").hasAuthority("employee")
+//                        .requestMatchers(HttpMethod.DELETE,"responses","resumes").hasAuthority("employee")
+                        .anyRequest().permitAll());
+
         return http.build();
     }
 }
+
 
 
 

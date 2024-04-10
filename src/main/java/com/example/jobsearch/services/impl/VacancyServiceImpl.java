@@ -72,32 +72,11 @@ public class VacancyServiceImpl implements VacancyService {
 
     @Override
     public VacancyDto createVacancy(VacancyDto vacancyDto) {
-        Vacancy vacancy = new Vacancy();
-        vacancy.setName(vacancyDto.getName());
-        vacancy.setDescription(vacancyDto.getDescription());
-        vacancy.setCategoryId(vacancyDto.getCategoryId());
-        vacancy.setAuthorId(vacancyDto.getAuthorId());
-        vacancy.setSalary(vacancyDto.getSalary());
-        vacancy.setExpFrom(vacancyDto.getExpFrom());
-        vacancy.setExpTo(vacancyDto.getExpTo());
-        vacancy.setIsActive(vacancyDto.getIsActive());
-        vacancy.setCreatedDate(LocalDateTime.now());vacancy.setUpdateTime(LocalDateTime.now());
-
+        Vacancy vacancy = mapDtoToVacancy(vacancyDto);
+        vacancy.setCreatedDate(LocalDateTime.now());
+        vacancy.setUpdateTime(LocalDateTime.now());
         Long vacancyId = dao.createVacancy(vacancy);
-
-        return new VacancyDto(
-                vacancyId,
-                vacancy.getName(),
-                vacancy.getDescription(),
-                vacancy.getCategoryId(),
-                vacancy.getAuthorId(),
-                vacancy.getSalary(),
-                vacancy.getExpFrom(),
-                vacancy.getExpTo(),
-                vacancy.getIsActive(),
-                vacancy.getCreatedDate(),
-                vacancy.getUpdateTime()
-        );
+        return getVacancyById(vacancyId);
     }
 
 
@@ -184,6 +163,19 @@ public class VacancyServiceImpl implements VacancyService {
                 .isActive(resume.getIsActive())
                 .createdDate(resume.getCreatedDate())
                 .updateTime(resume.getUpdateDate())
+                .build();
+    }
+
+    private Vacancy mapDtoToVacancy(VacancyDto vacancyDto) {
+        return Vacancy.builder()
+                .name(vacancyDto.getName())
+                .description(vacancyDto.getDescription())
+                .categoryId(vacancyDto.getCategoryId())
+                .authorId(vacancyDto.getAuthorId())
+                .salary(vacancyDto.getSalary())
+                .expFrom(vacancyDto.getExpFrom())
+                .expTo(vacancyDto.getExpTo())
+                .isActive(vacancyDto.getIsActive())
                 .build();
     }
 }
