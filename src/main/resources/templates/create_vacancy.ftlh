@@ -30,8 +30,8 @@
 
 <div class="container mt-5">
     <h2>Create Vacancy</h2>
-    <form action="/profile/vacancy" method="post">
-        <div class="form-group">
+    <form action="/profile/vacancy/create" method="post">
+    <div class="form-group">
             <label for="name">Vacancy Name:</label>
             <input type="text" class="form-control" id="name" name="name" required>
         </div>

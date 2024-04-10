@@ -67,4 +67,10 @@ public class ProfileController {
     public String showCreateVacancyForm() {
         return "create_vacancy";
     }
+
+    @PostMapping("/vacancy/create")
+    public String createVacancy(@ModelAttribute VacancyDto vacancyDto, Principal principal) {
+        vacancyService.createVacancy(vacancyDto);
+        return "redirect:/profile/" + userService.getUserById(vacancyDto.getId());
+    }
 }
