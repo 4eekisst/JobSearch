@@ -21,7 +21,6 @@ public class ProfileController {
     private final UserImageService userImageService;
     private final ResumeService resumeService;
     private final VacancyService vacancyService;
-    private final CategoryService categoryService;
 
     @GetMapping("/{userId}")
     public String viewProfile(@PathVariable Long userId, Model model, Principal principal) {
@@ -53,24 +52,5 @@ public class ProfileController {
             userImageService.upload(new UserImageDto());
         }
         return "redirect:/profile/" + userId;
-    }
-
-    @GetMapping("/resume/create")
-    public String showResumeForm(Model model) {
-        List<CategoryDto> categories = categoryService.getAllCategories();
-        model.addAttribute("categories", categories);
-        model.addAttribute("resumeDto", new ResumeDto());
-        return "create_resume";
-    }
-
-    @GetMapping("/vacancy/create")
-    public String showCreateVacancyForm() {
-        return "create_vacancy";
-    }
-
-    @PostMapping("/vacancies/create")
-    public String createVacancy(VacancyDto vacancyDto) {
-        vacancyService.createVacancy(vacancyDto);
-        return "redirect:/vacancies";
     }
 }

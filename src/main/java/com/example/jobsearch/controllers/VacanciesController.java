@@ -16,7 +16,19 @@ import java.util.List;
 @RequiredArgsConstructor
 
 public class VacanciesController {
+
     private final VacancyService vacancyService;
+
+    @GetMapping("/vacancy/create")
+    public String showCreateVacancyForm() {
+        return "create_vacancy";
+    }
+
+    @PostMapping("/vacancies/create")
+    public String createVacancy(VacancyDto vacancyDto) {
+        vacancyService.createVacancy(vacancyDto);
+        return "redirect:/vacancies";
+    }
 
     @GetMapping
     public String getAllVacancies(Model model,

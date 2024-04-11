@@ -1,6 +1,8 @@
 package com.example.jobsearch.controllers;
 
+import com.example.jobsearch.dto.CategoryDto;
 import com.example.jobsearch.dto.ResumeDto;
+import com.example.jobsearch.services.CategoryService;
 import com.example.jobsearch.services.ResumeService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
@@ -18,6 +20,15 @@ import java.util.List;
 public class ResumesController {
 
     private final ResumeService resumeService;
+    private final CategoryService categoryService;
+
+    @GetMapping("/resume/create")
+    public String showResumeForm(Model model) {
+        List<CategoryDto> categories = categoryService.getAllCategories();
+        model.addAttribute("categories", categories);
+        model.addAttribute("resumeDto", new ResumeDto());
+        return "create_resume";
+    }
 
     @GetMapping()
     public String viewAllResumes(Model model,
