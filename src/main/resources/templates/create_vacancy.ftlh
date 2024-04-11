@@ -30,7 +30,7 @@
 
 <div class="container mt-5">
     <h2>Создание вакансии:</h2>
-    <form action="/profile/vacancies/create" method="post">
+    <form action="/vacancies/create_vacancy" method="post">
         <div class="form-group">
             <label for="name">Название вакансии:</label>
             <input type="text" class="form-control" id="name" name="name" required>

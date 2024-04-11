@@ -70,7 +70,7 @@
             <#if isApplicant>
                 <div class="card mt-3">
                     <div class="card-body">
-                        <form action="/profile/resume/create" method="get">
+                        <form action="/resumes/create_resume" method="get">
                             <button type="submit" class="btn btn-primary">Создать резюме:</button>
                         </form>
                     </div>
@@ -80,7 +80,7 @@
             <#if isEmployer>
                 <div class="card mt-3">
                     <div class="card-body">
-                        <form action="/profile/vacancy/create" method="get">
+                        <form action="/vacancies/create_vacancy" method="get">
                             <button type="submit" class="btn btn-primary">Добавить вакансию:</button>
                         </form>
                     </div>

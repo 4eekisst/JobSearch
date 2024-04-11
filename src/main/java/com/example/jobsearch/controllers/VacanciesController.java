@@ -19,12 +19,12 @@ public class VacanciesController {
 
     private final VacancyService vacancyService;
 
-    @GetMapping("/vacancy/create")
+    @GetMapping("/create_vacancy")
     public String showCreateVacancyForm() {
         return "create_vacancy";
     }
 
-    @PostMapping("/vacancies/create")
+    @PostMapping("/create_vacancy")
     public String createVacancy(VacancyDto vacancyDto) {
         vacancyService.createVacancy(vacancyDto);
         return "redirect:/vacancies";

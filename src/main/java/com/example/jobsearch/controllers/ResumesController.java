@@ -22,7 +22,7 @@ public class ResumesController {
     private final ResumeService resumeService;
     private final CategoryService categoryService;
 
-    @GetMapping("/resume/create")
+    @GetMapping("/create_resume")
     public String showResumeForm(Model model) {
         List<CategoryDto> categories = categoryService.getAllCategories();
         model.addAttribute("categories", categories);
