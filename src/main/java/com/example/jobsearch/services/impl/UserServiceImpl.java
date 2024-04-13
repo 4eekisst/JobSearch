@@ -7,6 +7,7 @@ import com.example.jobsearch.exceptions.UserNotFoundException;
 import com.example.jobsearch.services.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -18,6 +19,8 @@ import java.util.List;
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
     private final UserDao userDao;
+    private final PasswordEncoder passwordEncoder;
+
 
     @Override
     public List<UserDto> getUsers() {
@@ -50,8 +53,9 @@ public class UserServiceImpl implements UserService {
         return null;
     }
 
-    @Override
     public void createUser(User user) {
+        String encryptedPassword = passwordEncoder.encode(user.getPassword());
+        user.setPassword(encryptedPassword);
         userDao.createUser(user);
     }
 

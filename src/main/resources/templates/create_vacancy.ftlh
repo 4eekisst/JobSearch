@@ -29,38 +29,42 @@
 </nav>
 
 <div class="container mt-5">
-    <h2>Create Vacancy</h2>
-    <form action="/profile/vacancy" method="post">
+    <h2>Создание вакансии:</h2>
+    <form action="/vacancies/create_vacancy" method="post">
         <div class="form-group">
-            <label for="name">Vacancy Name:</label>
+            <label for="name">Название вакансии:</label>
             <input type="text" class="form-control" id="name" name="name" required>
         </div>
         <div class="form-group">
-            <label for="description">Description:</label>
-            <textarea class="form-control" id="description" name="description" required></textarea>
+            <label for="categoryId">Выберите категорию:</label>
+            <input type="text" class="form-control" id="categoryId" name="categoryId" required>
         </div>
         <div class="form-group">
-            <label for="categoryId">Category:</label>
-            <select class="form-control" id="categoryId" name="categoryId" required>
-                <option value="">Select category</option>
-                <option value="1">IT</option>
-                <option value="2">Marketing</option>
-                <option value="3">Finance</option>
-            </select>
+            <label for="description">Описание вакансии:</label>
+            <textarea class="form-control" id="description" name="description" rows="4" cols="50" required></textarea>
         </div>
         <div class="form-group">
-            <label for="salary">Salary:</label>
-            <input type="number" class="form-control" id="salary" name="salary">
+            <label for="authorId">Author ID:</label>
+            <input type="text" class="form-control" id="authorId" name="authorId" required>
         </div>
         <div class="form-group">
-            <label for="expFrom">Experience From:</label>
-            <input type="number" class="form-control" id="expFrom" name="expFrom">
+            <label for="salary">Заработная плата:</label>
+            <input type="number" class="form-control" id="salary" name="salary" required>
+        </div>
+        <p>Требуемый опыт:</p>
+        <div class="form-group">
+            <label for="expFrom">от:</label>
+            <input type="number" class="form-control" id="expFrom" name="expFrom" required>
         </div>
         <div class="form-group">
-            <label for="expTo">Experience To:</label>
-            <input type="number" class="form-control" id="expTo" name="expTo">
+            <label for="expTo">до:</label>
+            <input type="number" class="form-control" id="expTo" name="expTo" required>
         </div>
-        <button type="submit" class="btn btn-primary">Publish</button>
+        <div class="form-group">
+            <label for="isActive">Активно:</label>
+            <input type="checkbox" class="form-control" id="isActive" name="isActive" checked>
+        </div>
+        <button type="submit" class="btn btn-primary">Опубликовать</button>
     </form>
 </div>
 

@@ -30,7 +30,7 @@
 
 <div class="container mt-5">
     <h2>Создание резюме:</h2>
-    <form action="/profile/resume" method="post">
+    <form action="/resumes/create_resume" method="post">
         <div class="form-group">
             <label for="name">Название резюме:</label>
             <input type="text" class="form-control" id="name" name="name" required>

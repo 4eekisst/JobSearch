@@ -29,41 +29,66 @@
     </div>
 </nav>
 <div class="container">
-    <h2>Registration Form</h2>
     <form action="/register/submit" method="post">
+        <h2>Registration Form</h2>
         <div class="form-group">
-            <label for="name">Name:</label>
+            <label for="userType">Кто вы?</label>
+            <input type="hidden" id="roleId" name="roleId">
+            <select class="form-control" id="userType" name="userType" required onchange="toggleFields()">
+                <option value="applicant">Соискатель</option>
+                <option value="employer">Работодатель</option>
+            </select>
+        </div>
+        <div class="form-group" id="nameFields">
+            <label for="name">Имя:</label>
             <input type="text" class="form-control" id="name" name="name" required>
+
+            <label for="surname">Фамилия:</label>
+            <input type="text" class="form-control" id="surname" name="surname">
+        </div>
+        <div class="form-group" id="companyNameFields" style="display:none;">
+            <label for="companyName">Название компании:</label>
+            <input type="text" class="form-control" id="companyName" name="companyName" required>
         </div>
         <div class="form-group">
-            <label for="surname">Surname:</label>
-            <input type="text" class="form-control" id="surname" name="surname" required>
-        </div>
-        <div class="form-group">
-            <label for="age">Age:</label>
+            <label for="age">Возраст:</label>
             <input type="number" class="form-control" id="age" name="age" required>
         </div>
         <div class="form-group">
-            <label for="email">Email Address:</label>
+            <label for="email">Адрес электронной почты:</label>
             <input type="email" class="form-control" id="email" name="email" required>
         </div>
         <div class="form-group">
-            <label for="email">Password:</label>
+            <label for="password">Пароль:</label>
             <input type="password" class="form-control" id="password" name="password" required>
         </div>
         <div class="form-group">
-            <label for="phoneNumber">Phone Number:</label>
+            <label for="phoneNumber">Номер телефона:</label>
             <input type="text" class="form-control" id="phoneNumber" name="phoneNumber" required>
         </div>
-        <div class="form-group">
-            <label for="roleId">Role:</label>
-            <select class="form-control" id="roleId" name="roleId" required>
-                <option value="1">Applicant</option>
-                <option value="2">Employer</option>
-            </select>
-        </div>
+        <input type="hidden" id="roleId" name="roleId">
         <button type="submit" class="btn btn-primary">Register</button>
     </form>
 </div>
+
+<script>
+    function toggleFields() {
+        var userType = document.getElementById("userType").value;
+        var nameFields = document.getElementById("nameFields");
+        var companyNameFields = document.getElementById("companyNameFields");
+        var roleIdField = document.getElementById("roleId");
+
+        if (userType === "applicant") {
+            nameFields.style.display = "block";
+            companyNameFields.style.display = "none";
+            roleIdField.value = "2";
+        } else {
+            nameFields.style.display = "none";
+            companyNameFields.style.display = "block";
+            roleIdField.value = "1";
+        }
+    }
+</script>
+
 </body>
 </html>

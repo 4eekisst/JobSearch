@@ -77,7 +77,8 @@ public class VacancyDao {
     }
 
     public Long createVacancy(Vacancy vacancy) {
-        String sql = "INSERT INTO vacancies (name, description, category_id, author_id, salary, exp_from, exp_to, is_active, created_date, UPDATE_DATE) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO vacancies (name, description, category_id, author_id, salary, exp_from, exp_to, is_active, created_date, update_date) " +
+                "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         GeneratedKeyHolder keyHolder = new GeneratedKeyHolder();
         template.update(connection -> {
             PreparedStatement ps = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
@@ -90,13 +91,12 @@ public class VacancyDao {
             ps.setInt(7, vacancy.getExpTo());
             ps.setBoolean(8, vacancy.getIsActive());
             ps.setObject(9, vacancy.getCreatedDate());
-            ps.setObject(9, LocalDateTime.now());
-
-
+            ps.setObject(10, vacancy.getUpdateTime());
             return ps;
         }, keyHolder);
         return Objects.requireNonNull(keyHolder.getKey()).longValue();
     }
+
 
     public void deleteVacancyById(Long id) {
         String sql = "DELETE FROM vacancies WHERE id = ?";

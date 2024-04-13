@@ -64,14 +64,14 @@
             </form>
 
 
+
             <#--ТУТ ЭДИТ ПРОФИЛЯ-->
 
             <#if isApplicant>
                 <div class="card mt-3">
                     <div class="card-body">
-                        <h5 class="card-title">Добавить резюме:</h5>
-                        <form action="/profile/resume/create" method="get">
-                            <button type="submit" class="btn btn-primary">Создать резюме</button>
+                        <form action="/resumes/create_resume" method="get">
+                            <button type="submit" class="btn btn-primary">Создать резюме:</button>
                         </form>
                     </div>
                 </div>
@@ -80,9 +80,8 @@
             <#if isEmployer>
                 <div class="card mt-3">
                     <div class="card-body">
-                        <h5 class="card-title">Добавить вакансию:</h5>
-                        <form action="/profile/vacancy/create" method="get">
-                            <button type="submit" class="btn btn-primary">Submit</button>
+                        <form action="/vacancies/create_vacancy" method="get">
+                            <button type="submit" class="btn btn-primary">Добавить вакансию:</button>
                         </form>
                     </div>
                 </div>
@@ -174,6 +173,7 @@
                 </div>
                 <div class="modal-body">
                     <form id="editProfileForm" action="/profile/update" method="post">
+                        <input type="hidden" name="id" value="${user.id}">
                         <div class="form-group">
                             <label for="name">Name</label>
                             <input type="text" class="form-control" id="name" name="name" value="${user.name}">
@@ -185,6 +185,10 @@
                         <div class="form-group">
                             <label for="age">Age</label>
                             <input type="number" class="form-control" id="age" name="age" value="${user.age}">
+                        </div>
+                        <div class="form-group">
+                            <label for="phoneNumber">Phone Number</label>
+                            <input type="text" class="form-control" id="phoneNumber" name="phoneNumber" value="${user.phoneNumber}">
                         </div>
                         <button type="submit" class="btn btn-primary">Save changes</button>
                     </form>

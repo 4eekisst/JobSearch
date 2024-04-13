@@ -45,10 +45,8 @@ public class UserDto {
     @NotBlank(message = "Phone number cannot be blank")
     @Pattern(regexp = "^\\+?[0-9]+$", message = "Invalid phone number format")
     private String phoneNumber;
-
     private String avatar;
-
     private Boolean enabled;
-
     private Long roleId;
+    private String avatarUrl;
 }

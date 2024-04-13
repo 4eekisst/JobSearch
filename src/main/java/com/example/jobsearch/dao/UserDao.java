@@ -41,9 +41,9 @@ public class UserDao {
 
     public void createUser(User user) {
         String sql = """
-            insert into users(name, surname, age, email, password, phone_number, avatar, enabled, role_id)
-            values (:name, :surname, :age, :email, :password, :phoneNumber, :avatar, :enabled, :roleId);
-            """;
+        insert into users(name, surname, age, email, password, phone_number, avatar, enabled, role_id)
+        values (:name, :surname, :age, :email, :password, :phoneNumber, :avatar, :enabled, :roleId);
+        """;
         namedParameter.update(sql, new MapSqlParameterSource()
                 .addValue("name", user.getName())
                 .addValue("surname", user.getSurname())
@@ -100,26 +100,33 @@ public class UserDao {
     }
 
     public void editUser(UserDto userDto) {
-        String sql = """
-        UPDATE USERS
-        SET NAME = :name, SURNAME = :surname, AGE = :age, email = :email, password = :password, 
-        phone_number = :phoneNumber, avatar = :avatar, enabled = :enabled, role_id = :roleId
-        WHERE id = :id;
-        """;
-        namedParameter.update(sql, new MapSqlParameterSource()
-                .addValue("name", userDto.getName())
-                .addValue("surname", userDto.getSurname())
-                .addValue("age", userDto.getAge())
-                .addValue("email", userDto.getEmail())
-                .addValue("password", userDto.getPassword())
-                .addValue("phoneNumber", userDto.getPhoneNumber())
-                .addValue("avatar", userDto.getAvatar())
-                .addValue("enabled", userDto.getEnabled())
-                .addValue("roleId", userDto.getRoleId())
-                .addValue("id", userDto.getId())
-        );
-    }
+        StringBuilder sqlBuilder = new StringBuilder("UPDATE USERS SET ");
+        MapSqlParameterSource parameters = new MapSqlParameterSource();
 
+        if (userDto.getName() != null) {
+            sqlBuilder.append("NAME = :name, ");
+            parameters.addValue("name", userDto.getName());
+        }
+        if (userDto.getSurname() != null) {
+            sqlBuilder.append("SURNAME = :surname, ");
+            parameters.addValue("surname", userDto.getSurname());
+        }
+        if (userDto.getAge() != null) {
+            sqlBuilder.append("AGE = :age, ");
+            parameters.addValue("age", userDto.getAge());
+        }
+        if (userDto.getPhoneNumber() != null) {
+            sqlBuilder.append("PHONE_NUMBER = :phoneNumber, ");
+            parameters.addValue("phoneNumber", userDto.getPhoneNumber());
+        }
+
+        sqlBuilder.delete(sqlBuilder.length() - 2, sqlBuilder.length());
+        sqlBuilder.append(" WHERE id = :id");
+
+        parameters.addValue("id", userDto.getId());
+
+        namedParameter.update(sqlBuilder.toString(), parameters);
+    }
 
     public List<User> getUsersByAccountType(String accountType) {
         String sql = "SELECT * FROM users WHERE enabled = ?";
