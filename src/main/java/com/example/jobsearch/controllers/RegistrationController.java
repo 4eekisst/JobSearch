@@ -21,8 +21,14 @@ public class RegistrationController {
     }
 
     @PostMapping("/submit")
-    public String registerUser(@ModelAttribute User user) {
+    public String registerUser(User user, @RequestParam("userType") String userType) {
+        if (userType.equals("applicant")) {
+            user.setRoleId(1L);
+        } else {
+            user.setRoleId(2L);
+        }
         userService.createUser(user);
         return "redirect:/profile/" + user.getRoleId();
     }
+
 }

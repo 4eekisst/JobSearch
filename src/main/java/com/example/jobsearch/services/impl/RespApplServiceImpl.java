@@ -18,8 +18,6 @@ import java.util.List;
 @Slf4j
 public class RespApplServiceImpl implements RespondedApplicantsService {
     private final RespondedApplicantsDao dao;
-    private final ResumeService resumeService;
-    private final VacancyService vacancyService;
 
     @Override
     public List<RespondedApplicantDto> getAllRespondents() {
