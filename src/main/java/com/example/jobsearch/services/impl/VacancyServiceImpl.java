@@ -135,15 +135,30 @@ public class VacancyServiceImpl implements VacancyService {
         Vacancy existingVacancy = dao.getVacancyById(vacancyId)
                 .orElseThrow(() -> new VacancyNotFoundException("Вакансия с id: " + vacancyId + " не найдена"));
 
-        BeanUtils.copyProperties(updatedVacancy, existingVacancy, "id", "createdDate", "updateTime");
+        if (updatedVacancy.getName() != null) {
+            existingVacancy.setName(updatedVacancy.getName());
+        }
+        if (updatedVacancy.getDescription() != null) {
+            existingVacancy.setDescription(updatedVacancy.getDescription());
+        }
+        if (updatedVacancy.getCategoryId() != null) {
+            existingVacancy.setCategoryId(updatedVacancy.getCategoryId());
+        }
+        if (updatedVacancy.getSalary() != null) {
+            existingVacancy.setSalary(updatedVacancy.getSalary());
+        }
         existingVacancy.setUpdateTime(LocalDateTime.now());
+
         dao.updateVacancy(existingVacancy);
+
         return VacancyDto.builder()
                 .id(existingVacancy.getId())
                 .createdDate(existingVacancy.getCreatedDate())
                 .updateTime(existingVacancy.getUpdateTime())
                 .build();
     }
+
+
 
     @Override
     public List<ResumeDto> getRespondedApplicants(Long vacancyId) {

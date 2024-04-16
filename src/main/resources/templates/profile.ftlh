@@ -29,8 +29,8 @@
     </div>
 </nav>
 
+<#--проверка на соискателя и работодателя -->
 <div class="container mt-5">
-
     <#if user??>
         <#if user.roleId == 1>
             <div class="card mt-3">
@@ -47,51 +47,33 @@
             </div>
         </#if>
     </#if>
-
+    <#--проверка на соискателя и работодателя конец -->
 
     <div class="card">
-        <div class="card-body">
-            <h5 class="card-title">Имя: ${user.name}</h5>
-            <h5 class="card-title">Фамилия: ${user.surname}</h5>
-            <h5 class="card-title">Возраст: ${user.age}</h5>
-            <button type="button" class="btn btn-primary mb-3" data-toggle="modal" data-target="#editProfileModal">
-                Edit
-            </button>
-            <form action="/profile/uploadAvatar" method="post" enctype="multipart/form-data">
-                <input type="file" name="file" accept="image/jpeg,image/jpg">
-                <input type="hidden" name="userId" value="${user.id}">
-                <button type="submit">Upload Avatar</button>
-            </form>
-
-
-
-            <#--ТУТ ЭДИТ ПРОФИЛЯ-->
-
-            <#if isApplicant>
-                <div class="card mt-3">
-                    <div class="card-body">
-                        <form action="/resumes/create_resume" method="get">
-                            <button type="submit" class="btn btn-primary">Создать резюме:</button>
-                        </form>
-                    </div>
-                </div>
-            </#if>
-
-            <#if isEmployer>
-                <div class="card mt-3">
-                    <div class="card-body">
-                        <form action="/vacancies/create_vacancy" method="get">
-                            <button type="submit" class="btn btn-primary">Добавить вакансию:</button>
-                        </form>
-                    </div>
-                </div>
-            </#if>
+        <div class="card-body d-flex justify-content-between align-items-center">
+            <div>
+                <h5 class="card-title">
+                    <span>${user.name}</span> <span>${user.surname}</span>
+                </h5>
+                <h5 class="card-title">Возраст: ${user.age}</h5>
+                <button type="button" class="btn btn-primary mb-3" data-toggle="modal" data-target="#editProfileModal">
+                    Редактировать
+                </button>
+            </div>
+            <div class="text-right">
+                <form action="<#if isEmployer>/vacancies/create_vacancy<#else>/resumes/create_resume</#if>" method="get"
+                      class="mb-0">
+                    <button type="submit" class="btn btn-primary btn-square btn-3d">
+                        <#if isEmployer>Добавить вакансию<#else>Создать резюме</#if>
+                    </button>
+                </form>
+            </div>
         </div>
+    </div>
 
-        <#--СПИСОК РЕЗЮМЕ И ВАКАНСИЙ-->
-
-        <div class="container mt-5">
-            <#if user??>
+    <#--соискатель-->
+    <div class="container mt-5">
+        <#if user??>
             <#if user.roleId == 1>
                 <#if resumes?? && resumes?size != 0>
                     <h3 class="my-3 text-center">Резюме:</h3>
@@ -125,48 +107,59 @@
                     </div>
                 </#if>
             </#if>
-            <#if user.roleId == 2>
+        </#if>
+        <#--соискатель-->
+
+        <#--работодатель-->
+        <#if user.roleId?has_content && user.roleId == 2>
             <#if vacancies?? && vacancies?size != 0>
-            <h3 class="my-3 text-center">Созданные вакансии:</h3>
-            <div class="row row-cols-2">
-                <#list vacancies as vacancy>
-                    <div class="col">
-                        <div class="card mb-3">
-                            <div class="card-header">
-                                <h5 class="card-title">${vacancy.name}</h5>
-                            </div>
-                            <div class="card-body">
-                                <p class="card-text">
-                                    <#if vacancy.updatedTime??>
-                                <h6>Updated Date: ${vacancy.updatedTime}</h6>
-                                <#else>
-                                    <h6>Created Date: ${vacancy.createdDate}</h6>
-                                </#if>
-                                </p>
-                            </div>
-                            <div class="card-footer">
-                                <a href="#" class="btn btn-secondary">Update</a>
-                                <a href="#" class="btn btn-secondary">Edit</a>
+                <h3 class="my-3 text-center">Созданные вакансии:</h3>
+                <div class="row row-cols-2">
+                    <#list vacancies as vacancy>
+                        <div class="col">
+                            <div class="card mb-3">
+                                <div class="card-header">
+                                    <h5 class="card-title">${vacancy.name}</h5>
+                                </div>
+                                <div class="card-body">
+                                    <p class="card-text">
+                                        <#if vacancy.updatedTime??>
+                                    <h6>Updated Date: ${vacancy.updatedTime}</h6>
+                                    <#else>
+                                        <h6>Created Date: ${vacancy.createdDate}</h6>
+                                    </#if>
+                                    </p>
+                                </div>
+                                <div class="card-footer">
+                                    <form action="/vacancies/edit/${vacancy.id}" method="get" style="display: inline;">
+                                        <button type="submit" class="btn btn-primary">Редактировать вакансию</button>
+                                    </form>
+                                    <form action="/vacancies/edit/${vacancy.id}" method="post" style="display: inline;">
+                                        <button type="submit" class="btn btn-primary">Обновить вакансию</button>
+                                    </form>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                </#list>
-                </#if>
-                </#if>
-                </#if>
-            </div>
-        </div>
-        <#--СПИСОК РЕЗЮМЕ И ВАКАНСИЙ-->
-
+                    </#list>
+                </div>
+            <#else>
+                <div class="alert alert-info" role="alert">
+                    You have no vacancies yet
+                </div>
+            </#if>
+        </#if>
     </div>
+    <#--работодатель-->
+    <#--список вакансий и резюме конец-->
 
-
-    <div class="modal fade" id="editProfileModal" tabindex="-1" role="dialog" aria-labelledby="editProfileModalLabel"
+    <#--модальное окно для редактирования профиля-->
+    <div class="modal fade" id="editProfileModal" tabindex="-1" role="dialog"
+         aria-labelledby="editProfileModalLabel"
          aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="editProfileModalLabel">Edit Profile</h5>
+                    <h5 class="modal-title" id="editProfileModalLabel">Редактирование профиля</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
@@ -175,31 +168,33 @@
                     <form id="editProfileForm" action="/profile/update" method="post">
                         <input type="hidden" name="id" value="${user.id}">
                         <div class="form-group">
-                            <label for="name">Name</label>
+                            <label for="name">Имя</label>
                             <input type="text" class="form-control" id="name" name="name" value="${user.name}">
                         </div>
                         <div class="form-group">
-                            <label for="surname">Surname</label>
-                            <input type="text" class="form-control" id="surname" name="surname" value="${user.surname}">
+                            <label for="surname">Фамилия</label>
+                            <input type="text" class="form-control" id="surname" name="surname"
+                                   value="${user.surname}">
                         </div>
                         <div class="form-group">
-                            <label for="age">Age</label>
+                            <label for="age">Возраст</label>
                             <input type="number" class="form-control" id="age" name="age" value="${user.age}">
                         </div>
                         <div class="form-group">
-                            <label for="phoneNumber">Phone Number</label>
-                            <input type="text" class="form-control" id="phoneNumber" name="phoneNumber" value="${user.phoneNumber}">
+                            <label for="phoneNumber">Номер телефона</label>
+                            <input type="text" class="form-control" id="phoneNumber" name="phoneNumber"
+                                   value="${user.phoneNumber}">
                         </div>
-                        <button type="submit" class="btn btn-primary">Save changes</button>
+                        <button type="submit" class="btn btn-primary">Сохранить изменения</button>
                     </form>
                 </div>
             </div>
         </div>
     </div>
-
-
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</div>
+<#--модальное окно для редактирования профиля конец-->
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
 </html>

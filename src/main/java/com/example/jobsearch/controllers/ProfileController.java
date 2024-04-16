@@ -1,6 +1,7 @@
 package com.example.jobsearch.controllers;
 
 import com.example.jobsearch.dto.*;
+import com.example.jobsearch.exceptions.UserNotFoundException;
 import com.example.jobsearch.services.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
@@ -18,9 +19,10 @@ import java.util.List;
 public class ProfileController {
 
     private final UserService userService;
-    private final UserImageService userImageService;
     private final ResumeService resumeService;
     private final VacancyService vacancyService;
+    private final UserImageService userImageService;
+
 
     @GetMapping("/{userId}")
     public String viewProfile(@PathVariable Long userId, Model model, Principal principal) {
@@ -41,16 +43,22 @@ public class ProfileController {
     }
 
     @PostMapping("/update")
-    public String updateProfile(@ModelAttribute UserDto userDto) {
+    public String updateProfile(UserDto userDto) throws UserNotFoundException {
         userService.editUser(userDto);
         return "redirect:/profile/" + userDto.getId();
     }
 
     @PostMapping("/uploadAvatar")
-    public String uploadAvatar(@RequestParam("file") MultipartFile file, @RequestParam("userId") Long userId) throws IOException {
-        if (!file.isEmpty()) {
-            userImageService.upload(new UserImageDto());
+    public String uploadImage(@RequestParam("file") MultipartFile file,
+                              @RequestParam("userId") Long userId) {
+        try {
+            UserImageDto userImageDto = new UserImageDto();
+            userImageDto.setUserId(userId);
+            userImageDto.setFile(file);
+            userImageService.upload(userImageDto);
+            return "redirect:/profile/" + userId;
+        } catch (Exception e) {
+            return "error";
         }
-        return "redirect:/profile/" + userId;
     }
 }

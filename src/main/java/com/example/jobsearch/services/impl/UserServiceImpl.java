@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 
 @Service
 @Slf4j
@@ -95,10 +96,6 @@ public class UserServiceImpl implements UserService {
         return userDao.getUserByEmail(email).isPresent();
     }
 
-    @Override
-    public void editUser(UserDto userDto) {
-        userDao.editUser(userDto);
-    }
 
     private UserDto getUserDto(User user) {
         return UserDto.builder()
@@ -112,6 +109,42 @@ public class UserServiceImpl implements UserService {
                 .enabled(user.isEnabled())
                 .roleId(user.getRoleId())
                 .build();
+    }
+
+    @Override
+    public void editUser(UserDto userDto) throws UserNotFoundException {
+        User user = userDao.getUserById(userDto.getId())
+                .orElseThrow(() -> new UserNotFoundException("User with id " + userDto.getId() + " not found"));
+
+        if (userDto.getName() != null) {
+            user.setName(userDto.getName());
+        }
+        if (userDto.getSurname() != null) {
+            user.setSurname(userDto.getSurname());
+        }
+        if (userDto.getAge() != null) {
+            user.setAge(userDto.getAge());
+        }
+        if (userDto.getEmail() != null) {
+            user.setEmail(userDto.getEmail());
+        }
+        if (userDto.getPassword() != null) {
+            user.setPassword(userDto.getPassword());
+        }
+        if (userDto.getPhoneNumber() != null) {
+            user.setPhoneNumber(userDto.getPhoneNumber());
+        }
+        if (userDto.getAvatar() != null) {
+            user.setAvatar(userDto.getAvatar());
+        }
+        if (userDto.getEnabled() != null) {
+            user.setEnabled(userDto.getEnabled());
+        }
+        if (userDto.getRoleId() != null) {
+            user.setRoleId(userDto.getRoleId());
+        }
+
+        userDao.editUser(user);
     }
 
     @Override

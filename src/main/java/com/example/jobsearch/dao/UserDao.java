@@ -98,34 +98,26 @@ public class UserDao {
                 )
         );
     }
-
-    public void editUser(UserDto userDto) {
-        StringBuilder sqlBuilder = new StringBuilder("UPDATE USERS SET ");
-        MapSqlParameterSource parameters = new MapSqlParameterSource();
-
-        if (userDto.getName() != null) {
-            sqlBuilder.append("NAME = :name, ");
-            parameters.addValue("name", userDto.getName());
-        }
-        if (userDto.getSurname() != null) {
-            sqlBuilder.append("SURNAME = :surname, ");
-            parameters.addValue("surname", userDto.getSurname());
-        }
-        if (userDto.getAge() != null) {
-            sqlBuilder.append("AGE = :age, ");
-            parameters.addValue("age", userDto.getAge());
-        }
-        if (userDto.getPhoneNumber() != null) {
-            sqlBuilder.append("PHONE_NUMBER = :phoneNumber, ");
-            parameters.addValue("phoneNumber", userDto.getPhoneNumber());
-        }
-
-        sqlBuilder.delete(sqlBuilder.length() - 2, sqlBuilder.length());
-        sqlBuilder.append(" WHERE id = :id");
-
-        parameters.addValue("id", userDto.getId());
-
-        namedParameter.update(sqlBuilder.toString(), parameters);
+    public void editUser(User user) {
+        String sql = """
+            UPDATE USERS
+            SET NAME = :name, SURNAME = :surname, AGE = :age, email = :email, 
+                password = :password, phone_number = :phoneNumber, avatar = :avatar, 
+                enabled = :enabled, role_id = :roleId
+            WHERE id = :id;
+            """;
+        namedParameter.update(sql, new MapSqlParameterSource()
+                .addValue("name", user.getName())
+                .addValue("surname", user.getSurname())
+                .addValue("age", user.getAge())
+                .addValue("email", user.getEmail())
+                .addValue("password", user.getPassword())
+                .addValue("phoneNumber", user.getPhoneNumber())
+                .addValue("avatar", user.getAvatar())
+                .addValue("enabled", user.isEnabled())
+                .addValue("roleId", user.getRoleId())
+                .addValue("id", user.getId())
+        );
     }
 
     public List<User> getUsersByAccountType(String accountType) {

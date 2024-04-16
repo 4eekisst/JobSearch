@@ -77,6 +77,11 @@
             <input type="text" class="form-control" id="educationDuration" name="educationDuration" required>
         </div>
         <div class="form-group">
+            <label for="applicantId">Идентификатор соискателя:</label>
+            <input type="text" class="form-control" id="applicantId" name="applicantId" required>
+        </div>
+
+        <div class="form-group">
             <label for="socialLinks">Ссылки на соц. сети:</label><br>
             <span class="mr-3"><i class="fab fa-telegram"></i> <input type="text" class="form-control" id="telegram" name="telegram" placeholder="Telegram"></span>
             <span class="mr-3"><i class="far fa-envelope"></i> <input type="email" class="form-control" id="email" name="email" placeholder="Email"></span>

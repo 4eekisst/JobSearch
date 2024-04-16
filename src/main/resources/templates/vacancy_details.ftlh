@@ -36,10 +36,6 @@
             <p class="card-text">Salary: ${vacancy.salary}</p>
             <p class="card-text">Category id: ${vacancy.categoryId}</p>
             <p class="card-text">created date: ${vacancy.createdDate}</p>
-
-
-
-
         </div>
     </div>
 </div>

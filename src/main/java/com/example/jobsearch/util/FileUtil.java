@@ -1,5 +1,6 @@
 package com.example.jobsearch.util;
 
+import com.example.jobsearch.dto.UserDto;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
