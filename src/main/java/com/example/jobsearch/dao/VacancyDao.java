@@ -104,7 +104,7 @@ public class VacancyDao {
     }
 
     public void updateVacancy(Vacancy vacancy) {
-        String sql = "UPDATE vacancies SET name=?, description=?, category_id=?, author_id=?, salary=?, exp_from=?, exp_to=?, is_active=?, UPDATE_DATE=? WHERE id=?";
+        String sql = "UPDATE vacancies SET name=?, description=?, category_id=?, author_id=?, salary=?, exp_from=?, exp_to=?, is_active=?, update_date=? WHERE id=?";
         template.update(sql, vacancy.getName(), vacancy.getDescription(), vacancy.getCategoryId(), vacancy.getAuthorId(), vacancy.getSalary(), vacancy.getExpFrom(), vacancy.getExpTo(), vacancy.getIsActive(), vacancy.getUpdateTime(), vacancy.getId());
     }
 

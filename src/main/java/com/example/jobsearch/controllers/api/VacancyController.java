@@ -59,17 +59,17 @@ public class VacancyController {
         return ResponseEntity.ok(HttpStatus.OK);
     }
 
-    @PutMapping("/{vacancyId}")
-    public ResponseEntity<?> updateVacancy(@PathVariable Long vacancyId, @RequestBody VacancyDto updatedVacancy) {
-        try {
-            VacancyDto updatedDto = service.updateVacancy(vacancyId, updatedVacancy);
-            return ResponseEntity.ok(updatedDto);
-        } catch (VacancyNotFoundException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to update vacancy: " + e.getMessage());
-        }
-    }
+//    @PutMapping("/{vacancyId}")
+//    public ResponseEntity<?> updateVacancy(@PathVariable Long vacancyId, @RequestBody VacancyDto updatedVacancy) {
+//        try {
+//            VacancyDto updatedDto = service.updateVacancy(vacancyId, updatedVacancy);
+//            return ResponseEntity.ok(updatedDto);
+//        } catch (VacancyNotFoundException e) {
+//            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+//        } catch (Exception e) {
+//            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to update vacancy: " + e.getMessage());
+//        }
+//    }
 
     @GetMapping("/{vacancyId}/applicants")
     public ResponseEntity<?> getRespondedApplicants(@PathVariable Long vacancyId) {

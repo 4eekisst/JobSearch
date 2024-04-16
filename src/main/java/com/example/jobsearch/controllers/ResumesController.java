@@ -7,10 +7,7 @@ import com.example.jobsearch.services.ResumeService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -28,6 +25,12 @@ public class ResumesController {
         model.addAttribute("categories", categories);
         model.addAttribute("resumeDto", new ResumeDto());
         return "create_resume";
+    }
+
+    @PostMapping("/create_resume")
+    public String createResume(ResumeDto resumeDto) {
+        resumeService.createResume(resumeDto);
+        return "redirect:/resumes";
     }
 
     @GetMapping()

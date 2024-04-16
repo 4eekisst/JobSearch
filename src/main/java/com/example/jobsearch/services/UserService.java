@@ -1,6 +1,7 @@
 package com.example.jobsearch.services;
 
 import com.example.jobsearch.dto.UserDto;
+import com.example.jobsearch.exceptions.UserNotFoundException;
 import com.example.jobsearch.models.User;
 
 import java.util.List;
@@ -12,9 +13,9 @@ public interface UserService {
     void createUser(User user);
     List<UserDto> getUserByName(String name);
     UserDto getUserByPhone(String phone);
+    void editUser(UserDto userDto) throws UserNotFoundException;
     Long getUserId(String user);
     Boolean checkIfUserExists(String email);
-    void editUser(UserDto userDto);
     List<UserDto> getApplicantsByAccountType(String accountType);
     List<UserDto> getEmployersByAccountType(String accountType);
     List<UserDto> getAllUsersByVacancyId(Long id);

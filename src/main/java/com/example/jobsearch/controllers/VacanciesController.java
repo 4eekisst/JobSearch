@@ -1,10 +1,9 @@
 package com.example.jobsearch.controllers;
 
 import com.example.jobsearch.dto.VacancyDto;
+import com.example.jobsearch.exceptions.VacancyNotFoundException;
 import com.example.jobsearch.services.VacancyService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -80,5 +79,18 @@ public class VacanciesController {
         VacancyDto vacancy = vacancyService.getVacancyById(id);
         model.addAttribute("vacancy", vacancy);
         return "vacancy_details";
+    }
+
+    @GetMapping("/edit/{id}")
+    public String showEditVacancyForm(@PathVariable("id") Long id, Model model) {
+        VacancyDto vacancy = vacancyService.getVacancyById(id);
+        model.addAttribute("vacancy", vacancy);
+        return "edit_vacancy";
+    }
+    @PostMapping("/edit/{id}")
+    public String updateVacancy(@PathVariable("id") Long id, VacancyDto updatedVacancy) throws VacancyNotFoundException {
+        updatedVacancy.setId(id);
+        vacancyService.updateVacancy(id, updatedVacancy);
+        return "redirect:/vacancies";
     }
 }
