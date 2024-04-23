@@ -20,15 +20,12 @@ public class RegistrationController {
         return "register";
     }
 
-    @PostMapping("/submit")
-    public String registerUser(User user, @RequestParam("userType") String userType) {
-        if (userType.equals("applicant")) {
-            user.setRoleId(1L);
-        } else {
-            user.setRoleId(2L);
-        }
-        userService.createUser(user);
-        return "redirect:/profile/" + user.getRoleId();
-    }
+    @PostMapping
+    public String registerUser(@ModelAttribute("user") User user, @RequestParam("accountType") String accountType) {
+        Long roleId = accountType.equalsIgnoreCase("employer") ? 2L : 1L;
+        user.setRoleId(roleId);
 
+        userService.createUser(user);
+        return "redirect:/login";
+    }
 }

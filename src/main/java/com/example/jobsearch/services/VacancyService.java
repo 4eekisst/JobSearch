@@ -7,6 +7,8 @@ import com.example.jobsearch.dto.VacancyDto;
 import com.example.jobsearch.exceptions.CategoryNotFoundException;
 import com.example.jobsearch.exceptions.UserNotFoundException;
 import com.example.jobsearch.exceptions.VacancyNotFoundException;
+import com.example.jobsearch.models.Vacancy;
+import org.springframework.security.core.Authentication;
 
 import java.util.List;
 
@@ -29,4 +31,6 @@ public interface VacancyService {
     VacancyDto updateVacancy(Long vacancyId, VacancyDto updatedVacancy) throws VacancyNotFoundException;
 
     List<ResumeDto> getRespondedApplicants(Long vacancyId);
+
+    List<Vacancy> getVacanciesByEmployer(Authentication authentication);
 }

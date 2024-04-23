@@ -1,8 +1,10 @@
 package com.example.jobsearch.services;
 
 import com.example.jobsearch.dto.UserDto;
+import com.example.jobsearch.dto.UserProfileDto;
 import com.example.jobsearch.exceptions.UserNotFoundException;
 import com.example.jobsearch.models.User;
+import org.springframework.security.core.Authentication;
 
 import java.util.List;
 
@@ -19,4 +21,5 @@ public interface UserService {
     List<UserDto> getApplicantsByAccountType(String accountType);
     List<UserDto> getEmployersByAccountType(String accountType);
     List<UserDto> getAllUsersByVacancyId(Long id);
+    UserProfileDto getUser(Authentication authentication);
 }

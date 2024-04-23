@@ -13,9 +13,11 @@ import com.example.jobsearch.models.Resume;
 import com.example.jobsearch.services.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 @Service
@@ -29,6 +31,7 @@ public class ResumeServiceImpl implements ResumeService {
     private final EducationService educationService;
     private final WorkExperienceService workExperienceService;
     private final ContactService contactService;
+
 
     @Override
     public List<ResumeDto> getResumeByCategory(String categoryName) throws CategoryNotFoundException {
@@ -45,6 +48,15 @@ public class ResumeServiceImpl implements ResumeService {
         int offset = page * pageSize;
         List<Resume> resumes = dao.getResumes(offset, pageSize);
         return getResumeDtos(resumes);
+    }
+
+    public List<Resume> getResumesByApplicant(Authentication authentication) {
+        if (authentication == null || !authentication.isAuthenticated()) {
+            return Collections.emptyList();
+        }
+
+        String userEmail = authentication.getName();
+        return dao.getResumesByApplicant(userEmail);
     }
 
     @Override

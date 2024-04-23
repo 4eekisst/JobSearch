@@ -68,6 +68,16 @@ public class VacancyDao {
         return template.query(sql, new BeanPropertyRowMapper<>(Vacancy.class), id);
     }
 
+    public List<Vacancy> getVacanciesByEmployer(String email) {
+        String sql = """
+        SELECT v.* 
+        FROM VACANCIES v
+        JOIN USERS u ON v.AUTHOR_ID = u.ID
+        WHERE u.EMAIL = ?
+        """;
+        return template.query(sql, new BeanPropertyRowMapper<>(Vacancy.class), email);
+    }
+
     public List<Vacancy> getVacancyByCategory(Long id) {
         String sql = """
                 SELECT * FROM vacancies\s
