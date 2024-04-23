@@ -111,6 +111,16 @@ public class ResumeDao {
         );
     }
 
+    public List<Resume> getResumesByApplicant(String email) {
+        String sql = """
+        SELECT r.* 
+        FROM RESUMES r
+        JOIN USERS u ON r.APPLICANT_ID = u.ID
+        WHERE u.EMAIL = ?
+        """;
+        return template.query(sql, new BeanPropertyRowMapper<>(Resume.class), email);
+    }
+
     public void activateResume(Long id) {
         String sql = "UPDATE RESUMES SET IS_ACTIVE = TRUE WHERE ID = ?";
         template.update(sql, id);

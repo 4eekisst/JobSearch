@@ -5,6 +5,8 @@ import com.example.jobsearch.dto.ResumeDto;
 import com.example.jobsearch.services.CategoryService;
 import com.example.jobsearch.services.ResumeService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -28,10 +30,15 @@ public class ResumesController {
     }
 
     @PostMapping("/create_resume")
-    public String createResume(ResumeDto resumeDto) {
-        resumeService.createResume(resumeDto);
-        return "redirect:/resumes";
+    public ResponseEntity<String> createResume(@RequestBody ResumeDto resumeDto) {
+        try {
+            resumeService.createResume(resumeDto);
+            return ResponseEntity.ok("Resume created successfully");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to create resume: " + e.getMessage());
+        }
     }
+
 
     @GetMapping()
     public String viewAllResumes(Model model,

@@ -9,7 +9,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
 import java.security.Principal;
 import java.util.List;
 
@@ -58,7 +57,7 @@ public class ProfileController {
             userImageService.upload(userImageDto);
             return "redirect:/profile/" + userId;
         } catch (Exception e) {
-            return "error";
+            return "/profile";
         }
     }
 }

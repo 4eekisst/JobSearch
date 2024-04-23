@@ -2,18 +2,17 @@ package com.example.jobsearch.services.impl;
 
 import com.example.jobsearch.dao.UserDao;
 import com.example.jobsearch.dto.UserDto;
+import com.example.jobsearch.dto.UserProfileDto;
 import com.example.jobsearch.models.User;
 import com.example.jobsearch.exceptions.UserNotFoundException;
 import com.example.jobsearch.services.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 @Service
 @Slf4j
@@ -29,6 +28,27 @@ public class UserServiceImpl implements UserService {
         List<UserDto> dtos = new ArrayList<>();
         users.forEach(e -> dtos.add(getUserDto(e)));
         return dtos;
+    }
+
+    @Override
+    public UserProfileDto getUser(Authentication authentication) {
+        User user = userDao.getUserByEmail(authentication.getName()).orElseThrow(()-> new NoSuchElementException("User not found"));
+        String accountType = "Employer";
+        if (user.getRoleId()==2){
+            accountType = "Applicant";
+        }
+
+        return UserProfileDto.builder()
+                .id(user.getId())
+                .age(user.getAge())
+                .phoneNumber(user.getPhoneNumber())
+                .email(user.getEmail())
+                .password(user.getPassword())
+                .accountType(accountType)
+                .avatar(user.getAvatar())
+                .surName(user.getSurname())
+                .name(user.getName())
+                .build();
     }
 
     @Override
@@ -95,6 +115,8 @@ public class UserServiceImpl implements UserService {
     public Boolean checkIfUserExists(String email) {
         return userDao.getUserByEmail(email).isPresent();
     }
+
+
 
 
     private UserDto getUserDto(User user) {

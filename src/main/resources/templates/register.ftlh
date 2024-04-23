@@ -3,59 +3,27 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>User Registration</title>
+    <title>Форма регистрации</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
 </head>
 <body>
-<nav class="navbar navbar-expand-lg navbar-light bg-light">
-    <a class="navbar-brand" href="/register">Job Search</a>
-    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
-            aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-    </button>
-    <div class="collapse navbar-collapse" id="navbarNav">
-        <ul class="navbar-nav">
-            <li class="nav-item active">
-                <a class="nav-link" href="/register">Registration Form
-                    <span class="sr-only">(current)</span></a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="/vacancies">List of vacancies</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="/resumes">List of resumes</a>
-            </li>
-        </ul>
-    </div>
-</nav>
-<div class="container">
-    <form action="/register/submit" method="post">
-        <h2>Registration Form</h2>
+<div class="container mt-5">
+    <h1>Форма регистрации</h1>
+    <form action="/register" method="post">
         <div class="form-group">
-            <label for="userType">Кто вы?</label>
-            <input type="hidden" id="roleId" name="roleId">
-            <select class="form-control" id="userType" name="userType" required onchange="toggleFields()">
-                <option value="applicant">Соискатель</option>
-                <option value="employer">Работодатель</option>
-            </select>
-        </div>
-        <div class="form-group" id="nameFields">
             <label for="name">Имя:</label>
             <input type="text" class="form-control" id="name" name="name" required>
-
-            <label for="surname">Фамилия:</label>
-            <input type="text" class="form-control" id="surname" name="surname">
         </div>
-        <div class="form-group" id="companyNameFields" style="display:none;">
-            <label for="companyName">Название компании:</label>
-            <input type="text" class="form-control" id="companyName" name="companyName" required>
+        <div class="form-group">
+            <label for="surname">Фамилия:</label>
+            <input type="text" class="form-control" id="surname" name="surname" required>
         </div>
         <div class="form-group">
             <label for="age">Возраст:</label>
-            <input type="number" class="form-control" id="age" name="age" required>
+            <input type="number" class="form-control" id="age" name="age" min="18" max="50" required>
         </div>
         <div class="form-group">
-            <label for="email">Адрес электронной почты:</label>
+            <label for="email">Ваш адрес электронной почты:</label>
             <input type="email" class="form-control" id="email" name="email" required>
         </div>
         <div class="form-group">
@@ -64,31 +32,17 @@
         </div>
         <div class="form-group">
             <label for="phoneNumber">Номер телефона:</label>
-            <input type="text" class="form-control" id="phoneNumber" name="phoneNumber" required>
+            <input type="tel" class="form-control" id="phoneNumber" name="phoneNumber" pattern="[0-9]+" required>
         </div>
-        <input type="hidden" id="roleId" name="roleId">
-        <button type="submit" class="btn btn-primary">Register</button>
+        <div class="form-group">
+            <label for="accountType">Кто вы?:</label>
+            <select class="form-control" id="accountType" name="accountType" required>
+                <option value="applicant">Соискатель</option>
+                <option value="employer">Работодатель</option>
+            </select>
+        </div>
+        <button type="submit" class="btn btn-primary">Зарегестрироваться</button>
     </form>
 </div>
-
-<script>
-    function toggleFields() {
-        var userType = document.getElementById("userType").value;
-        var nameFields = document.getElementById("nameFields");
-        var companyNameFields = document.getElementById("companyNameFields");
-        var roleIdField = document.getElementById("roleId");
-
-        if (userType === "applicant") {
-            nameFields.style.display = "block";
-            companyNameFields.style.display = "none";
-            roleIdField.value = "2";
-        } else {
-            nameFields.style.display = "none";
-            companyNameFields.style.display = "block";
-            roleIdField.value = "1";
-        }
-    }
-</script>
-
 </body>
 </html>

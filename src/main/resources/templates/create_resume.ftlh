@@ -52,48 +52,51 @@
             <label for="aboutMe">О себе:</label>
             <textarea class="form-control" id="aboutMe" name="aboutMe" required></textarea>
         </div>
-        <div class="form-group">
-            <label for="experienceYear">Год работы:</label>
-            <input type="number" class="form-control" id="experienceYear" name="experienceYear" required>
-        </div>
-        <div class="form-group">
-            <label for="companyName">Название компании:</label>
-            <input type="text" class="form-control" id="companyName" name="companyName" required>
-        </div>
-        <div class="form-group">
-            <label for="position">Должность:</label>
-            <input type="text" class="form-control" id="position" name="position" required>
-        </div>
-        <div class="form-group">
-            <label for="responsibilities">Обязанности:</label>
-            <textarea class="form-control" id="responsibilities" name="responsibilities" required></textarea>
-        </div>
-        <div class="form-group">
-            <label for="educationPlace">Место обучения:</label>
-            <input type="text" class="form-control" id="educationPlace" name="educationPlace" required>
-        </div>
-        <div class="form-group">
-            <label for="educationDuration">Срок обучения:</label>
-            <input type="text" class="form-control" id="educationDuration" name="educationDuration" required>
-        </div>
-        <div class="form-group">
-            <label for="applicantId">Идентификатор соискателя:</label>
-            <input type="text" class="form-control" id="applicantId" name="applicantId" required>
-        </div>
 
         <div class="form-group">
-            <label for="socialLinks">Ссылки на соц. сети:</label><br>
-            <span class="mr-3"><i class="fab fa-telegram"></i> <input type="text" class="form-control" id="telegram" name="telegram" placeholder="Telegram"></span>
-            <span class="mr-3"><i class="far fa-envelope"></i> <input type="email" class="form-control" id="email" name="email" placeholder="Email"></span>
-            <span class="mr-3"><i class="fas fa-phone"></i> <input type="tel" class="form-control" id="phoneNumber" name="phoneNumber" placeholder="Phone Number"></span>
-            <span class="mr-3"><i class="fab fa-facebook"></i> <input type="text" class="form-control" id="facebook" name="facebook" placeholder="Facebook"></span>
-            <span class="mr-3"><i class="fab fa-linkedin"></i> <input type="text" class="form-control" id="linkedin" name="linkedin" placeholder="Linkedin"></span>
+            <button type="button" class="btn btn-primary" id="addEducation">Добавить образование</button>
+            <button type="button" class="btn btn-primary" id="addExperience">Добавить опыт работы</button>
+            <button type="button" class="btn btn-primary" id="addSocialLinks">Добавить ссылки на соц. сети</button>
         </div>
+
+        <div id="educationForm"></div>
+        <div id="experienceForm"></div>
+        <div id="socialLinksForm"></div>
+
         <div>
             <button type="submit" class="btn btn-primary">Опубликовать</button>
         </div>
     </form>
 </div>
+
+<script>
+    $("#addEducation").click(function() {
+        if ($("#educationForm .form-group").length === 0) {
+            $("#educationForm").append('<div class="form-group">' +
+                '<label>Образование:</label>' +
+                '<input type="text" class="form-control" name="education[]" required>' +
+                '</div>');
+        }
+    });
+
+    $("#addExperience").click(function() {
+        if ($("#experienceForm .form-group").length === 0) {
+            $("#experienceForm").append('<div class="form-group">' +
+                '<label>Опыт работы:</label>' +
+                '<input type="text" class="form-control" name="experience[]" required>' +
+                '</div>');
+        }
+    });
+
+    $("#addSocialLinks").click(function() {
+        if ($("#socialLinksForm .form-group").length === 0) {
+            $("#socialLinksForm").append('<div class="form-group">' +
+                '<label>Ссылка на соц.сеть:</label>' +
+                '<input type="url" class="form-control" name="socialLinks[]" required>' +
+                '</div>');
+        }
+    });
+</script>
 
 <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>

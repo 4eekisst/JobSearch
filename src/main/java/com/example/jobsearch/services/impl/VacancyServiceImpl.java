@@ -13,11 +13,12 @@ import com.example.jobsearch.services.UserService;
 import com.example.jobsearch.services.VacancyService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.BeanUtils;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 @Service
@@ -129,6 +130,14 @@ public class VacancyServiceImpl implements VacancyService {
         return dtos;
     }
 
+    public List<Vacancy> getVacanciesByEmployer(Authentication authentication) {
+        if (authentication == null || !authentication.isAuthenticated()) {
+            return Collections.emptyList();
+        }
+
+        String userEmail = authentication.getName();
+        return dao.getVacanciesByEmployer(userEmail);
+    }
 
     @Override
     public VacancyDto updateVacancy(Long vacancyId, VacancyDto updatedVacancy) throws VacancyNotFoundException {
