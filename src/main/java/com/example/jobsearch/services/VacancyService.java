@@ -1,36 +1,45 @@
 package com.example.jobsearch.services;
 
 
-import com.example.jobsearch.dto.ResumeDto;
-import com.example.jobsearch.dto.UserDto;
-import com.example.jobsearch.dto.VacancyDto;
-import com.example.jobsearch.exceptions.CategoryNotFoundException;
-import com.example.jobsearch.exceptions.UserNotFoundException;
-import com.example.jobsearch.exceptions.VacancyNotFoundException;
+import com.example.jobsearch.dto.vacancies.VacancyCreateDto;
+import com.example.jobsearch.dto.vacancies.VacancyDto;
+import com.example.jobsearch.dto.vacancies.VacancyEditDto;
 import com.example.jobsearch.models.Vacancy;
+import org.springframework.data.domain.Page;
 import org.springframework.security.core.Authentication;
 
 import java.util.List;
 
 public interface VacancyService {
-    List<VacancyDto> getAllVacancies(int page, int pageSize);
-    int getTotalVacanciesCount();
-    List<VacancyDto> getVacanciesByCategory(String category, int page, int pageSize);
+    List<VacancyDto> getAllVacancies();
 
-    int getTotalVacanciesCountByCategory(String category);
-    List<VacancyDto> getVacanciesOfRespondedApplicant(String email) throws UserNotFoundException;
+    List<VacancyDto> getVacanciesByRespondedApplicant(String email) ;
 
-    List<VacancyDto> getVacanciesOfCategory(String strip) throws CategoryNotFoundException;
+    List<VacancyDto> getVacanciesByCategory(String strip) ;
 
     VacancyDto getVacancyById(Long vacancyId);
 
-    VacancyDto createVacancy(VacancyDto vacancyDto);
+    Boolean deleteVacancyById(Long id);
 
-    void deleteVacancy(Long vacancyId);
+    void editVacancy(VacancyEditDto vacancy, Authentication authentication);
 
-    VacancyDto updateVacancy(Long vacancyId, VacancyDto updatedVacancy) throws VacancyNotFoundException;
+    List<VacancyDto> getAllVacanciesByCompany(String email);
 
-    List<ResumeDto> getRespondedApplicants(Long vacancyId);
+    List<VacancyDto> getActiveVacanciesByCompany(String email);
 
-    List<Vacancy> getVacanciesByEmployer(Authentication authentication);
+    List<VacancyDto> getActiveVacancies();
+
+    VacancyDto getVacancyByName(String name);
+
+    Long createVacancyAndReturnId(VacancyCreateDto vacancyDto, Authentication auth);
+
+    void changeVacancyState(Long id);
+
+    Page<VacancyDto> getActiveVacanciesPage(Integer page,String byUpdate);
+
+    void updateVacancy(Long id);
+
+    boolean existsById(Long id);
+
+    Vacancy getVacancyModelById(Long vacancyId);
 }

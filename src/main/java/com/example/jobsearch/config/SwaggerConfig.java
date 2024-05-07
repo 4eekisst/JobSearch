@@ -6,12 +6,9 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
-
 public class SwaggerConfig {
     @Bean
-    public OpenAPI customOpenIpi () {
-        return new OpenAPI().info(
-                new Info().title("Job Search").version("1.0.0")
-        );
+    public OpenAPI customOpenApi() {
+        return new OpenAPI().info(new Info().title("Job_Search").version("1.0.0"));
     }
 }

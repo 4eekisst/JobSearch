@@ -1,19 +1,33 @@
 package com.example.jobsearch.models;
-
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import jakarta.persistence.*;
+import lombok.*;
 
 import java.time.LocalDateTime;
 
-@Data
-@NoArgsConstructor(access = AccessLevel.PRIVATE)
-@AllArgsConstructor(access = AccessLevel.PRIVATE)
-
+@Getter
+@Setter
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+@Entity
+@Table(name = "messages")
 public class Message {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private Long respondedApplicants;
+
+    @ManyToOne
+    @JoinColumn(name = "responded_applicant_id")
+    private RespondedApplicant respApplicant;
+
+    @ManyToOne
+    @JoinColumn(name = "sender")
+    private UserModel sender;
+
+    @Lob
+    @Column
     private String content;
+
+    @Column
     private LocalDateTime timestamp;
 }

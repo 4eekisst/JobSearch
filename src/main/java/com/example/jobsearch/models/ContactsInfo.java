@@ -1,18 +1,28 @@
 package com.example.jobsearch.models;
+import jakarta.persistence.*;
+import lombok.*;
 
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-
-
-@Data
-@NoArgsConstructor(access = AccessLevel.PRIVATE)
-@AllArgsConstructor(access = AccessLevel.PRIVATE)
-
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
+@Entity
+@Table(name = "contacts_info")
 public class ContactsInfo {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private Long typeId;
-    private Long resumeId;
+
+    @ManyToOne
+    @JoinColumn(name = "type_id")
+    private ContactType type;
+
+    @ManyToOne
+    @JoinColumn(name = "resume_id")
+    private Resume resume;
+
+    @Lob
+    @Column(name = "info_value")
     private String infoValue;
 }

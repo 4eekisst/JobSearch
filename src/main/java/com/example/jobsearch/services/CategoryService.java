@@ -6,8 +6,8 @@ import com.example.jobsearch.models.Category;
 import java.util.List;
 
 public interface CategoryService {
-    Category getCategoryIdByName(String category);
+    Category getCategoryByName(String category);
     CategoryDto getCategoryById(Long id);
-    List<CategoryDto> getAllCategories();
 
+    List<CategoryDto> getCategories();
 }

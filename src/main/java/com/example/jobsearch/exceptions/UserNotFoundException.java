@@ -1,6 +1,8 @@
 package com.example.jobsearch.exceptions;
 
-public class UserNotFoundException extends Exception{
+import java.util.NoSuchElementException;
+
+public class UserNotFoundException extends NoSuchElementException {
     public UserNotFoundException() {
     }
 

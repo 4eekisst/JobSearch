@@ -1,6 +1,8 @@
 package com.example.jobsearch.exceptions;
 
-public class CategoryNotFoundException extends Exception{
+import java.util.NoSuchElementException;
+
+public class CategoryNotFoundException extends NoSuchElementException {
     public CategoryNotFoundException() {
     }
 
