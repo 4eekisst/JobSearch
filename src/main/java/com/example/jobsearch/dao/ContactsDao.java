@@ -16,4 +16,5 @@ public class ContactsDao {
     private final JdbcTemplate template;
     private final NamedParameterJdbcTemplate namedParameter;
 
+
 }

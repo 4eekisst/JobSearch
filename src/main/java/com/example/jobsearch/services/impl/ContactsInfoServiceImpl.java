@@ -44,7 +44,7 @@ public class ContactsInfoServiceImpl implements ContactsInfoService {
         contacts = contactInfoRepository.findByResume(resume);
 
         contacts.forEach(e -> contactsList.add(ContactsInfoWithIdDto.builder()
-                .id(resume.getId())
+                .id(e.getResume().getId())
                 .infoValue(e.getInfoValue())
                 .type(e.getType().getType())
                 .build()));

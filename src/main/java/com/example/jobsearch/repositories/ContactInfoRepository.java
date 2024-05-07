@@ -1,6 +1,5 @@
 package com.example.jobsearch.repositories;
 
-import com.example.jobsearch.dto.resumes.ResumeDto;
 import com.example.jobsearch.models.ContactsInfo;
 import com.example.jobsearch.models.Resume;
 import org.springframework.data.jpa.repository.JpaRepository;
