@@ -1,0 +1,71 @@
+package com.example.jobsearch.controllers.mvc;
+
+import com.example.jobsearch.dto.users.EditUserDto;
+import com.example.jobsearch.dto.users.UserDto;
+import com.example.jobsearch.services.UserService;
+import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.multipart.MultipartFile;
+
+@Controller
+@RequestMapping("employee")
+@RequiredArgsConstructor
+public class ApplicantController {
+    private final UserService service;
+
+    @PreAuthorize("hasAuthority('employee')")
+    @GetMapping("/edit")
+    public String employerInfo(Model model, Authentication auth) {
+        UserDto user = service.getUserByEmail(auth.getName());
+        model.addAttribute("accType", user.getAccType());
+        return "edit/editUser";
+    }
+
+    @PreAuthorize("hasAuthority('employee')")
+    @PostMapping("/edit")
+    public String editProfile(EditUserDto userDto, Authentication auth) {
+        service.editUser(userDto,auth);
+        return "redirect:/profile";
+    }
+
+    @PreAuthorize("hasAuthority('employee')")
+    @GetMapping("/uploadImage")
+    public String uploadImageToProfile(Model model, Authentication authentication) {
+        UserDto user = service.getUserByEmail(authentication.getName());
+        model.addAttribute("accType", user.getAccType());
+        return "edit/uploadImage";
+    }
+
+    @PreAuthorize("hasAuthority('employee')")
+    @PostMapping("/uploadImage")
+    public String uploadImageProfile(Model model, Authentication authentication, MultipartFile file) {
+        UserDto user = service.getUserByEmail(authentication.getName());
+        service.uploadImage(file, authentication);
+        model.addAttribute("accType", user.getAccType());
+        return "redirect:/profile";
+    }
+
+    @PreAuthorize("hasAuthority('employee')")
+    @GetMapping("/changePassword")
+    public String changePassword(Model model, Authentication authentication) {
+        UserDto user = service.getUserByEmail(authentication.getName());
+        model.addAttribute("accType", user.getAccType());
+        return "edit/setNewPassword";
+    }
+
+    @PreAuthorize("hasAuthority('employee')")
+    @PostMapping("/changePassword")
+    public String SetNewPassword(Model model, String email, String oldPassword, String newPassword) {
+        UserDto user = service.getUserByEmail(email);
+        service.changePassword(oldPassword,newPassword,email);
+        model.addAttribute("accType", user.getAccType());
+        return "redirect:/profile";
+    }
+
+}

@@ -1,17 +1,29 @@
 package com.example.jobsearch.models;
+import jakarta.persistence.*;
+import lombok.*;
 
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import java.util.List;
 
-@Data
-@NoArgsConstructor(access = AccessLevel.PRIVATE)
-@AllArgsConstructor(access = AccessLevel.PRIVATE)
-
-
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
+@Entity
+@Table(name = "categories")
 public class Category {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     private String name;
-    private Long parentId;
+
+    @Column(name = "parent_id")
+    private Long parentCategory;
+
+    @OneToMany(fetch = FetchType.LAZY,mappedBy = "category")
+    List<Resume> resumes;
+
+    @OneToMany(fetch = FetchType.LAZY,mappedBy = "category")
+    List<Vacancy> vacancies;
 }

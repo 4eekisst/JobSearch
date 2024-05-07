@@ -1,210 +1,167 @@
 package com.example.jobsearch.services.impl;
 
-import com.example.jobsearch.dao.UserDao;
-import com.example.jobsearch.dto.UserDto;
-import com.example.jobsearch.dto.UserProfileDto;
-import com.example.jobsearch.models.User;
+import com.example.jobsearch.dto.users.EditUserDto;
+import com.example.jobsearch.dto.users.UserCreationDto;
+import com.example.jobsearch.dto.users.UserDto;
+import com.example.jobsearch.exceptions.AlreadyExistsException;
 import com.example.jobsearch.exceptions.UserNotFoundException;
+import com.example.jobsearch.models.Authority;
+import com.example.jobsearch.models.UserModel;
+import com.example.jobsearch.repositories.AuthorityRepository;
+import com.example.jobsearch.repositories.UserModelRepository;
+import com.example.jobsearch.util.FileUtil;
 import com.example.jobsearch.services.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.core.io.InputStreamResource;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
-import java.util.*;
+import java.util.HashSet;
+import java.util.NoSuchElementException;
+import java.util.Objects;
+import java.util.Set;
 
-@Service
 @Slf4j
+@Service
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
-    private final UserDao userDao;
+    private final UserModelRepository userModelRepository;
+    private final AuthorityRepository authorityRepository;
+    private final FileUtil fileUtil;
     private final PasswordEncoder passwordEncoder;
 
-
     @Override
-    public List<UserDto> getUsers() {
-        List<User> users = userDao.getAllUsers();
-        List<UserDto> dtos = new ArrayList<>();
-        users.forEach(e -> dtos.add(getUserDto(e)));
-        return dtos;
+    public UserDto getUser(String email) {
+        UserModel userModel = userModelRepository.findByEmail(email).orElseThrow(UserNotFoundException::new);
+        String accType = getAccTypeByUserEmail(email);
+        return getUserDto(userModel,accType);
     }
 
-    @Override
-    public UserProfileDto getUser(Authentication authentication) {
-        User user = userDao.getUserByEmail(authentication.getName()).orElseThrow(()-> new NoSuchElementException("User not found"));
-        String accountType = "Employer";
-        if (user.getRoleId()==2){
-            accountType = "Applicant";
-        }
+    private String getAccTypeByUserEmail(String email) {
+        UserModel user = userModelRepository.findByEmail(email).orElseThrow(UserNotFoundException::new);
+        String accType;
+        Set<Authority> authorities = user.getRoles();
 
-        return UserProfileDto.builder()
-                .id(user.getId())
-                .age(user.getAge())
-                .phoneNumber(user.getPhoneNumber())
-                .email(user.getEmail())
-                .password(user.getPassword())
-                .accountType(accountType)
-                .avatar(user.getAvatar())
-                .surName(user.getSurname())
-                .name(user.getName())
-                .build();
+        accType = authorities.stream().anyMatch(authority -> "admin".equals(authority.getRole())) ? "admin" :  authorities.iterator().next().getRole();
+
+        return accType;
     }
 
     @Override
     public UserDto getUserByEmail(String email) {
-        try {
-            User user = userDao.getUserByEmail(email).orElseThrow(UserNotFoundException::new);
-            return getUserDto(user);
-        } catch (UserNotFoundException e) {
-            log.error("user with email: {} does not exists", email);
-        }
-        return null;
+        String accType = getAccTypeByUserEmail(email);
+        return getUserDto(userModelRepository.findByEmail(email).orElseThrow(() -> new UserNotFoundException("user with email: " + email + " does not exists")), accType);
     }
 
 
     @Override
     public UserDto getUserById(Long id) {
-        try {
-            User user = userDao.getUserById(id).orElseThrow(UserNotFoundException::new);
-            return getUserDto(user);
-        } catch (UserNotFoundException e) {
-            log.error("User with {} not found", id);
-        }
-        return null;
-    }
-
-    public void createUser(User user) {
-        String encryptedPassword = passwordEncoder.encode(user.getPassword());
-        user.setPassword(encryptedPassword);
-        userDao.createUser(user);
+        UserModel user = userModelRepository.findById(id).orElseThrow(() -> new UserNotFoundException("user with id: " + id + " does not exists"));
+        String accType = getAccTypeByUserEmail(user.getEmail());
+        return getUserDto(user, accType);
     }
 
     @Override
-    public List<UserDto> getUserByName(String name) {
-        List<User> users = userDao.getUserByName(name);
-        List<UserDto> dtos = new ArrayList<>();
-        users.forEach(e -> dtos.add(getUserDto(e)));
-        return dtos;
+    public void createUser(UserCreationDto dto) {
+        if (userModelRepository.existsByEmail(dto.getEmail())) {
+            throw new AlreadyExistsException("User with email:" + dto.getEmail() + " already exists.");
+        }
+        UserModel userModel = UserModel.builder()
+                .name(dto.getName())
+                .surname(dto.getSurname())
+                .age(Integer.valueOf(dto.getAge()))
+                .email(dto.getEmail())
+                .password(passwordEncoder.encode(dto.getPassword()))
+                .phoneNumber(dto.getPhoneNumber())
+                .enabled(true)
+                .roles(new HashSet<>(
+                        Set.of(authorityRepository.findById(Long.valueOf(dto.getAccType())).orElseThrow(NoSuchElementException::new))
+                ))
+                .avatar(null)
+                .build();
+        userModelRepository.save(userModel);
     }
 
     @Override
     public UserDto getUserByPhone(String phone) {
-        try {
-            User user = userDao.getUserByPhone(phone).orElseThrow(UserNotFoundException::new);
-            return getUserDto(user);
-
-        } catch (UserNotFoundException e) {
-            log.error("cannot find user with phone number: {}", phone);
-        }
-        return null;
+        UserModel userModel = userModelRepository.findByPhoneNumber(phone).orElseThrow(() -> new UserNotFoundException("User by phone num: " + phone + " not found"));
+        String accType = getAccTypeByUserEmail(userModel.getEmail());
+        return getUserDto(userModel,accType);
     }
 
     @Override
     public Long getUserId(String email) {
-        try {
-            User user1 = userDao.getUserByEmail(email).orElseThrow(UserNotFoundException::new);
-            return user1.getId();
-        } catch (UserNotFoundException e) {
-            log.error("user with email: {} does not exists", email);
-        }
-        return null;
+        UserModel userModel1 = userModelRepository.findByEmail(email).orElseThrow(() -> new UserNotFoundException("User by email " + email + " not found"));
+        return userModel1.getId();
     }
 
     @Override
-    public Boolean checkIfUserExists(String email) {
-        return userDao.getUserByEmail(email).isPresent();
+    public void uploadImage(MultipartFile avatar, Authentication authentication) {
+        if (avatar != null) {
+            if (Objects.requireNonNull(avatar.getContentType()).matches("png|jpeg|jpg")) {
+                throw new IllegalArgumentException("Unsupported img types (should be: \"png|jpeg|jpg\")");
+            }
+            String fileName = fileUtil.saveUploadedFile(avatar, "/images");
+            UserModel user = userModelRepository.findByEmail(authentication.getName()).orElseThrow(() -> new UserNotFoundException("User by email " + authentication.getName() + " not found"));
+            user.setAvatar(fileName);
+            userModelRepository.save(user);
+        }
     }
 
 
+    @Override
+    public void editUser(EditUserDto user, Authentication auth) {
+        UserModel userModel = userModelRepository.findByEmail(auth.getName()).orElseThrow(() -> new UserNotFoundException("User by email " + auth.getName() + " not found"));
+        userModel.setName(user.getName());
+        userModel.setSurname(user.getSurname());
+        userModel.setPhoneNumber(user.getPhoneNumber());
+        userModel.setAge(Integer.valueOf(user.getAge()));
+        userModelRepository.save(userModel);
+    }
+
+    @Override
+    public void changePassword(String oldPassword, String newPassword, String email) {
+        UserModel user = userModelRepository.findByEmail(email).orElseThrow(() -> new UserNotFoundException("User by email: " + email + "not registered"));
+        if (passwordEncoder.matches(oldPassword, user.getPassword())) {
+            user.setPassword(passwordEncoder.encode(newPassword));
+            userModelRepository.save(user);
+        }
+    }
 
 
-    private UserDto getUserDto(User user) {
+    @Override
+    public ResponseEntity<InputStreamResource> downloadImage(String name) {
+        return fileUtil.getOutputFile(name, "/images");
+    }
+
+
+    @Override
+    public Boolean loginCheck(String email, String password) {
+        return userModelRepository.findAll().stream()
+                .anyMatch(userModel ->
+                        userModel.getEmail().equals(email) && passwordEncoder.matches(password, userModel.getPassword()));
+    }
+
+    @Override
+    public UserModel getUserModelByEmail(String email) {
+        return userModelRepository.findByEmail(email).orElseThrow(() -> new UserNotFoundException("User by email " + email + " not found"));
+    }
+
+
+    private UserDto getUserDto(UserModel userModel, String accType) {
         return UserDto.builder()
-                .id(user.getId())
-                .name(user.getName())
-                .surname(user.getSurname())
-                .age(user.getAge())
-                .email(user.getEmail())
-                .phoneNumber(user.getPhoneNumber())
-                .avatar(user.getAvatar())
-                .enabled(user.isEnabled())
-                .roleId(user.getRoleId())
-                .build();
-    }
-
-    @Override
-    public void editUser(UserDto userDto) throws UserNotFoundException {
-        User user = userDao.getUserById(userDto.getId())
-                .orElseThrow(() -> new UserNotFoundException("User with id " + userDto.getId() + " not found"));
-
-        if (userDto.getName() != null) {
-            user.setName(userDto.getName());
-        }
-        if (userDto.getSurname() != null) {
-            user.setSurname(userDto.getSurname());
-        }
-        if (userDto.getAge() != null) {
-            user.setAge(userDto.getAge());
-        }
-        if (userDto.getEmail() != null) {
-            user.setEmail(userDto.getEmail());
-        }
-        if (userDto.getPassword() != null) {
-            user.setPassword(userDto.getPassword());
-        }
-        if (userDto.getPhoneNumber() != null) {
-            user.setPhoneNumber(userDto.getPhoneNumber());
-        }
-        if (userDto.getAvatar() != null) {
-            user.setAvatar(userDto.getAvatar());
-        }
-        if (userDto.getEnabled() != null) {
-            user.setEnabled(userDto.getEnabled());
-        }
-        if (userDto.getRoleId() != null) {
-            user.setRoleId(userDto.getRoleId());
-        }
-
-        userDao.editUser(user);
-    }
-
-    @Override
-    public List<UserDto> getApplicantsByAccountType(String accountType) {
-        List<User> applicants = userDao.getUsersByAccountType(accountType);
-        List<UserDto> applicantDtos = new ArrayList<>();
-        applicants.forEach(applicant -> applicantDtos.add(mapUserToDto(applicant)));
-        return applicantDtos;
-    }
-
-    @Override
-    public List<UserDto> getEmployersByAccountType(String accountType) {
-        List<User> employers = userDao.getEmployersByAccountType(accountType);
-        List<UserDto> employerDtos = new ArrayList<>();
-        employers.forEach(employer -> employerDtos.add(mapUserToDto(employer)));
-        return employerDtos;
-    }
-
-    @Override
-    public List<UserDto> getAllUsersByVacancyId(Long id) {
-        List<User> users = userDao.getAllUsersByVacancyId(id);
-        List<UserDto> dtos = new ArrayList<>();
-        users.forEach(user -> dtos.add(mapUserToDto(user)));
-        return dtos;
-    }
-
-
-    private UserDto mapUserToDto(User user) {
-        return UserDto.builder()
-                .id(user.getId())
-                .name(user.getName())
-                .surname(user.getSurname())
-                .age(user.getAge())
-                .email(user.getEmail())
-                .phoneNumber(user.getPhoneNumber())
-                .avatar(user.getAvatar())
-                .enabled(user.isEnabled())
-                .roleId(user.getRoleId())
+                .id(userModel.getId())
+                .name(userModel.getName())
+                .surname(userModel.getSurname())
+                .age(userModel.getAge())
+                .accType(accType)
+                .email(userModel.getEmail())
+                .phoneNumber(userModel.getPhoneNumber())
+                .avatar(userModel.getAvatar())
                 .build();
     }
 }

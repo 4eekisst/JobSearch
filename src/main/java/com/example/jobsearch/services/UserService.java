@@ -1,25 +1,34 @@
 package com.example.jobsearch.services;
 
-import com.example.jobsearch.dto.UserDto;
-import com.example.jobsearch.dto.UserProfileDto;
-import com.example.jobsearch.exceptions.UserNotFoundException;
-import com.example.jobsearch.models.User;
+import com.example.jobsearch.dto.users.EditUserDto;
+import com.example.jobsearch.dto.users.UserCreationDto;
+import com.example.jobsearch.dto.users.UserDto;
+import com.example.jobsearch.models.UserModel;
+import org.springframework.core.io.InputStreamResource;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
 public interface UserService {
-    List<UserDto> getUsers();
+    UserDto getUser(String email);
     UserDto getUserByEmail(String email) ;
     UserDto getUserById(Long id);
-    void createUser(User user);
-    List<UserDto> getUserByName(String name);
+    void createUser(UserCreationDto user);
     UserDto getUserByPhone(String phone);
-    void editUser(UserDto userDto) throws UserNotFoundException;
     Long getUserId(String user);
-    Boolean checkIfUserExists(String email);
-    List<UserDto> getApplicantsByAccountType(String accountType);
-    List<UserDto> getEmployersByAccountType(String accountType);
-    List<UserDto> getAllUsersByVacancyId(Long id);
-    UserProfileDto getUser(Authentication authentication);
+
+    void uploadImage(MultipartFile avatar, Authentication authentication);
+
+    void editUser(EditUserDto user, Authentication auth);
+
+    void changePassword(String oldPassword, String newPassword, String email);
+
+    ResponseEntity<InputStreamResource> downloadImage(String name);
+
+
+    Boolean loginCheck(String email, String password);
+
+    UserModel getUserModelByEmail(String email);
 }

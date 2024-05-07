@@ -1,0 +1,53 @@
+<#import "../layout.ftlh" as main>
+<@main.layout>
+    <div class="row">
+        <div class="col-md-8">
+            <div class="row">
+                <#list resumes as resume>
+                    <div class="col-sm-6 mb-3 mb-sm-5">
+                        <div class="card mb-3">
+                            <div class="card-body">
+                                <h5 class="mt-2 mb-5"><a href="/resume/${resume.id}"
+                                                         class="text-decoration-none text-dark rounded-2 px-3 py-1" style="height: 50px; overflow: hidden;">${resume.name}</a>
+                                </h5>
+                                <h2 class="card-text">${resume.category}</h2>
+                                <p class="card-text">Зарплата: <br> ${resume.salary}</p>
+                                <a href="/resume/${resume.id}" class="btn btn-primary">Подробнее</a>
+                            </div>
+                        </div>
+                    </div>
+                </#list>
+            </div>
+        </div>
+        <div class="col-md-4 h-100">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Фильтрация резюме</h5>
+                    <form action="/resume/filter" method="get">
+                        <div class="mb-3">
+                            <label for="category" class="form-label">Категория:</label>
+                            <input type="text" list="datalistOptions" class="form-control" id="category" name="category"
+                                   placeholder="название категории">
+                            <datalist id="datalistOptions">
+                                <#list categories as category>
+                                <option value=${category.name}>
+                                    </#list>
+                            </datalist>
+                        </div>
+                        <div class="mb-3">
+                            <label for="salary" class="form-label">Зарплата:</label>
+                            <input type="number" class="form-control" id="salary" name="salary"
+                                   placeholder="сумма зарплаты">
+                        </div>
+                        <div class="mb-3">
+                            <label for="applicant" class="form-label">Соискатель:</label>
+                            <input type="email" class="form-control" id="applicant" name="email"
+                                   placeholder="по электронной почте соискателя">
+                        </div>
+                        <button type="submit" class="btn btn-primary">Найти</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</@main.layout>

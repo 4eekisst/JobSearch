@@ -1,0 +1,84 @@
+databaseChangeLog:
+  - changeSet:
+      id: create-work-experience-info-table
+      author: Adil
+      changes:
+        - createTable:
+            tableName: work_experience_info
+            columns:
+              - column:
+                  name: id
+                  type: integer
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: resume_id
+                  type: integer
+                  constraints:
+                    foreignKeyName: fk_work_experience_info_resume_id
+                    references: resumes(id)
+                    nullable: false
+                    deleteCascade: true
+              - column:
+                  name: years
+                  type: integer
+                  constraints:
+                    nullable: false
+              - column:
+                  name: company_name
+                  type: text
+                  constraints:
+                    nullable: false
+              - column:
+                  name: position
+                  type: text
+                  constraints:
+                    nullable: false
+              - column:
+                  name: responsibilities
+                  type: text
+                  constraints:
+                    nullable: false
+
+  - changeSet:
+      id: create-messages-table
+      author: Adil
+      changes:
+        - createTable:
+            tableName: messages
+            columns:
+              - column:
+                  name: id
+                  type: integer
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: sender
+                  type: integer
+                  constraints:
+                    foreignKeyName: fk_messages_sender
+                    references: users(id)
+                    nullable: false
+                    deleteCascade: true
+              - column:
+                  name: recipient
+                  type: integer
+                  constraints:
+                    foreignKeyName: fk_messages_recipient
+                    references: users(id)
+                    nullable: false
+                    deleteCascade: true
+              - column:
+                  name: content
+                  type: text
+                  constraints:
+                    nullable: false
+              - column:
+                  name: timestamp
+                  type: timestamp
+                  constraints:
+                    nullable: false

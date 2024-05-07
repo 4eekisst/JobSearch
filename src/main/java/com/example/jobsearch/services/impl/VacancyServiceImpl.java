@@ -1,205 +1,238 @@
 package com.example.jobsearch.services.impl;
 
-import com.example.jobsearch.dao.VacancyDao;
-import com.example.jobsearch.dto.ResumeDto;
-import com.example.jobsearch.dto.UserDto;
-import com.example.jobsearch.dto.VacancyDto;
-import com.example.jobsearch.models.Category;
+import com.example.jobsearch.dto.users.UserDto;
+import com.example.jobsearch.dto.vacancies.VacancyCreateDto;
+import com.example.jobsearch.dto.vacancies.VacancyDto;
+import com.example.jobsearch.dto.vacancies.VacancyEditDto;
+import com.example.jobsearch.exceptions.UserNotFoundException;
 import com.example.jobsearch.exceptions.VacancyNotFoundException;
-import com.example.jobsearch.models.Resume;
+import com.example.jobsearch.models.Category;
 import com.example.jobsearch.models.Vacancy;
+import com.example.jobsearch.services.VacancyService;
 import com.example.jobsearch.services.CategoryService;
 import com.example.jobsearch.services.UserService;
-import com.example.jobsearch.services.VacancyService;
+import com.example.jobsearch.repositories.VacancyRepository;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 @Service
-@Slf4j
 @RequiredArgsConstructor
+
 public class VacancyServiceImpl implements VacancyService {
-    private final VacancyDao dao;
+    private final VacancyRepository vacancyRepository;
     private final CategoryService categoryService;
     private final UserService userService;
 
     @Override
-    public List<VacancyDto> getAllVacancies(int page, int pageSize) {
-        int offset = page * pageSize;
-
-        List<Vacancy> vacancies = dao.getAllVacancies(offset, pageSize);
-
-        return getVacancyDtos(vacancies);
+    public List<VacancyDto> getAllVacancies() {
+        List<Vacancy> vacancies = vacancyRepository.findAll();
+        List<VacancyDto> dtos = new ArrayList<>();
+        vacancies.forEach(e -> dtos.add(getVacancyDto(e)));
+        return dtos;
     }
 
     @Override
-    public int getTotalVacanciesCount() {
-
-        return dao.getTotalVacanciesCount();
-    }
-
-    @Override
-    public List<VacancyDto> getVacanciesByCategory(String category, int page, int pageSize) {
-        int offset = page * pageSize;
-        List<Vacancy> vacancies = dao.getVacanciesByCategory(category, offset, pageSize);
-        return getVacancyDtos(vacancies);
-    }
-
-    @Override
-    public int getTotalVacanciesCountByCategory(String category) {
-        return dao.getTotalVacanciesCountByCategory(category);
-    }
-
-    @Override
-    public List<VacancyDto> getVacanciesOfRespondedApplicant(String userEmail) {
+    public List<VacancyDto> getVacanciesByRespondedApplicant(String userEmail) {
         UserDto applicant = userService.getUserByEmail(userEmail);
         Long id = applicant.getId();
-        List<Vacancy> vacancies = dao.getVacanciesByRespondedApplicantsId(id);
-        return getVacancyDtos(vacancies);
+        List<Vacancy> vacancies = vacancyRepository.findVacanciesByRespondedApplicantsId(id);
+        List<VacancyDto> dtos = new ArrayList<>();
+        vacancies.forEach(e -> dtos.add(getVacancyDto(e)));
+        return dtos;
     }
 
     @Override
-    public List<VacancyDto> getVacanciesOfCategory(String strip) {
-        Category category = categoryService.getCategoryIdByName(strip);
-        List<Vacancy> vacancies = dao.getVacancyByCategory(category.getId());
-        return getVacancyDtos(vacancies);
+    public List<VacancyDto> getVacanciesByCategory(String strip) {
+        Category category = categoryService.getCategoryByName(strip);
+        List<Vacancy> vacancies = vacancyRepository.findByCategory(category);
+        List<VacancyDto> dtos = new ArrayList<>();
+        vacancies.forEach(e -> dtos.add(getVacancyDto(e)));
+        return dtos;
     }
-
-    @Override
-    public VacancyDto createVacancy(VacancyDto vacancyDto) {
-        Vacancy vacancy = mapDtoToVacancy(vacancyDto);
-        vacancy.setCreatedDate(LocalDateTime.now());
-        vacancy.setUpdateTime(LocalDateTime.now());
-        Long vacancyId = dao.createVacancy(vacancy);
-        return getVacancyById(vacancyId);
-    }
-
-
-    @Override
-    public void deleteVacancy(Long vacancyId) {
-        dao.deleteVacancyById(vacancyId);
-    }
-
 
     @Override
     public VacancyDto getVacancyById(Long vacancyId) {
-        try {
-            Vacancy e = dao.getVacancyById(vacancyId).orElseThrow(VacancyNotFoundException::new);
-            return VacancyDto.builder()
-                    .id(e.getId())
-                    .categoryId(e.getCategoryId())
-                    .createdDate(e.getCreatedDate())
-                    .expTo(e.getExpTo())
-                    .description(e.getDescription())
-                    .expFrom(e.getExpFrom())
-                    .isActive(e.getIsActive())
-                    .salary(e.getSalary())
-                    .updateTime(e.getUpdateTime())
-                    .name(e.getName())
-                    .categoryId(e.getAuthorId())
-                    .build();
-        } catch (VacancyNotFoundException e) {
-            log.error("vacancy by id: {} not found", vacancyId);
+        Vacancy e = vacancyRepository.findById(vacancyId).orElseThrow(() -> new VacancyNotFoundException("Vacancy by id" + vacancyId + " not found"));
+        return getVacancyDto(e);
+    }
+
+    public void createVacancy(VacancyDto vacancy1) {
+        Vacancy vacancy = Vacancy.builder()
+                .name(vacancy1.getName())
+                .description(vacancy1.getDescription())
+                .category(categoryService.getCategoryByName(vacancy1.getCategory()))
+                .author(userService.getUserModelByEmail(vacancy1.getAuthorEmail()))
+                .salary(vacancy1.getSalary())
+                .expFrom(vacancy1.getExpFrom())
+                .expTo(vacancy1.getExpTo())
+                .build();
+        vacancyRepository.save(vacancy);
+    }
+
+    @Override
+    public Boolean deleteVacancyById(Long id) {
+        if (vacancyRepository.existsById(id)) {
+            vacancyRepository.deleteById(id);
+            return true;
         }
-        return null;
+        return false;
+    }
+
+    @Override
+    public void editVacancy(VacancyEditDto vacancy, Authentication authentication) {
+        Vacancy vac = Vacancy.builder()
+                .id(vacancy.getId())
+                .name(vacancy.getName())
+                .description(vacancy.getDescription())
+                .category(categoryService.getCategoryByName(vacancy.getCategory()))
+                .salary(vacancy.getSalary())
+                .expFrom(vacancy.getExpFrom())
+                .expTo(vacancy.getExpTo())
+                .build();
+        vacancyRepository.save(vac);
+    }
+
+    @Override
+    public List<VacancyDto> getAllVacanciesByCompany(String email) {
+        UserDto userDto = userService.getUserByEmail(email);
+        List<Vacancy> vacancies = vacancyRepository.findByAuthor_Email(userDto.getEmail());
+        return getVacancyDtos(userDto.getId(), vacancies);
+    }
+
+    @Override
+    public List<VacancyDto> getActiveVacanciesByCompany(String email) {
+        Long id = userService.getUserByEmail(email).getId();
+        List<Vacancy> vacancies = vacancyRepository.findByAuthor_EmailAndIsActive(email, true);
+        return getVacancyDtos(id, vacancies);
+    }
+
+    private List<VacancyDto> getVacancyDtos(Long id, List<Vacancy> vacancies) {
+        if (userService.getUserById(id) == null) {
+            throw new UserNotFoundException("employer by id " + id + " not found");
+        }
+        List<VacancyDto> dtos = new ArrayList<>();
+        vacancies.forEach(e -> dtos.add(getVacancyDto(e)));
+        return dtos;
+    }
+
+    @Override
+    public List<VacancyDto> getActiveVacancies() {
+        List<Vacancy> vacancyList = vacancyRepository.findByIsActive(true);
+        List<VacancyDto> dtos = new ArrayList<>();
+        vacancyList.forEach(e -> dtos.add(getVacancyDto(e)));
+        return dtos;
+    }
+
+    @Override
+    public VacancyDto getVacancyByName(String name) {
+        Vacancy e = vacancyRepository.findByName(name).orElseThrow(() -> new VacancyNotFoundException("vacancy by name " + name + " not found"));
+        return getVacancyDto(e);
+    }
+
+    @Override
+    public Long createVacancyAndReturnId(VacancyCreateDto vacancy1, Authentication auth) {
+        Vacancy vacancy = Vacancy.builder()
+                .name(vacancy1.getName())
+                .description(vacancy1.getDescription())
+                .category(categoryService.getCategoryByName(vacancy1.getCategory()))
+                .author(userService.getUserModelByEmail(auth.getName()))
+                .salary(vacancy1.getSalary())
+                .expFrom(vacancy1.getExpFrom())
+                .expTo(vacancy1.getExpTo())
+                .isActive(true)
+                .createdDate(LocalDateTime.now())
+                .updateDate(LocalDateTime.now())
+                .build();
+        return vacancyRepository.save(vacancy).getId();
+    }
+
+    @Override
+    public void changeVacancyState(Long id) {
+        if (!vacancyRepository.existsById(id)) {
+            throw new VacancyNotFoundException("Vacancy by id " + id + " not found");
+        }
+        boolean b = !getVacancyById(id).getIsActive();
+        vacancyRepository.changeVacancyState(id, b);
+    }
+
+    @Override
+    public Page<VacancyDto> getActiveVacanciesPage(Integer pageNumber, String filter) {
+        final int count = 5;
+        Pageable pageable ;
+        Page<Vacancy> vacancies;
+        if (filter != null) {
+            if (filter.contains("Date")) {
+                pageable = getPageableByDate(filter, pageNumber);
+            } else {
+                pageable = getPageableByAppliesCount(filter,pageNumber);
+            }
+        } else {
+            pageable = PageRequest.of(pageNumber,count);
+        }
+        vacancies = vacancyRepository.findAll(pageable);
+        return vacancies.map(this::getVacancyDto);
     }
 
 
+    private Pageable getPageableByDate(String filter, int pageNumber) {
+        Sort sortBy;
+        if (filter.contains("asc")) {
+            sortBy = Sort.by(Sort.Order.asc("updateDate"));
+            return PageRequest.of(pageNumber, 5, sortBy);
+        } else {
+            sortBy = Sort.by(Sort.Order.desc("updateDate"));
+            return PageRequest.of(pageNumber, 5, sortBy);
+        }
+    }
 
-    private List<VacancyDto> getVacancyDtos(List<Vacancy> vacancies) {
-        List<VacancyDto> dtos = new ArrayList<>();
-        vacancies.forEach(e -> dtos.add(VacancyDto.builder()
+    private Pageable getPageableByAppliesCount(String filter, int pageNumber) {
+        Sort sortBy;
+        if (filter.contains("asc")) {
+            sortBy = Sort.by(Sort.Order.asc("updateDate"));
+            return PageRequest.of(pageNumber, 5, sortBy);
+        } else {
+            sortBy = Sort.by(Sort.Order.desc("updateDate"));
+            return PageRequest.of(pageNumber, 5, sortBy);
+        }
+    }
+
+    @Override
+    public void updateVacancy(Long id) {
+        vacancyRepository.updateVacancy(id);
+    }
+
+    @Override
+    public boolean existsById(Long id) {
+        return vacancyRepository.existsById(id);
+    }
+
+    @Override
+    public Vacancy getVacancyModelById(Long vacancyId) {
+        return vacancyRepository.findById(vacancyId).orElseThrow(() -> new VacancyNotFoundException("vacancy by id: " + vacancyId + " not found"));
+    }
+
+    private VacancyDto getVacancyDto(Vacancy e) {
+        return VacancyDto.builder()
                 .id(e.getId())
-                .categoryId(e.getCategoryId())
+                .category(categoryService.getCategoryById(e.getCategory().getId()).getName())
                 .createdDate(e.getCreatedDate())
                 .expTo(e.getExpTo())
                 .description(e.getDescription())
                 .expFrom(e.getExpFrom())
                 .isActive(e.getIsActive())
                 .salary(e.getSalary())
-                .updateTime(e.getUpdateTime())
+                .updateTime(e.getUpdateDate())
                 .name(e.getName())
-                .categoryId(e.getAuthorId())
-                .build()));
-        return dtos;
-    }
-
-    public List<Vacancy> getVacanciesByEmployer(Authentication authentication) {
-        if (authentication == null || !authentication.isAuthenticated()) {
-            return Collections.emptyList();
-        }
-
-        String userEmail = authentication.getName();
-        return dao.getVacanciesByEmployer(userEmail);
-    }
-
-    @Override
-    public VacancyDto updateVacancy(Long vacancyId, VacancyDto updatedVacancy) throws VacancyNotFoundException {
-        Vacancy existingVacancy = dao.getVacancyById(vacancyId)
-                .orElseThrow(() -> new VacancyNotFoundException("Вакансия с id: " + vacancyId + " не найдена"));
-
-        if (updatedVacancy.getName() != null) {
-            existingVacancy.setName(updatedVacancy.getName());
-        }
-        if (updatedVacancy.getDescription() != null) {
-            existingVacancy.setDescription(updatedVacancy.getDescription());
-        }
-        if (updatedVacancy.getCategoryId() != null) {
-            existingVacancy.setCategoryId(updatedVacancy.getCategoryId());
-        }
-        if (updatedVacancy.getSalary() != null) {
-            existingVacancy.setSalary(updatedVacancy.getSalary());
-        }
-        existingVacancy.setUpdateTime(LocalDateTime.now());
-
-        dao.updateVacancy(existingVacancy);
-
-        return VacancyDto.builder()
-                .id(existingVacancy.getId())
-                .createdDate(existingVacancy.getCreatedDate())
-                .updateTime(existingVacancy.getUpdateTime())
-                .build();
-    }
-
-
-
-    @Override
-    public List<ResumeDto> getRespondedApplicants(Long vacancyId) {
-        List<Resume> respondedResumes = dao.getRespondedApplicantsForVacancy(vacancyId);
-        List<ResumeDto> respondedApplicantsDto = new ArrayList<>();
-        respondedResumes.forEach(resume -> respondedApplicantsDto.add(mapResumeToDto(resume)));
-        return respondedApplicantsDto;
-    }
-
-    private ResumeDto mapResumeToDto(Resume resume) {
-        return ResumeDto.builder()
-                .id(resume.getId())
-                .name(resume.getName())
-                .categoryId(resume.getCategoryId())
-                .userId(resume.getApplicantId())
-                .salary(resume.getSalary())
-                .isActive(resume.getIsActive())
-                .createdDate(resume.getCreatedDate())
-                .updateTime(resume.getUpdateDate())
-                .build();
-    }
-
-    private Vacancy mapDtoToVacancy(VacancyDto vacancyDto) {
-        return Vacancy.builder()
-                .name(vacancyDto.getName())
-                .description(vacancyDto.getDescription())
-                .categoryId(vacancyDto.getCategoryId())
-                .authorId(vacancyDto.getAuthorId())
-                .salary(vacancyDto.getSalary())
-                .expFrom(vacancyDto.getExpFrom())
-                .expTo(vacancyDto.getExpTo())
-                .isActive(vacancyDto.getIsActive())
+                .authorEmail(userService.getUserById(e.getAuthor().getId()).getEmail())
                 .build();
     }
 }

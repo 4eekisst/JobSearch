@@ -1,32 +1,37 @@
-package com.example.jobsearch.controllers.api;
-
-import com.example.jobsearch.dto.RespondedApplicantDto;
-import com.example.jobsearch.services.RespondedApplicantsService;
-import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
-
-@RestController("responsesRest")
-@RequiredArgsConstructor
-@RequestMapping("api/responses")
-public class RespondsController {
-    private final RespondedApplicantsService service;
-
-    @GetMapping()
-    public ResponseEntity<List<RespondedApplicantDto>> getAllRespondedApplicants(){
-        List<RespondedApplicantDto> dtos = service.getAllRespondents();
-        return ResponseEntity.ok(dtos);
-    }
-
-    @GetMapping("/{vacancyId}")
-    public ResponseEntity<?> getRespondedApplicantsToVacancy(@PathVariable Long vacancyId){
-        List<RespondedApplicantDto> dtos = service.getRespondedApplicantsByVacancyId(vacancyId);
-        if (dtos.isEmpty()){
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Vacancy by id: "+vacancyId+" not found");
-        }
-        return ResponseEntity.ok(dtos);
-    }
-}
+//package com.example.jobsearch.controllers.api;
+//
+//import com.example.jobsearch.services.RespondedApplicantsService;
+//import jakarta.validation.Valid;
+//import jakarta.validation.constraints.Pattern;
+//import com.example.jobsearch.dto.RespondedApplicantDto;
+//import com.example.jobsearch.dto.resumes.ResumeDto;
+//import lombok.RequiredArgsConstructor;
+//import org.springframework.http.ResponseEntity;
+//import org.springframework.web.bind.annotation.*;
+//
+//import java.util.List;
+//
+//@RestController("restResponses")
+//@RequiredArgsConstructor
+//@RequestMapping("api/responses")
+//public class RespondsController {
+//    private final RespondedApplicantsService service;
+//
+//    @GetMapping()
+//    public ResponseEntity<List<RespondedApplicantDto>> getAllRespondedApplicants() {
+//        List<RespondedApplicantDto> dtos = service.getAllRespondents();
+//        return ResponseEntity.ok(dtos);
+//    }
+//
+//    @GetMapping("/{vacancyId}")
+//    public ResponseEntity<List<ResumeDto>> getRespondedApplicantsToVacancy(@Valid @PathVariable Long vacancyId) {
+//        List<ResumeDto> dtos = service.getRespondedApplicantsByVacancyId(vacancyId);
+//        return ResponseEntity.ok(dtos);
+//    }
+//
+//    @PostMapping("/applyToVacancy")
+//    public ResponseEntity<?> applyToVacancy(@Valid @Pattern(regexp = "^\\d+$", message = "enter only digits") @RequestParam Long resumeId, Long vacancyId) {
+//        Long id = service.ApplyAndReturnVacancyId(resumeId, vacancyId);
+//        return ResponseEntity.ok(service.getAllRespondents());
+//    }
+//}

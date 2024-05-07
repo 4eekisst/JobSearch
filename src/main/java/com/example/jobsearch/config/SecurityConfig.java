@@ -11,66 +11,62 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 import javax.sql.DataSource;
 
 @Configuration
 @EnableWebSecurity
 @RequiredArgsConstructor
-
 public class SecurityConfig {
-
+    private final DataSource dataSource;
     private final PasswordEncoder encoder;
 
-    private final DataSource dataSource;
-
     @Autowired
-    public SecurityConfig(DataSource source, PasswordEncoder encoder) {
-        this.dataSource = source;
-        this.encoder = encoder;
-    }
-
-    private static final String USER_QUERY = "select EMAIL, PASSWORD, ENABLED from USERS where EMAIL =?;";
-    private static final String AUTHORITIES_QUERY = """
-            select ua.EMAIL, a.role from USER_AUTHORITY ua, AUTHORITIES a
-            where ua.AUTHORITY_ID = a.ID
-            and ua.EMAIL = ?;
-            """;
-
-    @Autowired
-    public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
+    public void configurerGlobal(AuthenticationManagerBuilder auth) throws Exception {
+        String USER_QUERY = "select USERS.EMAIL, USERS.PASSWORD,USERS.ENABLED from USERS where EMAIL = ?";
+        String USER_ROLE = """
+                SELECT USERS.EMAIL, AUTHORITIES.ROLE
+                                              FROM USERS
+                                              JOIN USER_AUTHORITY ON USERS.ID = USER_AUTHORITY.USER_ID
+                                              JOIN AUTHORITIES ON USER_AUTHORITY.AUTHORITY_ID = AUTHORITIES.ID
+                                              WHERE USERS.EMAIL = ?;
+                """;
         auth.jdbcAuthentication()
                 .dataSource(dataSource)
                 .usersByUsernameQuery(USER_QUERY)
-                .authoritiesByUsernameQuery(AUTHORITIES_QUERY)
-                .passwordEncoder(new BCryptPasswordEncoder());
+                .authoritiesByUsernameQuery(USER_ROLE)
+                .passwordEncoder(encoder);
     }
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        http.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+        http
+                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.ALWAYS))
                 .httpBasic(Customizer.withDefaults())
-                .formLogin(AbstractHttpConfigurer::disable)
-                .logout(AbstractHttpConfigurer::disable)
+                .formLogin(form -> form
+                        .loginPage("/login")
+                        .loginProcessingUrl("/login")
+                        .defaultSuccessUrl("/profile")
+                        .failureUrl("/login?error=true")
+                        .permitAll())
+                .logout(logout -> logout
+                        .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
+                        .permitAll())
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(authorize -> authorize
-//                        .requestMatchers(HttpMethod.GET,"vacancies").permitAll()
-//                        .requestMatchers(HttpMethod.GET,"employer/**","vacancies/create").hasAuthority("employer")
-//                        .requestMatchers(HttpMethod.GET,"/register/submit","/login").permitAll()
-//                        .requestMatchers(HttpMethod.POST,"/register/submit","/login").permitAll()
-//                        .requestMatchers(HttpMethod.POST,"employer/*","/employer/**").hasAuthority("employer")
-//                        .requestMatchers(HttpMethod.POST,"employee/*","/employee/**").hasAuthority("employee")
-//                        .requestMatchers(HttpMethod.DELETE,"responses","resumes").hasAuthority("employee")
+                        .requestMatchers(HttpMethod.GET, "vacancies").permitAll()
+                        .requestMatchers(HttpMethod.GET, "resume/create", "resume/update").hasAuthority("employee")
+                        .requestMatchers(HttpMethod.GET, "employer/**", "vacancies/create", "vacancies/update").hasAuthority("employer")
+                        .requestMatchers(HttpMethod.POST, "/register", "/login").permitAll()
+                        .requestMatchers( "/api/users/**").permitAll()
+                        .requestMatchers(HttpMethod.POST, "employer/*", "/employer/**").hasAuthority("employer")
+                        .requestMatchers(HttpMethod.POST, "employee/*", "/employee/**").hasAuthority("employee")
+                        .requestMatchers(HttpMethod.POST, "chat/**","/api/message").authenticated()
+                        .requestMatchers(HttpMethod.GET, "chat/**","/api/message/**").authenticated()
                         .anyRequest().permitAll());
-
         return http.build();
     }
 }
-
-
-
-
-

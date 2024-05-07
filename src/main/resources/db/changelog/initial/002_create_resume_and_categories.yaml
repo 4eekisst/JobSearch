@@ -1,0 +1,83 @@
+databaseChangeLog:
+  - changeSet:
+        id: create-categories-table
+        author: Adil
+        changes:
+          - createTable:
+              tableName: categories
+              columns:
+                - column:
+                    name: id
+                    type: integer
+                    autoIncrement: true
+                    constraints:
+                      primaryKey: true
+                      nullable: false
+                - column:
+                    name: name
+                    type: text
+                    constraints:
+                      nullable: false
+                - column:
+                    name: parent_id
+                    type: integer
+                    constraints:
+                      foreignKeyName: fk_categories_parent_id
+                      references: categories(id)
+                      deleteCascade: true
+  - changeSet:
+      id: create-resumes-table
+      author: Adil
+      changes:
+        - createTable:
+            tableName: resumes
+            columns:
+              - column:
+                  name: id
+                  type: integer
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: name
+                  type: text
+                  constraints:
+                    nullable: false
+              - column:
+                  name: category_id
+                  type: integer
+                  constraints:
+                    foreignKeyName: fk_resumes_category_id
+                    references: categories(id)
+                    nullable: false
+                    deleteCascade: true
+              - column:
+                  name: applicant_id
+                  type: integer
+                  constraints:
+                    foreignKeyName: fk_resumes_applicant_id
+                    references: users(id)
+                    nullable: false
+                    deleteCascade: true
+              - column:
+                  name: salary
+                  type: real
+                  constraints:
+                    nullable: false
+              - column:
+                  name: is_active
+                  type: boolean
+                  constraints:
+                    nullable: false
+              - column:
+                  name: created_date
+                  type: timestamp
+                  constraints:
+                    nullable: false
+              - column:
+                  name: update_date
+                  type: timestamp
+                  constraints:
+                    nullable: false
+

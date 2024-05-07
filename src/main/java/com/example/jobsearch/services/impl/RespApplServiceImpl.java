@@ -1,45 +1,100 @@
 package com.example.jobsearch.services.impl;
 
-import com.example.jobsearch.dao.RespondedApplicantsDao;
 import com.example.jobsearch.dto.RespondedApplicantDto;
+import com.example.jobsearch.dto.resumes.ResumeDto;
+import com.example.jobsearch.dto.vacancies.VacancyDto;
+import com.example.jobsearch.exceptions.VacancyNotFoundException;
 import com.example.jobsearch.models.RespondedApplicant;
+import com.example.jobsearch.models.Resume;
+import com.example.jobsearch.repositories.RespondedApplicantRepository;
 import com.example.jobsearch.services.RespondedApplicantsService;
 import com.example.jobsearch.services.ResumeService;
 import com.example.jobsearch.services.VacancyService;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.util.Assert;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.NoSuchElementException;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
-@Slf4j
 public class RespApplServiceImpl implements RespondedApplicantsService {
-    private final RespondedApplicantsDao dao;
+    private final RespondedApplicantRepository respondedApplicantRepository;
+    private final ResumeService resumeService;
+    private final VacancyService vacancyService;
 
     @Override
     public List<RespondedApplicantDto> getAllRespondents() {
-        List<RespondedApplicant> applicants = dao.getAllRespAppl();
-        return getRespondedApplicantDtos(applicants);
+        return respondedApplicantRepository.findAll().stream().map(this::getRespondedApplicantDto).collect(Collectors.toList());
     }
 
     @Override
-    public List<RespondedApplicantDto> getRespondedApplicantsByVacancyId(Long id) {
-        List<RespondedApplicant> applicants = dao.getAllRespApplByVacancyId(id);
-        return getRespondedApplicantDtos(applicants);
+    public List<ResumeDto> getRespondedApplicantsByVacancyId(Long id) {
+        if (vacancyService.existsById(id)) {
+            throw new VacancyNotFoundException("Vacancy by id: " + id + " not found");
+        }
+        List<RespondedApplicant> applicants = respondedApplicantRepository.findByVacancyId(id);
+        return applicants.stream().map(a -> resumeService.getResumeDto(a.getResume())).collect(Collectors.toList());
+    }
+
+    @Override
+    public void applyToVacancy(Long resumeId, Long vacancyId) {
+        Assert.notNull(resumeId,"resume id must not be null");
+        Assert.notNull(vacancyId,"vacancy id must not be null");
+        for (RespondedApplicant res : respondedApplicantRepository.findAll()) {
+            if (Objects.equals(res.getVacancy().getId(), vacancyId) && Objects.equals(res.getResume().getId(), resumeId)) {
+                return;
+            }
+        }
+        RespondedApplicant respondedApplicant = RespondedApplicant.builder()
+                .resume(resumeService.getResumeModel(resumeId))
+                .vacancy(vacancyService.getVacancyModelById(vacancyId))
+                .confirmation(false)
+                .build();
+        respondedApplicantRepository.save(respondedApplicant);
     }
 
 
-    private List<RespondedApplicantDto> getRespondedApplicantDtos(List<RespondedApplicant> applicants) {
-        List<RespondedApplicantDto> dtos = new ArrayList<>();
-        applicants.forEach(e -> dtos.add(RespondedApplicantDto.builder()
-                        .id(e.getId())
-                        .resumeId(e.getResumeId())
-                        .vacancyId(e.getVacancyId())
-                        .confirmation(e.getConfirmation())
-                .build()));
-        return dtos;
+
+    @Override
+    public Long ifThereResumeIdAndVacancyId(List<ResumeDto> resumes, Long vacancyId) {
+        return respondedApplicantRepository.findAll().stream().filter(res -> resumes.stream().anyMatch(resume -> Objects.equals(res.getResume().getId(), resume.getId()) && Objects.equals(res.getVacancy().getId(), vacancyId))).findFirst().map(RespondedApplicant::getId).orElse(null);
+    }
+
+    @Override
+    public RespondedApplicantDto getRespondedApplicantById(Long respId) {
+        RespondedApplicant responded = respondedApplicantRepository.findById(respId).orElseThrow(()->new NoSuchElementException("no responded applicant found by id: "+respId));
+        return getRespondedApplicantDto(responded);
+    }
+
+    @Override
+    public Integer getRespondentsSizeByEmployer(String email) {
+
+       List<VacancyDto> vacancies=  vacancyService.getActiveVacanciesByCompany(email);
+       List<Resume> resumes = new ArrayList<>();
+       for (VacancyDto vacancy : vacancies){
+           List<RespondedApplicant> respondedApplicants = respondedApplicantRepository.findByVacancyId(vacancy.getId());
+          respondedApplicants.forEach(r -> resumes.add(r.getResume()));
+       }
+        return resumes.size();
+    }
+
+    @Override
+    public RespondedApplicant getRespondedApplicantModelById(Long respApplId) {
+        return respondedApplicantRepository.findById(respApplId).orElseThrow(NoSuchElementException::new);
+    }
+
+
+    private RespondedApplicantDto getRespondedApplicantDto(RespondedApplicant e) {
+        return  RespondedApplicantDto.builder()
+                .id(e.getId())
+                .resume(resumeService.getResumeById(e.getResume().getId()))
+                .vacancy(vacancyService.getVacancyById(e.getVacancy().getId()))
+                .confirmation(e.getConfirmation())
+                .build();
     }
 }
