@@ -6,6 +6,8 @@
         <meta name="viewport"
               content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
         <meta http-equiv="X-UA-Compatible" content="ie=edge">
+        <meta name="_csrf_header" content="${_csrf.headerName}"/>
+        <meta name="_csrf_token" content="${_csrf.token}"/>
         <title>Main page</title>
         <link rel="preconnect" href="https://fonts.googleapis.com">
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -29,7 +31,6 @@
                         aria-expanded="false" aria-label="Toggle navigation">
                     <i class="bi bi-list-nested"></i>
                 </button>
-
                 <div class="collapse navbar-collapse" id="navbarNav">
                     <ul class="navbar-nav fw-medium mx-auto">
                         <li class="mx-3 nav-item">
@@ -51,15 +52,15 @@
             </div>
         </nav>
     </header>
-
     <body>
     <div class=" py-5">
         <div class="container">
-            <#nested>
+            <#nested springMacroRequestContext>
         </div>
     </div>
 
     </body>
 
     </html>
+
 </#macro>

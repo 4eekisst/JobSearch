@@ -88,3 +88,4 @@ VALUES ((select id from users where email = 'jane.smith@example.com'),
        ((select id from users where email = 'john.doe@example.com'),
         (select id from users where email = 'jane.smith@example.com'), 'Thank you for applying.',
         NOW())
+

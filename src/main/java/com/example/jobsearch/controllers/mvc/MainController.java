@@ -36,6 +36,7 @@ public class MainController {
 
     @GetMapping("/profile")
     public String applicantInfo(Model model, Authentication authentication) {
+        authentication.getName();
         UserDto user = service.getUserByEmail(authentication.getName());
         model.addAttribute("user", user);
         List<ResumeDto> resumes = resumeService.getResumesByUserEmail(authentication.getName());

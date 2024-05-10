@@ -2,9 +2,11 @@
 <@register.layout>
     <main>
         <#if accType == 'employee'>
+        <#if _csrf??>
         <form action="/employee/edit" method="post" enctype="multipart/form-data">
             <#else>
-            <form action="/employer/edit" method="post" enctype="multipart/form-data">
+                <#if _csrf??>
+                    <form action="/employer/edit" method="post" enctype="multipart/form-data">
                 </#if>
                 <fieldset>
                     <div class="form-element">
@@ -30,7 +32,11 @@
                         <button class="btn btn-primary mt-5" style="width: 200px" type="submit">Редактировать</button>
                     </div>
                 </fieldset>
+                <input type="hidden" name="${(_csrf.parameterName)!'csrf-param-name'}" value="${(_csrf.token)!'csrf-token'}" />
+                </form>
+            </#if>
+            <input type="hidden" name="${(_csrf.parameterName)!'csrf-param-name'}" value="${(_csrf.token)!'csrf-token'}" />
             </form>
-        </form>
+        </#if>
     </main>
 </@register.layout>

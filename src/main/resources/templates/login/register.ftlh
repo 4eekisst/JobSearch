@@ -1,6 +1,7 @@
 <#import "../layout.ftlh" as register>
 <@register.layout>
     <main>
+        <#if _csrf??>
         <form action="/register" method="post">
             <fieldset>
                 <p>Регистрация</p>
@@ -37,6 +38,7 @@
                                 <option value="2">Соискатель</option>
                             </select>
                         </div>
+            <input type="hidden" name="${(_csrf.parameterName)!'csrf-param-name'}" value="${(_csrf.token)!'csrf-token'}" />
                         <div class="col-12">
                             <button class="btn btn-primary" type="submit">Зарегистрироваться</button>
                         </div>
@@ -49,5 +51,6 @@
                 </div>
             </fieldset>
         </form>
+        </#if>
     </main>
 </@register.layout>

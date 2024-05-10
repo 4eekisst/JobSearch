@@ -1,6 +1,7 @@
 <#import "../layout.ftlh" as login>
 <@login.layout>
     <main>
+        <#if _csrf??>
         <form action="/login" method="post">
             <fieldset>
                 <p>Авторизация</p>
@@ -14,6 +15,7 @@
                             <input name="password" type="password" class="form-control mb-3" placeholder="Пароль"
                                    aria-label="Пароль">
                         </div>
+                        <input type="hidden" name="${(_csrf.parameterName)!'csrf-param-name'}" value="${(_csrf.token)!'csrf-token'}" />
                         <div class="col-12">
                             <button class="btn btn-primary" type="submit">Войти!</button>
                         </div>
@@ -26,5 +28,6 @@
                 </div>
             </fieldset>
         </form>
+        </#if>
     </main>
 </@login.layout>
