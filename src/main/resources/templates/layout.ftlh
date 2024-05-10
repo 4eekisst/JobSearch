@@ -21,7 +21,6 @@
     </head>
 
     <header>
-
         <nav class="navbar navbar-expand-md navbar-dark bg-primary pt-5 pb-5" data-bs-theme="dark">
             <div class="container">
                 <a class="navbar-brand" href="/">Job Search</a>

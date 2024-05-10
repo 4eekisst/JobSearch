@@ -33,5 +33,4 @@ public interface ResumeRepository extends JpaRepository<Resume,Long> {
             WHERE id = :id;
             """)
     void updateResumeByIdAndUpdateDate(Long id, LocalDateTime updateDate);
-
 }

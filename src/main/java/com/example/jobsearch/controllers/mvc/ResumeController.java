@@ -25,87 +25,86 @@ import java.util.List;
 
 @Controller
 @RequiredArgsConstructor
-@RequestMapping("resume")
-public class ResumeViewController {
+@RequestMapping("/resume")
+public class ResumeController {
     private final ResumeService service;
     private final UserService userService;
     private final CategoryService categoryService;
     private final ContactsInfoService contactsInfoService;
 
     @GetMapping("/{id}")
-    public String getResumeById(@PathVariable Long id, Model model){
+    public String getResumeById(@PathVariable Long id, Model model) {
         ResumeDto resume = service.getResumeById(id);
         Resume resume1 = service.getResumeModel(id);
         UserDto user = userService.getUserByEmail(resume.getUserEmail());
         List<WorkExpInfoForFrontDto> workExpInfos = service.getWorkExpInfoByResumeId(id);
         List<EducationInfoForFrontDto> educationInfo = service.getEducationInfoByResumeId(id);
         List<ContactsInfoWithIdDto> contacts = contactsInfoService.getContactsByResumeId(resume1);
-        model.addAttribute("user",user);
-        model.addAttribute("resume",resume);
-        model.addAttribute("works",workExpInfos);
-        model.addAttribute("educations",educationInfo);
-        model.addAttribute("contacts",contacts);
+        model.addAttribute("user", user);
+        model.addAttribute("resume", resume);
+        model.addAttribute("works", workExpInfos);
+        model.addAttribute("educations", educationInfo);
+        model.addAttribute("contacts", contacts);
         return "resume/resumesInfo";
     }
 
 
     @GetMapping("/create")
-    public String getResumeCreatePage(Model model){
-        model.addAttribute("categories",categoryService.getCategories());
+    public String getResumeCreatePage(Model model) {
+        model.addAttribute("categories", categoryService.getCategories());
         return "resume/resumeCreate";
     }
 
     @PostMapping("/create")
-    public String createResume(ResumeCreateDto createDto, Authentication authentication){
-        Long id = service.createResume(createDto,authentication);
-        return "redirect:/resume/"+id;
+    public String createResume(ResumeCreateDto createDto, Authentication authentication) {
+        Long id = service.createResume(createDto, authentication);
+        return "redirect:/resume/" + id;
     }
 
-
     @GetMapping()
-    public String getResumes(Model model, @RequestParam(name = "page", defaultValue = "0") Integer page){
-        if (page < 0){
+    public String getResumes(Model model, @RequestParam(name = "page", defaultValue = "0") Integer page) {
+        if (page < 0) {
             page = 0;
         }
         model.addAttribute("page", page);
         Page<ResumeDto> resumes = service.getResumesPage(page);
-        model.addAttribute("resumes",resumes);
+        model.addAttribute("resumes", resumes);
         List<CategoryDto> categories = categoryService.getCategories();
-        model.addAttribute("categories",categories);
+        model.addAttribute("categories", categories);
         return "resume/resumeList";
     }
 
     @GetMapping("/filter")
-    public String getVacancyByCategory(@RequestParam String category, Model model, Authentication authentication){
+    public String getVacancyByCategory(@RequestParam String category, Model model, Authentication authentication) {
         List<ResumeDto> resumes = service.getResumeByCategory(category);
         model.addAttribute("resumes", resumes);
         List<CategoryDto> categories = categoryService.getCategories();
-        model.addAttribute("categories",categories);
+        model.addAttribute("categories", categories);
         return "resume/filteredResumes";
     }
 
     @GetMapping("/update")
-    public String getResumeEditPage(Model model, @RequestParam Long id, Authentication authentication){
+    public String getResumeEditPage(Model model, @RequestParam Long id, Authentication authentication) {
         List<CategoryDto> categories = categoryService.getCategories();
-        model.addAttribute("categories",categories);
+        model.addAttribute("categories", categories);
         UserDto user = userService.getUserByEmail(authentication.getName());
-        model.addAttribute("user",user);
+        model.addAttribute("user", user);
         EditResumeDto resume = service.getResumeForEdit(id);
-        model.addAttribute("resume",resume);
+        model.addAttribute("resume", resume);
         return "resume/editResume";
     }
 
 
     @PostMapping("/update")
-    public String updateResume(Model model,@RequestParam Long id ,@Valid EditResumeDto editDto, Authentication authentication){
+    public String updateResume(Model model, @RequestParam Long id, @Valid EditResumeDto editDto, Authentication authentication) {
         editDto.setId(id);
-        service.editResume(editDto,authentication);
-        model.addAttribute("user",userService.getUserByEmail(authentication.getName()));
-        return "redirect:/resume/"+editDto.getId();
+        service.editResume(editDto, authentication);
+        model.addAttribute("user", userService.getUserByEmail(authentication.getName()));
+        return "redirect:/resume/" + editDto.getId();
     }
 
     @PostMapping("/changeState")
-    public String changeActivation(@RequestParam Long id){
+    public String changeActivation(@RequestParam Long id) {
         service.changeResumeState(id);
         return "redirect:/profile";
     }

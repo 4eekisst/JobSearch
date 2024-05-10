@@ -1,8 +1,8 @@
 package com.example.jobsearch.controllers.mvc;
 
-import com.example.jobsearch.services.CategoryService;
-import com.example.jobsearch.services.UserService;
-import com.example.jobsearch.services.VacancyService;
+import com.example.jobsearch.dto.resumes.ResumeDto;
+import com.example.jobsearch.dto.users.UserDto;
+import com.example.jobsearch.services.*;
 import jakarta.validation.Valid;
 import com.example.jobsearch.dto.CategoryDto;
 import com.example.jobsearch.dto.vacancies.VacancyCreateDto;
@@ -21,18 +21,29 @@ import java.util.List;
 @Controller
 @RequestMapping("/vacancies")
 @RequiredArgsConstructor
-public class VacancyViewController {
-   private final VacancyService service;
-   private final UserService uService;
+public class VacancyController {
+   private final VacancyService vacancyService;
+   private final UserService userService;
    private final CategoryService categoryService;
+   private final RespondedApplicantsService respondedApplicantsService;
+   private final ResumeService resumeService;
 
     @GetMapping()
-    public String getVacancies(Model model, @RequestParam(name = "page", defaultValue = "0") Integer page){
-        if (page < 0){
+    public String getVacancies(Model model,
+                               @RequestParam(name = "page", defaultValue = "0") Integer page,
+                               @RequestParam(name = "sortBy", required = false) String sortBy) {
+        if (page < 0) {
             page = 0;
         }
         model.addAttribute("page", page);
-        Page<VacancyDto> vacancies = service.getActiveVacanciesPage(page, null);
+        Page<VacancyDto> vacancies;
+
+        if (sortBy != null && !sortBy.isEmpty()) {
+            vacancies = vacancyService.getActiveVacanciesPage(page, sortBy);
+        } else {
+            vacancies = vacancyService.getActiveVacanciesPage(page, null);
+        }
+
         model.addAttribute("vacancies", vacancies);
         List<CategoryDto> categories = categoryService.getCategories();
         model.addAttribute("categories", categories);
@@ -40,18 +51,19 @@ public class VacancyViewController {
     }
 
 
+
    @GetMapping("/info/{vacancyId}")
     public String getVacancyById(@PathVariable Long vacancyId, Model model){
-       VacancyDto vacancy = service.getVacancyById(vacancyId);
+       VacancyDto vacancy = vacancyService.getVacancyById(vacancyId);
        model.addAttribute("vacancy", vacancy);
-       List<VacancyDto> vacanciesOfAuthor = service.getActiveVacanciesByCompany(vacancy.getAuthorEmail());
+       List<VacancyDto> vacanciesOfAuthor = vacancyService.getActiveVacanciesByCompany(vacancy.getAuthorEmail());
        model.addAttribute("employers", vacanciesOfAuthor);
        return "vacancy/vacancyInfo";
    }
 
    @GetMapping("/filter")
     public String getVacancyByCategory(@RequestParam String category, Model model){
-        List<VacancyDto> vacancies = service.getVacanciesByCategory(category);
+        List<VacancyDto> vacancies = vacancyService.getVacanciesByCategory(category);
         model.addAttribute("vacancies", vacancies);
        List<CategoryDto> categories = categoryService.getCategories();
        model.addAttribute("categories",categories);
@@ -69,8 +81,8 @@ public class VacancyViewController {
     @PreAuthorize("(hasAuthority('employer'))")
     @PostMapping("/create")
     public String createVacancy(Model model, @Valid VacancyCreateDto createDto, Authentication authentication){
-        service.createVacancyAndReturnId(createDto,authentication);
-        model.addAttribute("user",uService.getUserByEmail(authentication.getName()));
+        vacancyService.createVacancyAndReturnId(createDto,authentication);
+        model.addAttribute("user",userService.getUserByEmail(authentication.getName()));
         return "redirect:/profile";
     }
 
@@ -79,7 +91,7 @@ public class VacancyViewController {
     public String getVacancyEditPage(Model model, @RequestParam Long id){
         List<CategoryDto> categories = categoryService.getCategories();
         model.addAttribute("categories",categories);
-        VacancyDto dto = service.getVacancyById(id);
+        VacancyDto dto = vacancyService.getVacancyById(id);
         model.addAttribute("vacancy",dto);
         return "vacancy/editVacancy";
     }
@@ -88,14 +100,14 @@ public class VacancyViewController {
     @PostMapping("/update")
     public String updateVacancy(@RequestParam Long id,Model model, @Valid VacancyEditDto editDto, Authentication authentication){
        editDto.setId(id);
-       service.editVacancy(editDto,authentication);
-        model.addAttribute("user",uService.getUserByEmail(authentication.getName()));
+       vacancyService.editVacancy(editDto,authentication);
+        model.addAttribute("user",userService.getUserByEmail(authentication.getName()));
         return "redirect:/profile";
     }
 
     @PostMapping("/changeActivation")
     public String changeActivation(@RequestParam Long id) {
-        service.changeVacancyState(id);
+        vacancyService.changeVacancyState(id);
         return "redirect:/profile";
     }
 }

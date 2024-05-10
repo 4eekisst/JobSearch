@@ -14,11 +14,26 @@
                                 <p class="card-text">${vacancy.description}</p>
                                 <p class="card-text">Зарплата: ${vacancy.salary}</p>
                                 <a href="vacancies/info/${vacancy.id}" class="btn btn-primary">Подробнее</a>
-
                             </div>
                         </div>
                     </div>
                 </#list>
+            </div>
+
+            <div class="row mt-4">
+                <div class="col-md-12">
+                    <form action="/vacancies" method="get">
+                        <div class="input-group mb-3">
+                            <label class="input-group-text" for="sortBy">Сортировка:</label>
+                            <select class="form-select" id="sortBy" name="sortBy">
+                                <option value="">Без сортировки</option>
+                                <option value="Date">По дате публикации</option>
+                                <option value="Applies">По количеству откликов</option>
+                            </select>
+                            <button class="btn btn-primary" type="submit">Применить</button>
+                        </div>
+                    </form>
+                </div>
             </div>
 
             <div class="mt-4">

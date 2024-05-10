@@ -33,8 +33,8 @@
                         <div class="col-12">
                             <label for="account-type" class="form-label">Тип аккаунта:</label>
                             <select name="accType" id="account-type" class="form-select mb-3" required>
-                                <option value="employee">Соискатель</option>
-                                <option value="employer">Работодатель</option>
+                                <option value="1">Работодатель</option>
+                                <option value="2">Соискатель</option>
                             </select>
                         </div>
                         <div class="col-12">

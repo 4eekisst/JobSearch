@@ -1,7 +1,7 @@
 <#import "../layout.ftlh" as login>
 <@login.layout>
     <main>
-        <form th:action="@{/authenticate}" method="post">
+        <form action="/login" method="post">
             <fieldset>
                 <p>Авторизация</p>
                 <div class="form-element mb-5">

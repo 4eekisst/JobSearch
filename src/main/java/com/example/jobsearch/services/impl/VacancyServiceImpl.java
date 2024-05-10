@@ -12,6 +12,7 @@ import com.example.jobsearch.services.VacancyService;
 import com.example.jobsearch.services.CategoryService;
 import com.example.jobsearch.services.UserService;
 import com.example.jobsearch.repositories.VacancyRepository;
+import jakarta.persistence.Id;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -89,17 +90,19 @@ public class VacancyServiceImpl implements VacancyService {
 
     @Override
     public void editVacancy(VacancyEditDto vacancy, Authentication authentication) {
-        Vacancy vac = Vacancy.builder()
-                .id(vacancy.getId())
-                .name(vacancy.getName())
-                .description(vacancy.getDescription())
-                .category(categoryService.getCategoryByName(vacancy.getCategory()))
-                .salary(vacancy.getSalary())
-                .expFrom(vacancy.getExpFrom())
-                .expTo(vacancy.getExpTo())
-                .build();
-        vacancyRepository.save(vac);
+        Vacancy existingVacancy = vacancyRepository.findById(vacancy.getId())
+                .orElseThrow(() -> new VacancyNotFoundException("Vacancy with id " + vacancy.getId() + " not found"));
+
+        existingVacancy.setName(vacancy.getName());
+        existingVacancy.setDescription(vacancy.getDescription());
+        existingVacancy.setCategory(categoryService.getCategoryByName(vacancy.getCategory()));
+        existingVacancy.setSalary(vacancy.getSalary());
+        existingVacancy.setExpFrom(vacancy.getExpFrom());
+        existingVacancy.setExpTo(vacancy.getExpTo());
+
+        vacancyRepository.save(existingVacancy);
     }
+
 
     @Override
     public List<VacancyDto> getAllVacanciesByCompany(String email) {
@@ -167,43 +170,31 @@ public class VacancyServiceImpl implements VacancyService {
     @Override
     public Page<VacancyDto> getActiveVacanciesPage(Integer pageNumber, String filter) {
         final int count = 5;
-        Pageable pageable ;
+        Pageable pageable;
         Page<Vacancy> vacancies;
-        if (filter != null) {
-            if (filter.contains("Date")) {
-                pageable = getPageableByDate(filter, pageNumber);
-            } else {
-                pageable = getPageableByAppliesCount(filter,pageNumber);
-            }
+
+        if (filter != null && filter.equalsIgnoreCase("Date")) {
+            pageable = getPageableByDate(pageNumber);
+        } else if (filter != null && filter.equalsIgnoreCase("Applies")) {
+            pageable = getPageableByAppliesCount(pageNumber);
         } else {
-            pageable = PageRequest.of(pageNumber,count);
+            pageable = PageRequest.of(pageNumber, count);
         }
+
         vacancies = vacancyRepository.findAll(pageable);
         return vacancies.map(this::getVacancyDto);
     }
 
-
-    private Pageable getPageableByDate(String filter, int pageNumber) {
-        Sort sortBy;
-        if (filter.contains("asc")) {
-            sortBy = Sort.by(Sort.Order.asc("updateDate"));
-            return PageRequest.of(pageNumber, 5, sortBy);
-        } else {
-            sortBy = Sort.by(Sort.Order.desc("updateDate"));
-            return PageRequest.of(pageNumber, 5, sortBy);
-        }
+    private Pageable getPageableByDate(int pageNumber) {
+        Sort sortBy = Sort.by(Sort.Order.desc("updateDate"));
+        return PageRequest.of(pageNumber, 5, sortBy);
     }
 
-    private Pageable getPageableByAppliesCount(String filter, int pageNumber) {
-        Sort sortBy;
-        if (filter.contains("asc")) {
-            sortBy = Sort.by(Sort.Order.asc("updateDate"));
-            return PageRequest.of(pageNumber, 5, sortBy);
-        } else {
-            sortBy = Sort.by(Sort.Order.desc("updateDate"));
-            return PageRequest.of(pageNumber, 5, sortBy);
-        }
+    private Pageable getPageableByAppliesCount(int pageNumber) {
+        Sort sortBy = Sort.by(Sort.Order.desc("appliesCount"));
+        return PageRequest.of(pageNumber, 5, sortBy);
     }
+
 
     @Override
     public void updateVacancy(Long id) {

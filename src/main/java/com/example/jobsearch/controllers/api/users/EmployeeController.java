@@ -1,5 +1,6 @@
 //package com.example.jobsearch.controllers.api.users;
 //
+//import com.example.jobsearch.repositories.UserModelRepository;
 //import com.example.jobsearch.services.UserService;
 //import jakarta.validation.Valid;
 //import jakarta.validation.constraints.Email;
@@ -17,6 +18,7 @@
 //@RequiredArgsConstructor
 //public class EmployeeController {
 //    private final UserService service;
+//    private final UserModelRepository userModelRepository;
 //
 //    @GetMapping()
 //    public ResponseEntity<List<UserDto>> getEmployees(Authentication auto) {

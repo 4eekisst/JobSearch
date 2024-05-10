@@ -47,18 +47,19 @@
                 <div class="card-body">
                     <h5 class="card-title">Контактная информация</h5>
                     <div class="mb-3">
-                        <label for="instagram" class="form-label"></label>
-                        <input type="text" value="" class="form-control" id="instagram" name="contacts[0].type">
+                        <label for="instagram" class="form-label">Ссылка на соц.сеть: </label>
+                        <input type="text" value="Instagram" class="form-control" id="instagram" name="contacts[0].type">
                     </div>
                     <div class="mb-3">
-                        <label for="instagramValue" class="form-label"></label>
-                        <input type="text" value="" class="form-control" id="instagramValue" name="contacts[0].infoValue">
+                        <label for="instagramValue" class="form-label">Номер телефона: </label>
+                        <input type="text" value="Instagram" class="form-control" id="instagramValue" name="contacts[0].infoValue">
                     </div>
                 </div>
                 <div id="contacts" class="d-flex justify-content-center">
-                    <input id="add-contacts-btn" class="btn btn-secondary my-3" type="button" value="Добавить больше">
+                    <input id="add-contacts-btn" class="btn btn-success my-3" type="button" value="Добавить больше">
                 </div>
             </div>
+
             <div class="d-grid gap-2">
                 <button type="submit" class="btn btn-primary btn-lg">Создать</button>
             </div>

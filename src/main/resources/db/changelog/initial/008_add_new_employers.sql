@@ -1,0 +1,35 @@
+--liquibase formatted sql
+--changeset Adil:add_employers_data
+INSERT INTO USERS (name, surname, age, email, password, phone_number, avatar, enabled, acc_type)
+VALUES
+    ('Peter', 'Wilson', 40, 'peter.wilson@example.com',
+     '$2a$12$WB2YUbFcCN0tm44SBcKUjua9yiFBsfB3vW02IjuwzY7HGtlQIKzy2', '9876543210',null, true, 2),
+    ('Sophie', 'Roberts', 35, 'sophie.roberts@example.com',
+     '$2a$10$zLoPtjUjaZAcOPjEuFunnOS13swef0FFxo06ujuyobopYxwD5F/s2', '7654321987', null, true, 2),
+    ('David', 'Harris', 45, 'david.harris@example.com',
+     '$2a$10$VGkwdmvXTqgn6yfmdZ6w7.NdMDeSYTs4JcDdySZ.yMdQ4qzGH3At.', '1122334455', null, true, 2),
+    ('Emma', 'Allen', 38, 'emma.allen@example.com',
+     '$2a$10$UYXM0mgh1OLkf6r7Iq0kCe2KV/fZT/GB1SkbdddpjzXEHK8NOQomi', '763547234', null, true, 2),
+    ('Tom', 'Carter', 42, 'tom.carter@example.com',
+     '$2a$12$WB2YUbFcCN0tm44SBcKUjua9yiFBsfB3vW02IjuwzY7HGtlQIKzy2', '9988776655',null, true, 2),
+    ('Olivia', 'King', 37, 'olivia.king@example.com',
+     '$2a$10$zLoPtjUjaZAcOPjEuFunnOS13swef0FFxo06ujuyobopYxwD5F/s2', '1234432156', null, true, 2),
+    ('Jack', 'Scott', 39, 'jack.scott@example.com',
+     '$2a$10$VGkwdmvXTqgn6yfmdZ6w7.NdMDeSYTs4JcDdySZ.yMdQ4qzGH3At.', '9876543210', null, true, 2),
+    ('Lucy', 'Turner', 36, 'lucy.turner@example.com',
+     '$2a$12$WB2YUbFcCN0tm44SBcKUjua9yiFBsfB3vW02IjuwzY7HGtlQIKzy2', '7654321987', null, true, 2),
+    ('Ben', 'Miller', 41, 'ben.miller@example.com',
+     '$2a$10$zLoPtjUjaZAcOPjEuFunnOS13swef0FFxo06ujuyobopYxwD5F/s2', '9988776655', null, true, 2),
+    ('Natalie', 'Moore', 37, 'natalie.moore@example.com',
+     '$2a$10$VGkwdmvXTqgn6yfmdZ6w7.NdMDeSYTs4JcDdySZ.yMdQ4qzGH3At.', '1234432156', null, true, 2),
+    ('Mark', 'Clark', 43, 'mark.clark@example.com',
+     '$2a$12$WB2YUbFcCN0tm44SBcKUjua9yiFBsfB3vW02IjuwzY7HGtlQIKzy2', '9876543210', null, true, 2),
+    ('Laura', 'Young', 39, 'laura.young@example.com',
+     '$2a$10$zLoPtjUjaZAcOPjEuFunnOS13swef0FFxo06ujuyobopYxwD5F/s2', '7654321987',null, true, 2),
+    ('Chris', 'Hill', 44, 'chris.hill@example.com',
+     '$2a$10$VGkwdmvXTqgn6yfmdZ6w7.NdMDeSYTs4JcDdySZ.yMdQ4qzGH3At.', '1122334455',null, true, 2),
+    ('Rachel', 'Wright', 38, 'rachel.wright@example.com',
+     '$2a$12$WB2YUbFcCN0tm44SBcKUjua9yiFBsfB3vW02IjuwzY7HGtlQIKzy2', '9988776655', null, true, 2),
+    ('Kevin', 'Adams', 40, 'kevin.adams@example.com',
+     '$2a$10$zLoPtjUjaZAcOPjEuFunnOS13swef0FFxo06ujuyobopYxwD5F/s2', '1234432156',null, true, 2);
+
