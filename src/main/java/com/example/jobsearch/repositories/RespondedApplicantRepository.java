@@ -7,6 +7,4 @@ import java.util.List;
 
 public interface RespondedApplicantRepository extends JpaRepository<RespondedApplicant,Long> {
     List<RespondedApplicant> findByVacancyId(Long id);
-
-
 }

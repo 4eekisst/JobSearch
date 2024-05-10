@@ -36,6 +36,7 @@ public class MainController {
 
     @GetMapping("/profile")
     public String applicantInfo(Model model, Authentication authentication) {
+        authentication.getName();
         UserDto user = service.getUserByEmail(authentication.getName());
         model.addAttribute("user", user);
         List<ResumeDto> resumes = resumeService.getResumesByUserEmail(authentication.getName());
@@ -57,12 +58,20 @@ public class MainController {
     }
     @GetMapping()
     public String getVacancies(Model model,
-                               @RequestParam(name = "page", defaultValue = "0") Integer page) {
+                               @RequestParam(name = "page", defaultValue = "0") Integer page,
+                               @RequestParam(name = "sortBy", required = false) String sortBy) {
         if (page < 0) {
             page = 0;
         }
         model.addAttribute("page", page);
-        Page<VacancyDto> vacancies = vacancyService.getActiveVacanciesPage(page, null);
+        Page<VacancyDto> vacancies;
+
+        if (sortBy != null && !sortBy.isEmpty()) {
+            vacancies = vacancyService.getActiveVacanciesPage(page, sortBy);
+        } else {
+            vacancies = vacancyService.getActiveVacanciesPage(page, null);
+        }
+
         model.addAttribute("vacancies", vacancies);
         List<CategoryDto> categories = categoryService.getCategories();
         model.addAttribute("categories", categories);

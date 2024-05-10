@@ -43,12 +43,7 @@ public class UserServiceImpl implements UserService {
 
     private String getAccTypeByUserEmail(String email) {
         UserModel user = userModelRepository.findByEmail(email).orElseThrow(UserNotFoundException::new);
-        String accType;
-        Set<Authority> authorities = user.getRoles();
-
-        accType = authorities.stream().anyMatch(authority -> "admin".equals(authority.getRole())) ? "admin" :  authorities.iterator().next().getRole();
-
-        return accType;
+        return user.getRole().getRole();
     }
 
     @Override
@@ -78,13 +73,12 @@ public class UserServiceImpl implements UserService {
                 .password(passwordEncoder.encode(dto.getPassword()))
                 .phoneNumber(dto.getPhoneNumber())
                 .enabled(true)
-                .roles(new HashSet<>(
-                        Set.of(authorityRepository.findById(Long.valueOf(dto.getAccType())).orElseThrow(NoSuchElementException::new))
-                ))
+                .role(authorityRepository.findById(Long.valueOf(dto.getAccType())).orElseThrow(NoSuchElementException::new))
                 .avatar(null)
                 .build();
         userModelRepository.save(userModel);
     }
+
 
     @Override
     public UserDto getUserByPhone(String phone) {

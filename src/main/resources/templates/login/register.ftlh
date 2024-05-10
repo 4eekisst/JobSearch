@@ -1,6 +1,7 @@
 <#import "../layout.ftlh" as register>
 <@register.layout>
     <main>
+        <#if _csrf??>
         <form action="/register" method="post">
             <fieldset>
                 <p>Регистрация</p>
@@ -33,10 +34,11 @@
                         <div class="col-12">
                             <label for="account-type" class="form-label">Тип аккаунта:</label>
                             <select name="accType" id="account-type" class="form-select mb-3" required>
-                                <option value="employee">Соискатель</option>
-                                <option value="employer">Работодатель</option>
+                                <option value="1">Работодатель</option>
+                                <option value="2">Соискатель</option>
                             </select>
                         </div>
+            <input type="hidden" name="${(_csrf.parameterName)!'csrf-param-name'}" value="${(_csrf.token)!'csrf-token'}" />
                         <div class="col-12">
                             <button class="btn btn-primary" type="submit">Зарегистрироваться</button>
                         </div>
@@ -49,5 +51,6 @@
                 </div>
             </fieldset>
         </form>
+        </#if>
     </main>
 </@register.layout>
