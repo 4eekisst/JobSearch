@@ -24,6 +24,7 @@
             <div class="card">
                 <div class="card-body">
                     <h5 class="card-title">Фильтрация вакансий</h5>
+                    <#if _csrf??>
                     <form action="/vacancies/filter" method="get">
                         <div class="mb-3">
                             <label for="category" class="form-label">Категория:</label>
@@ -34,9 +35,11 @@
                                 <option value=${category.name}>
                                     </#list>
                             </datalist>
+                            <input type="hidden" name="${(_csrf.parameterName)!'csrf-param-name'}" value="${(_csrf.token)!'csrf-token'}" />
                         </div>
                         <button type="submit" class="btn btn-primary">Найти</button>
                     </form>
+                    </#if>
                 </div>
             </div>
         </div>

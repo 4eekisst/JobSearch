@@ -3,7 +3,7 @@
     <h1 class="mb-4">Создание резюме</h1>
 
     <main>
-
+        <#if _csrf??>
         <form action="/resume/create" method="POST">
             <div class="card mb-4">
                 <div class="card-body">
@@ -59,11 +59,12 @@
                     <input id="add-contacts-btn" class="btn btn-success my-3" type="button" value="Добавить больше">
                 </div>
             </div>
-
+            <input type="hidden" name="${(_csrf.parameterName)!'csrf-param-name'}" value="${(_csrf.token)!'csrf-token'}" />
             <div class="d-grid gap-2">
                 <button type="submit" class="btn btn-primary btn-lg">Создать</button>
             </div>
         </form>
+        </#if>
     </main>
 
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
