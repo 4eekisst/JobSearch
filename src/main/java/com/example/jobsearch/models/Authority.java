@@ -20,6 +20,6 @@ public class Authority {
     @Column(name = "role")
     private String role;
 
-    @OneToMany(mappedBy = "role", cascade = CascadeType.ALL)
+    @OneToMany(fetch = FetchType.LAZY,mappedBy = "role")
     private List<UserModel> users;
 }

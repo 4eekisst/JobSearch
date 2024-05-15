@@ -34,7 +34,7 @@ public class MainController {
         return "login/login";
     }
 
-    @GetMapping("/profile")
+    @GetMapping("profile")
     public String applicantInfo(Model model, Authentication authentication) {
         authentication.getName();
         UserDto user = service.getUserByEmail(authentication.getName());
