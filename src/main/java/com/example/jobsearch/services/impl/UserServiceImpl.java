@@ -5,25 +5,28 @@ import com.example.jobsearch.dto.users.UserCreationDto;
 import com.example.jobsearch.dto.users.UserDto;
 import com.example.jobsearch.exceptions.AlreadyExistsException;
 import com.example.jobsearch.exceptions.UserNotFoundException;
-import com.example.jobsearch.models.Authority;
 import com.example.jobsearch.models.UserModel;
 import com.example.jobsearch.repositories.AuthorityRepository;
 import com.example.jobsearch.repositories.UserModelRepository;
+import com.example.jobsearch.repositories.UserRepository;
+import com.example.jobsearch.services.EmailService;
 import com.example.jobsearch.util.FileUtil;
 import com.example.jobsearch.services.UserService;
+import com.example.jobsearch.util.Utility;
+import jakarta.mail.MessagingException;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.util.HashSet;
-import java.util.NoSuchElementException;
-import java.util.Objects;
-import java.util.Set;
+import java.io.UnsupportedEncodingException;
+import java.util.*;
 
 @Slf4j
 @Service
@@ -33,6 +36,9 @@ public class UserServiceImpl implements UserService {
     private final AuthorityRepository authorityRepository;
     private final FileUtil fileUtil;
     private final PasswordEncoder passwordEncoder;
+    private final UserRepository userRepository;
+    private final PasswordEncoder encoder;
+    private final EmailService emailService;
 
     @Override
     public UserDto getUser(String email) {
@@ -143,6 +149,35 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserModel getUserModelByEmail(String email) {
         return userModelRepository.findByEmail(email).orElseThrow(() -> new UserNotFoundException("User by email " + email + " not found"));
+    }
+
+    @Override
+    public void makeResetPasswordLnk(HttpServletRequest request) throws MessagingException, UnsupportedEncodingException {
+        String email = request.getParameter("email");
+        String token = UUID.randomUUID().toString();
+        updateResetPasswordToken(token, email);
+
+        String resetPasswordLnk = Utility.getSiteUrl(request) + "/reset_password?token=" + token;
+        emailService.sendEmail(email, resetPasswordLnk);
+    }
+
+    private void updateResetPasswordToken(String token, String email){
+        UserModel userModel = userRepository.getByEmail(email).orElseThrow(()-> new UsernameNotFoundException("User no found by email: " + email));
+        userModel.setResetPasswordToken(token);
+        userRepository.saveAndFlush(userModel);
+    }
+
+    @Override
+    public UserModel getByResetPasswordToken(String token){
+        return userModelRepository.findByResetPasswordToken(token).orElseThrow(()-> new UsernameNotFoundException("User no found by token: " + token));
+    }
+
+    @Override
+    public void updatePassword(UserModel userModel, String password){
+        String encodedPassword = encoder.encode(password);
+        userModel.setPassword(encodedPassword);
+        userModel. setResetPasswordToken(null);
+        userRepository.saveAndFlush(userModel);
     }
 
 
