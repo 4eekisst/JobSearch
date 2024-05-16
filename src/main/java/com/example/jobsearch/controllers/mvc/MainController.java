@@ -91,16 +91,15 @@ public class MainController {
     }
 
     @PostMapping("forgot_password")
-    public String processForgotPassword(HttpServletRequest request, Model model) {
+    public String processForgotPassword(HttpServletRequest httpServletRequest, Model model) {
         try {
-            userService.makeResetPasswordLnk(request);
+            userService.makeResetPasswordLnk(httpServletRequest);
             model.addAttribute("message", "We have sent a reset password link to your email. Please check it.");
         } catch (UsernameNotFoundException | UnsupportedEncodingException e) {
             model.addAttribute("error", e.getMessage());
         } catch (MessagingException e) {
             model.addAttribute("error", "Error while sending email");
         }
-
         return "login/forgot_password_form";
     }
 

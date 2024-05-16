@@ -8,6 +8,5 @@ import java.util.List;
 public interface CategoryService {
     Category getCategoryByName(String category);
     CategoryDto getCategoryById(Long id);
-
     List<CategoryDto> getCategories();
 }

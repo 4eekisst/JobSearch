@@ -64,8 +64,10 @@ public class ResumeServiceImpl implements ResumeService {
 
     @Override
     public List<ResumeDto> getResumesByUserEmail(String email) {
-        Long id = userService.getUserId(email);
-        return resumeRepository.findByApplicant_Id(id).stream().map(this::getResumeDto).collect(Collectors.toList());
+        Long userId = userService.getUserId(email);
+        return resumeRepository.findByApplicant_Id(userId).stream()
+                .map(this::getResumeDto)
+                .collect(Collectors.toList());
     }
 
     @Override

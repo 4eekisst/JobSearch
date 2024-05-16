@@ -50,6 +50,7 @@ public class RespApplServiceImpl implements RespondedApplicantsService {
                 return;
             }
         }
+
         RespondedApplicant respondedApplicant = RespondedApplicant.builder()
                 .resume(resumeService.getResumeModel(resumeId))
                 .vacancy(vacancyService.getVacancyModelById(vacancyId))

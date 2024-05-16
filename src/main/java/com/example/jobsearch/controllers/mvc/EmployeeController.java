@@ -2,15 +2,14 @@ package com.example.jobsearch.controllers.mvc;
 
 import com.example.jobsearch.dto.users.EditUserDto;
 import com.example.jobsearch.dto.users.UserDto;
+import com.example.jobsearch.services.RespondedApplicantsService;
 import com.example.jobsearch.services.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 
@@ -19,6 +18,7 @@ import org.springframework.web.multipart.MultipartFile;
 @RequiredArgsConstructor
 public class EmployeeController {
     private final UserService userService;
+    private final RespondedApplicantsService respondedApplicantsService;
 
     @PreAuthorize("hasAuthority('employee')")
     @GetMapping("/edit")

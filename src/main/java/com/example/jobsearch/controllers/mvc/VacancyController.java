@@ -10,8 +10,10 @@ import com.example.jobsearch.dto.vacancies.VacancyDto;
 import com.example.jobsearch.dto.vacancies.VacancyEditDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -25,8 +27,8 @@ public class VacancyController {
    private final VacancyService vacancyService;
    private final UserService userService;
    private final CategoryService categoryService;
-   private final RespondedApplicantsService respondedApplicantsService;
    private final ResumeService resumeService;
+   private final RespondedApplicantsService respondedApplicantsService;
 
     @GetMapping()
     public String getVacancies(Model model,
@@ -49,8 +51,6 @@ public class VacancyController {
         model.addAttribute("categories", categories);
         return "main/main";
     }
-
-
 
    @GetMapping("/info/{vacancyId}")
     public String getVacancyById(@PathVariable Long vacancyId, Model model){
@@ -109,5 +109,20 @@ public class VacancyController {
     public String changeActivation(@RequestParam Long id) {
         vacancyService.changeVacancyState(id);
         return "redirect:/profile";
+    }
+
+    @GetMapping("/currentUser")
+    public ResponseEntity<List<ResumeDto>> getCurrentUserResumes() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String userEmail = authentication.getName();
+
+        List<ResumeDto> resumes = resumeService.getResumesByUserEmail(userEmail);
+        return ResponseEntity.ok(resumes);
+    }
+
+    @PostMapping("/vacancies/apply")
+    public ResponseEntity<String> applyToVacancy(@RequestParam Long vacancyId, @RequestParam Long resumeId) {
+        respondedApplicantsService.applyToVacancy(resumeId, vacancyId);
+        return ResponseEntity.ok("Отклик успешно оставлен на вакансию.");
     }
 }
