@@ -23,6 +23,7 @@
     </head>
 
     <header>
+        <#assign known = SPRING_SECURITY_CONTEXT?? >
         <nav class="navbar navbar-expand-md navbar-dark bg-primary pt-5 pb-5" data-bs-theme="dark">
             <div class="container">
                 <a class="navbar-brand" href="/">Job Search</a>
@@ -33,34 +34,45 @@
                 </button>
                 <div class="collapse navbar-collapse" id="navbarNav">
                     <ul class="navbar-nav fw-medium mx-auto">
-                        <li class="mx-3 nav-item">
-                            <a class="nav-link" aria-current="page" href="/vacancies">Список вакансий
-                            </a>
-                        </li>
-                        <li class="mx-3 nav-item">
-                            <a class="nav-link" aria-current="page" href="/resume">Список резюме
-                            </a>
-                        </li>
-                        <li class="mx-3 nav-item">
-                            <a class="nav-link" href="/register">Зарегистрироваться</a>
-                        </li>
-                        <li class="mx-3 nav-item">
-                            <a class="nav-link" href="/profile">Перейти в личный кабинет</a>
-                        </li>
+                        <#if known>
+                            <li class="mx-3 nav-item">
+                                <a class="nav-link" href="/profile">Перейти в личный кабинет</a>
+                            </li>
+                            <#assign user = SPRING_SECURITY_CONTEXT.authentication.principal>
+                            <#if user.authorities?has_content>
+                                <#list user.authorities as authority>
+                                    <#if authority.authority == 'employer'>
+                                        <li class="mx-3 nav-item">
+                                            <a class="nav-link" href="/resume">Список резюме</a>
+                                        </li>
+                                    </#if>
+                                </#list>
+                            </#if>
+                            <li class="mx-3 nav-item">
+                                <a class="nav-link" href="/vacancies">Список вакансий</a>
+                            </li>
+                            <li class="mx-3 nav-item">
+                                <a class="nav-link" href="/logout">Выход</a>
+                            </li>
+                        <#else>
+                            <li class="mx-3 nav-item">
+                                <a class="nav-link" href="/login">Войти</a>
+                            </li>
+                            <li class="mx-3 nav-item">
+                                <a class="nav-link" href="/register">Зарегистрироваться</a>
+                            </li>
+                        </#if>
                     </ul>
                 </div>
             </div>
         </nav>
     </header>
     <body>
-    <div class=" py-5">
+    <div class="py-5">
         <div class="container">
             <#nested springMacroRequestContext>
         </div>
     </div>
-
     </body>
-
     </html>
-
 </#macro>

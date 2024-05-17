@@ -12,6 +12,8 @@ spring:
   h2:
     console:
       enabled: false
+  freemarker:
+    expose-session-attributes: true
 
   mail:
     host: smtp.gmail.com
