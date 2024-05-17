@@ -3,7 +3,7 @@
 
     <div class="text-center">
 
-        <h2>Reset Your Password</h2>
+        <h2>Сбросить пароль</h2>
 
         <#if error??>
 
@@ -35,11 +35,11 @@
 
                     <input type="password" name="password" class="form-control"
 
-                           placeholder="Enter your new password" required autofocus/>
+                           placeholder="Введите новый пароль" required autofocus/>
 
                     <p class="text-center">
 
-                        <button type="submit" class="btn btn-primary mt-3">Change Password</button>
+                        <button type="submit" class="btn btn-primary mt-3">Изменить пароль</button>
 
                     </p>
 

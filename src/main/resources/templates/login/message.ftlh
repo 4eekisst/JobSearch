@@ -3,7 +3,7 @@
 
     <div class="text-center">
 
-        <h2>Reset your password!</h2>
+        <h2>Сбросить пароль</h2>
 
         <p class="text-warning">${message}</p>
 

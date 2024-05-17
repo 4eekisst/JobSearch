@@ -1,7 +1,7 @@
 <#import "../layout.ftlh" as main>
 <@main.layout>
 
-    <h2>Forgot Password</h2>
+    <h2>Забыли пароль?</h2>
 
     <#if error??>
 
@@ -35,7 +35,7 @@
 
                         <div>
 
-                            <p>We will be sending a reset password link to your email.</p>
+                            <p>Мы отправим ссылку для сброса пароля на вашу электронную почту.</p>
 
                         </div>
 
@@ -45,13 +45,13 @@
 
                                 <input type="email" name="email" class="form-control"
 
-                                       placeholder="Enter your e-mail"required autofocus/>
+                                       placeholder="Введите адрес электронной почты"required autofocus/>
 
                             </p>
 
                             <p class="text-center">
 
-                                <input type="submit" value="Send" class="btn btn-primary"/>
+                                <input type="submit" value="Отправить" class="btn btn-primary"/>
 
                             </p>
 

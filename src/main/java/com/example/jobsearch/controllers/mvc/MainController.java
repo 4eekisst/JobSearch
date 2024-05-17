@@ -11,6 +11,7 @@ import com.example.jobsearch.services.ResumeService;
 import com.example.jobsearch.services.UserService;
 import com.example.jobsearch.services.VacancyService;
 import jakarta.mail.MessagingException;
+import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -40,6 +41,22 @@ public class MainController {
         return "login/login";
     }
 
+    @GetMapping("register")
+    public String create() {
+        return "login/register";
+    }
+
+    @PostMapping("register")
+    public String create(UserCreationDto newUser, Model model, HttpServletRequest request) {
+        userService.createUser(newUser);
+        try {
+            request.login(newUser.getEmail(), newUser.getPassword());
+        } catch (ServletException e) {
+            e.printStackTrace();
+        }
+        return "redirect:/profile";
+    }
+
     @GetMapping("profile")
     public String applicantInfo(Model model, Authentication authentication) {
         authentication.getName();
@@ -50,17 +67,6 @@ public class MainController {
         model.addAttribute("resumes", resumes);
         model.addAttribute("vacancies", vacancies);
         return "/users/profile";
-    }
-
-    @GetMapping("register")
-    public String create() {
-        return "login/register";
-    }
-
-    @PostMapping("register")
-    public String create(UserCreationDto newUser, Model model) {
-        userService.createUser(newUser);
-        return "redirect:/login";
     }
 
     @GetMapping()
@@ -94,11 +100,11 @@ public class MainController {
     public String processForgotPassword(HttpServletRequest httpServletRequest, Model model) {
         try {
             userService.makeResetPasswordLnk(httpServletRequest);
-            model.addAttribute("message", "We have sent a reset password link to your email. Please check it.");
+            model.addAttribute("message", "Мы отправили ссылку для сброса пароля на вашу электронную почту. Пожалуйста, проверьте.");
         } catch (UsernameNotFoundException | UnsupportedEncodingException e) {
             model.addAttribute("error", e.getMessage());
         } catch (MessagingException e) {
-            model.addAttribute("error", "Error while sending email");
+            model.addAttribute("error", "Ошибка при отправке электронной почты");
         }
         return "login/forgot_password_form";
     }
@@ -109,7 +115,7 @@ public class MainController {
             userService.getByResetPasswordToken(token);
             model.addAttribute("token", token);
         } catch (UsernameNotFoundException e) {
-            model.addAttribute("error", "Invalid token");
+            model.addAttribute("error", "Неверный токен");
         }
         return "login/reset_password_form";
     }
@@ -121,9 +127,9 @@ public class MainController {
         try{
             UserModel userModel = userService.getByResetPasswordToken(token);
             userService.updatePassword(userModel, password);
-            model.addAttribute( "message", "You have successfully changed password");
+            model.addAttribute( "message", "Вы успешно сменили пароль");
         } catch (UsernameNotFoundException e){
-            model.addAttribute("message", "Invalid token");
+            model.addAttribute("message", "Неверный токен");
         }
         return "login/message";
     }

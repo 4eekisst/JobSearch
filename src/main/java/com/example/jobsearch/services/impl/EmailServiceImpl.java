@@ -29,13 +29,13 @@ public class EmailServiceImpl implements EmailService {
         helper.setFrom(EMAIL_FROM, "JobSearch Support");
         helper.setTo(toEmail);
 
-        String subject = "Here`s the link to reset your password";
-        String content = "<p>Hello, </p>\n" +
-                "<p>You have requested to reset your password.</p>\n" +
-                "<p>Click the link below to change your password:</p>\n" +
-                "<p> <a href=\"" + link + "\">Change my password</a></p>\n" +
+        String subject = "Ссылка для сброса пароля";
+        String content = "<p>Здравствуйте, </p>\n" +
+                "<p>Вы запросили ссылку для сброса пароля.</p>\n" +
+                "<p>Нажмите на ссылку ниже, чтобы изменить свой пароль:</p>\n" +
+                "<p> <a href=\"" + link + "\">Изменить пароль</a></p>\n" +
                 "<br>\n" +
-                "<p>Ignore this email if you do remember password, or you have not made the request.</p>";
+                "<p>Проигнорируйте это письмо, если вы помните пароль или не отправили запрос.</p>";
 
         helper.setSubject(subject);
         helper.setText(content, true);
