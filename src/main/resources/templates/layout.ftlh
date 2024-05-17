@@ -34,6 +34,9 @@
                 </button>
                 <div class="collapse navbar-collapse" id="navbarNav">
                     <ul class="navbar-nav fw-medium mx-auto">
+                        <li class="mx-3 nav-item">
+                            <a class="nav-link" href="/vacancies">Список вакансий</a>
+                        </li>
                         <#if known>
                             <li class="mx-3 nav-item">
                                 <a class="nav-link" href="/profile">Перейти в личный кабинет</a>
@@ -48,9 +51,6 @@
                                     </#if>
                                 </#list>
                             </#if>
-                            <li class="mx-3 nav-item">
-                                <a class="nav-link" href="/vacancies">Список вакансий</a>
-                            </li>
                             <li class="mx-3 nav-item">
                                 <a class="nav-link" href="/logout">Выход</a>
                             </li>
