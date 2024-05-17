@@ -23,6 +23,7 @@
             <div class="card">
                 <div class="card-body">
                     <h5 class="card-title">Фильтрация резюме</h5>
+                    <#if _csrf??>
                     <form action="/resume/filter" method="get">
                         <div class="mb-3">
                             <label for="category" class="form-label">Категория:</label>
@@ -44,8 +45,10 @@
                             <input type="email" class="form-control" id="applicant" name="email"
                                    placeholder="по электронной почте соискателя">
                         </div>
+                        <input type="hidden" name="${(_csrf.parameterName)!'csrf-param-name'}" value="${(_csrf.token)!'csrf-token'}" />
                         <button type="submit" class="btn btn-primary">Найти</button>
                     </form>
+                    </#if>
                 </div>
             </div>
         </div>

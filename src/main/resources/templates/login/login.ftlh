@@ -23,7 +23,12 @@
                             <a class="btn btn-link text-decoration-none text-dark" onclick="window.location.href='/register'">
                                 Нет аккаунта?
                             </a>
+
+                            <a class="btn btn-link text-decoration-none text-dark" onclick="window.location.href='/forgot_password'">
+                                Забыли пароль?
+                            </a>
                         </div>
+
                     </div>
                 </div>
             </fieldset>

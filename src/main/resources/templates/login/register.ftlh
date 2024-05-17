@@ -38,7 +38,7 @@
                                 <option value="2">Соискатель</option>
                             </select>
                         </div>
-            <input type="hidden" name="${(_csrf.parameterName)!'csrf-param-name'}" value="${(_csrf.token)!'csrf-token'}" />
+                        <input type="hidden" name="${(_csrf.parameterName)!'csrf-param-name'}" value="${(_csrf.token)!'csrf-token'}" />
                         <div class="col-12">
                             <button class="btn btn-primary" type="submit">Зарегистрироваться</button>
                         </div>

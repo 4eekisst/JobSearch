@@ -22,6 +22,7 @@
 
             <div class="row mt-4">
                 <div class="col-md-12">
+                    <#if _csrf??>
                     <form action="/vacancies" method="get">
                         <div class="input-group mb-3">
                             <label class="input-group-text" for="sortBy">Сортировка:</label>
@@ -30,9 +31,11 @@
                                 <option value="Date">По дате публикации</option>
                                 <option value="Applies">По количеству откликов</option>
                             </select>
+                            <input type="hidden" name="${(_csrf.parameterName)!'csrf-param-name'}" value="${(_csrf.token)!'csrf-token'}" />
                             <button class="btn btn-primary" type="submit">Применить</button>
                         </div>
                     </form>
+                    </#if>
                 </div>
             </div>
 
@@ -52,6 +55,7 @@
             <div class="card">
                 <div class="card-body">
                     <h5 class="card-title">Фильтрация вакансий</h5>
+                    <#if _csrf??>
                     <form action="/vacancies/filter" method="get">
                         <div class="mb-3">
                             <input type="text" list="datalistOptions" class="form-control" id="category" name="category"
@@ -77,8 +81,10 @@
                                 <option value="Civil Rights Attorney">
                             </datalist>
                         </div>
+                        <input type="hidden" name="${(_csrf.parameterName)!'csrf-param-name'}" value="${(_csrf.token)!'csrf-token'}" />
                         <button type="submit" class="btn btn-primary">Найти</button>
                     </form>
+                    </#if>
                 </div>
             </div>
         </div>

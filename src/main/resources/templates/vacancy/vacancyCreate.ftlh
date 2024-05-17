@@ -2,6 +2,7 @@
 <@main.layout>
 
     <main>
+        <#if _csrf??>
         <form action="/vacancies/create" method="POST" enctype="application/x-www-form-urlencoded">
             <div class="card mb-4">
                 <div class="card-body">
@@ -38,11 +39,12 @@
                     </div>
                 </div>
             </div>
-
+            <input type="hidden" name="${(_csrf.parameterName)!'csrf-param-name'}" value="${(_csrf.token)!'csrf-token'}" />
             <div class="d-grid gap-2">
                 <button type="submit" class="btn btn-primary btn-lg">Создать</button>
             </div>
         </form>
+        </#if>
     </main>
 
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>

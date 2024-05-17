@@ -32,7 +32,7 @@ public class EmployerController {
     @PostMapping("/edit")
     public String editProfile(EditUserDto userDto, Authentication auth) {
         service.editUser(userDto,auth);
-        return "redirect:/vacancies";
+        return "redirect:/profile";
     }
 
     @PreAuthorize("hasRole('employer')")

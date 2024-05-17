@@ -16,7 +16,7 @@ public interface ResumeService {
     List<ResumeDto> getResumeByCategory(String name);
     List<ResumeDto> getResumeByCategory(String email,String name);
 
-    List<ResumeDto> getResumesByUserEmail(String user);
+    List<ResumeDto> getResumesByUserEmail(String email);
 
     ResumeDto getResumeDto(Resume r);
 

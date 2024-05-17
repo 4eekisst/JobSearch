@@ -28,6 +28,7 @@
             <div class="col-md-8">
                 <div class="card border-0 shadow-lg">
                     <main>
+                        <#if _csrf??>
                         <form action="/resume/update?id=${resume.id}" method="post">
                             <div class="card-body">
                                 <h3 class="card-title mb-4">
@@ -140,13 +141,14 @@
                                 </div>
 
                                 <hr class="my-4">
+                                <input type="hidden" name="${(_csrf.parameterName)!'csrf-param-name'}" value="${(_csrf.token)!'csrf-token'}" />
                                 <div class="d-grid gap-2">
                                     <button type="submit" class="btn btn-secondary btn-md">Редакитровать</button>
                                 </div>
                             </div>
                         </form>
+                        </#if>
                     </main>
-
                 </div>
             </div>
         </div>

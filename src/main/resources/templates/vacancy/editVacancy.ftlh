@@ -9,6 +9,7 @@
 <body>
 <h1 class="text-center mt-5">Редактирование вакансии</h1>
 <main class="container mt-5">
+    <#if _csrf??>
     <form action="/vacancies/update?id=${vacancy.id}" method="post" class="row g-3">
         <div class="col-md-6">
             <label for="name" class="form-label">Название:</label>
@@ -39,10 +40,12 @@
             <label for="expTo" class="form-label">Опыт работы до:</label>
             <input type="number" id="expTo" name="expTo" min="0" max="50" class="form-control" value="${vacancy.expTo}" required>
         </div>
+        <input type="hidden" name="${(_csrf.parameterName)!'csrf-param-name'}" value="${(_csrf.token)!'csrf-token'}" />
         <div class="col-12">
             <button type="submit" class="btn btn-primary">Обновить вакансию</button>
         </div>
     </form>
+    </#if>
 </main>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
 </body>

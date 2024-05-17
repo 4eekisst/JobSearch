@@ -11,7 +11,6 @@
             </#list>
         </div>
     </div>
-
     <div class="row row-cols-1 row-cols-md-3 g-4">
         <div class="col-md-9">
             <div class="card my-2" style="max-width: 900px">
@@ -20,8 +19,45 @@
                     <h5 class="card-title">${vacancy.description}</h5>
                     <p class="card-text">${vacancy.salary}</p>
                     <p class="text-end">${vacancy.updateTime.getDayOfMonth()} - ${vacancy.updateTime.getMonth()}</p>
-                </div>
+                    <select id="resumesDropdown" class="form-select">
+                        <option selected disabled>Выберите резюме</option>
+                    </select>
+                    <input type="hidden" id="vacancyId" value="${vacancy.id}">
+                    <button id="applyButton" class="btn btn-primary mt-3">Отправить отклик</button>
             </div>
         </div>
     </div>
+
+    <script>
+        fetch('/vacancies/currentUser')
+            .then(response => response.json())
+            .then(data => {
+                const dropdown = document.getElementById('resumesDropdown');
+                data.forEach(resume => {
+                    const option = document.createElement('option');
+                    option.text = resume.name;
+                    option.value = resume.id;
+                    dropdown.add(option);
+                });
+            })
+            .catch(error => console.error('Ошибка получения резюме:', error));
+
+        document.getElementById('applyButton').addEventListener('click', function() {
+            const selectedResumeId = document.getElementById('resumesDropdown').value;
+            const selectedVacancyId = document.getElementById('vacancyId').value;
+            fetch('/vacancies/apply?vacancyId=' + selectedVacancyId + '&resumeId=' + selectedResumeId, {
+                method: 'POST'
+            })
+                .then(response => {
+                    if (response.ok) {
+                        alert('Отклик успешно отправлен на вакансию.');
+                    } else {
+                        alert('Ошибка при отправке отклика на вакансию.');
+                    }
+                })
+                .catch(error => console.error('Ошибка при отправке отклика:', error));
+        });
+
+    </script>
+
 </@main.layout>
