@@ -25,20 +25,31 @@
                 <div class="card-body">
                     <h5 class="card-title">Фильтрация вакансий</h5>
                     <#if _csrf??>
-                    <form action="/vacancies/filter" method="get">
-                        <div class="mb-3">
-                            <label for="category" class="form-label">Категория:</label>
-                            <input type="text" list="datalistOptions" class="form-control" id="category" name="category"
-                                   placeholder="название категории">
-                            <datalist id="datalistOptions">
-                                <#list categories as category>
-                                <option value=${category.name}>
-                                    </#list>
-                            </datalist>
+                        <form action="/vacancies/filter" method="get">
+                            <div class="mb-3">
+                                <label for="category" class="form-label">Category:</label>
+                                <select class="form-control" id="category" name="category">
+                                    <option value="Software Development">Software Development</option>
+                                    <option value="Marketing">Marketing</option>
+                                    <option value="Finance">Finance</option>
+                                    <option value="Bio Engineer">Bio Engineer</option>
+                                    <option value="Engineering">Engineering</option>
+                                    <option value="Sales">Sales</option>
+                                    <option value="Human Resources">Human Resources</option>
+                                    <option value="Customer Support">Customer Support</option>
+                                    <option value="Operations">Operations</option>
+                                    <option value="Design">Design</option>
+                                    <option value="Healthcare">Healthcare</option>
+                                    <option value="Education">Education</option>
+                                    <option value="Legal">Legal</option>
+                                    <option value="Hospitality">Hospitality</option>
+                                    <option value="Construction">Construction</option>
+                                    <option value="Research">Research</option>
+                                </select>
+                            </div>
                             <input type="hidden" name="${(_csrf.parameterName)!'csrf-param-name'}" value="${(_csrf.token)!'csrf-token'}" />
-                        </div>
-                        <button type="submit" class="btn btn-primary">Найти</button>
-                    </form>
+                            <button type="submit" class="btn btn-primary">Filter</button>
+                        </form>
                     </#if>
                 </div>
             </div>

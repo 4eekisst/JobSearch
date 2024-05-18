@@ -56,34 +56,31 @@
                 <div class="card-body">
                     <h5 class="card-title">Фильтрация вакансий</h5>
                     <#if _csrf??>
-                    <form action="/vacancies/filter" method="get">
-                        <div class="mb-3">
-                            <input type="text" list="datalistOptions" class="form-control" id="category" name="category"
-                                   placeholder="Название категории">
-                            <datalist id="datalistOptions">
-                                <option value="Marketing Manager">
-                                <option value="Data base architecture">
-                                <option value="Software Engineer">
-                                <option value="Marketing Manager">
-                                <option value="Sales Executive">
-                                <option value="Financial Analyst">
-                                <option value="HR Manager">
-                                <option value="Customer Support Specialist">
-                                <option value="Operations Manager">
-                                <option value="UX/UI Designer">
-                                <option value="Nurse">
-                                <option value="Math Teacher">
-                                <option value="Legal Counsel">
-                                <option value="Hotel Manager">
-                                <option value="Construction Engineer">
-                                <option value="Research Scientist">
-                                <option value="Event Coordinator">
-                                <option value="Civil Rights Attorney">
-                            </datalist>
-                        </div>
-                        <input type="hidden" name="${(_csrf.parameterName)!'csrf-param-name'}" value="${(_csrf.token)!'csrf-token'}" />
-                        <button type="submit" class="btn btn-primary">Найти</button>
-                    </form>
+                        <form action="/vacancies/filter" method="get">
+                            <div class="mb-3">
+                                <label for="category" class="form-label">Category:</label>
+                                <select class="form-control" id="category" name="category">
+                                    <option value="Software Development">Software Development</option>
+                                    <option value="Marketing">Marketing</option>
+                                    <option value="Finance">Finance</option>
+                                    <option value="Bio Engineer">Bio Engineer</option>
+                                    <option value="Engineering">Engineering</option>
+                                    <option value="Sales">Sales</option>
+                                    <option value="Human Resources">Human Resources</option>
+                                    <option value="Customer Support">Customer Support</option>
+                                    <option value="Operations">Operations</option>
+                                    <option value="Design">Design</option>
+                                    <option value="Healthcare">Healthcare</option>
+                                    <option value="Education">Education</option>
+                                    <option value="Legal">Legal</option>
+                                    <option value="Hospitality">Hospitality</option>
+                                    <option value="Construction">Construction</option>
+                                    <option value="Research">Research</option>
+                                </select>
+                            </div>
+                            <input type="hidden" name="${(_csrf.parameterName)!'csrf-param-name'}" value="${(_csrf.token)!'csrf-token'}" />
+                            <button type="submit" class="btn btn-primary">Filter</button>
+                        </form>
                     </#if>
                 </div>
             </div>
