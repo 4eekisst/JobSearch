@@ -1,10 +1,10 @@
 <#import "../layout.ftlh" as main>
-<@main.layout>
+<@main.layout ; spring>
     <div class="col-md-3">
         <div class="card" style="max-width: 450px">
             <#list employers as employer>
                 <div class="card-body border-bottom-2">
-                    <h6>Работодатель: ${vacancy.authorEmail}</h6>
+                    <h6><@spring.message'vacancy.info.employer'/>${vacancy.authorEmail}</h6>
                     <a href="/vacancies/info/${employer.id}" class="text-decoration-none text-dark">${employer.name}</a>
                     <p class="card-text">${employer.salary}₽</p>
                 </div>
@@ -20,10 +20,10 @@
                     <p class="card-text">${vacancy.salary}</p>
                     <p class="text-end">${vacancy.updateTime.getDayOfMonth()} - ${vacancy.updateTime.getMonth()}</p>
                     <select id="resumesDropdown" class="form-select">
-                        <option selected disabled>Выберите резюме</option>
+                        <option selected disabled><@spring.message'vacancy.info.choose.resume'/></option>
                     </select>
                     <input type="hidden" id="vacancyId" value="${vacancy.id}">
-                    <button id="applyButton" class="btn btn-primary mt-3">Отправить отклик</button>
+                    <button id="applyButton" class="btn btn-primary mt-3"><@spring.message'vacancy.info.send.apply'/></button>
             </div>
         </div>
     </div>

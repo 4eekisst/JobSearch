@@ -1,7 +1,7 @@
 package com.example.jobsearch.enums;
 
 public enum AccountTypes {
-    APPLICANT("employee"),EMPLOYER("employer"),ADMIN("admin");
+    APPLICANT("employee"),EMPLOYER("employer");
 
     private  final String accType;
 

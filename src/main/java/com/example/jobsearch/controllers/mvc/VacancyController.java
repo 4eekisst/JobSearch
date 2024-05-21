@@ -53,8 +53,9 @@ public class VacancyController {
     }
 
    @GetMapping("/info/{vacancyId}")
-    public String getVacancyById(@PathVariable Long vacancyId, Model model){
+    public String getVacancyById(@PathVariable Long vacancyId, Model model, Authentication authentication){
        VacancyDto vacancy = vacancyService.getVacancyById(vacancyId);
+       model.addAttribute("user", authentication);
        model.addAttribute("vacancy", vacancy);
        List<VacancyDto> vacanciesOfAuthor = vacancyService.getActiveVacanciesByCompany(vacancy.getAuthorEmail());
        model.addAttribute("employers", vacanciesOfAuthor);
@@ -64,7 +65,7 @@ public class VacancyController {
    @GetMapping("/filter")
     public String getVacancyByCategory(@RequestParam String category, Model model){
         List<VacancyDto> vacancies = vacancyService.getVacanciesByCategory(category);
-        model.addAttribute("vacancies", vacancies);
+       model.addAttribute("vacancies", vacancies);
        List<CategoryDto> categories = categoryService.getCategories();
        model.addAttribute("categories",categories);
         return "vacancy/filteredVacancies";

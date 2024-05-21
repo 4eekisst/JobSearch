@@ -1,5 +1,5 @@
 <#import "../layout.ftlh" as main>
-<@main.layout>
+<@main.layout ; spring>
     <div class="container py-5">
         <div class="row">
             <div class="col-md-4">
@@ -19,10 +19,10 @@
                 transition: transform 0.2s ease-in-out; ">
                 </#if>
                 <div class="user-info mt-5">
-                    <h4>Контактная информация:</h4>
-                    <p class="text-muted"><strong>Пользователь: </strong>${user.name} ${user.surname}</p>
-                    <p class="text-muted"><strong>Возраст:</strong> ${user.age}</p>
-                    <p class="text-muted"><strong>Номер телефона:</strong> ${user.phoneNumber}</p>
+                    <h4><@spring.message'edit.resume.contact.info'/></h4>
+                    <p class="text-muted"><strong><@spring.message'edit.resume.user'/></strong>${user.name} ${user.surname}</p>
+                    <p class="text-muted"><strong><@spring.message'edit.resume.age'/></strong> ${user.age}</p>
+                    <p class="text-muted"><strong><@spring.message'edit.resume.phone'/></strong> ${user.phoneNumber}</p>
                 </div>
             </div>
             <div class="col-md-8">
@@ -38,13 +38,13 @@
                                     </label>
                                 </h3>
                                 <p class="card-text text-muted">
-                                    <strong>Категория:</strong>
+                                    <strong><@spring.message'edit.resume.category'/></strong>
                                     <label>
                                         <input type="text"
                                                name="categoryName"
                                                list="datalistOptions"
                                                value="${resume.categoryName}"
-                                               placeholder="Category">
+                                               placeholder="<@spring.message'edit.resume.category.place.holder'/>">
                                     </label>
                                     <datalist id="datalistOptions">
                                         <#list categories as category>
@@ -52,17 +52,17 @@
                                             </#list>
                                     </datalist>
                                 </p>
-                                <p class="card-text text-muted"><strong>Зарплата:</strong> <label>
+                                <p class="card-text text-muted"><strong><@spring.message'edit.resume.salary'/></strong> <label>
                                         <input type="text"
                                                name="salary"
                                                value="${resume.salary}"
-                                               placeholder="Salary">
+                                               placeholder="<@spring.message'edit.resume.salary.place.holder'/>">
                                     </label>
                                 </p>
 
                                 <hr class="my-4">
 
-                                <h5 class="card-subtitle mb-3 text-muted">Опыт работы</h5>
+                                <h5 class="card-subtitle mb-3 text-muted"><@spring.message'edit.resume.work.exp'/></h5>
                                 <div class="work-experience">
                                     <#list resume.workExpInfoEdit as work>
                                         <div class="mb-5">
@@ -73,20 +73,20 @@
                                                 </label>
                                                 <label>
                                                     <input type="text" name="workExpInfoEdit[${work_index}].position" value="${work.position}"
-                                                           placeholder="Должность">
+                                                           placeholder="<@spring.message'edit.resume.position'/>">
                                                 </label> - <label>
                                                     <input type="text" name="workExpInfoEdit[${work_index}].companyName"
                                                            value="${work.companyName}"
-                                                           placeholder="Название компании">
+                                                           placeholder="<@spring.message'edit.resume.company.name'/>">
                                                 </label></h6>
                                             <p><label>
                                                     <textarea name="workExpInfoEdit[${work_index}].responsibilities"
-                                                              placeholder="Обязанности">${work.responsibilities}</textarea>
+                                                              placeholder="<@spring.message'edit.resume.responsibilities'/>">${work.responsibilities}</textarea>
                                                 </label>
                                             </p>
                                             <p class="text-muted">Worked: <label>
                                                     <input type="text" name="workExpInfoEdit[${work_index}].years"
-                                                           placeholder="Трудовой стаж в годах">
+                                                           placeholder="<@spring.message'edit.resume.seniority'/>">
                                                 </label> years</p>
                                         </div>
                                     </#list>
@@ -95,12 +95,12 @@
                                 <div id="work">
                                     <div class="d-flex justify-content-center my-4">
                                         <input id="add-work-btn" class="btn btn-secondary mt-3 mb-1" type="button"
-                                               value="Добавить опыт работы">
+                                               value="<@spring.message'edit.resume.add.work.exp'/>">
                                     </div>
                                 </div>
                                 <hr class="my-4">
 
-                                <h5 class="card-subtitle mb-3 text-muted">Образование</h5>
+                                <h5 class="card-subtitle mb-3 text-muted"><@spring.message'edit.resume.education'/></h5>
                                 <div class="education">
                                     <#list resume.educationInfo as edu>
                                         <div class="mb-3">
@@ -110,25 +110,25 @@
                                             </label>
                                             <h6><label>
                                                     <input type="text" name="educationInfo[${edu_index}].degree" value="${edu.degree}"
-                                                           placeholder="Высшее образование - ср.">
+                                                           placeholder="<@spring.message'edit.resume.higher.education'/>">
                                                 </label>, <label>
                                                     <input type="text" name="educationInfo[${edu_index}].institution"
-                                                           placeholder="Учебное учреждение">
+                                                           placeholder="<@spring.message'edit.resume.educational.establishment'/>">
                                                 </label></h6>
                                                 <p>
                                                 <label>
                                                     <textarea name="educationInfo[${edu_index}].program"
-                                                placeholder="Program">${edu.program}</textarea>
+                                                placeholder="<@spring.message'edit.resume.program'/>">${edu.program}</textarea>
                                                 </label></p>
                                             <p class="text-muted"><label>
                                                     <input type="date" name="educationInfo[${edu_index}].startDate"
                                                            value="${edu.startDate}"
-                                                           placeholder="Дата начала">
+                                                           placeholder="<@spring.message'edit.resume.start.date'/>">
                                                 </label> - <label>
                                                     <input type="date"
                                                            name="educationInfo[${edu_index}].endDate"
                                                            value="${edu.endDate}"
-                                                           placeholder="Дата окончания">
+                                                           placeholder="<@spring.message'edit.resume.end.date'/>">
                                                 </label>
                                         </div>
                                     </#list>
@@ -136,14 +136,14 @@
                                 </div>
                                 <div id="education">
                                     <div id="educationInfo" class="d-flex justify-content-center my-4">
-                                        <input id="add-education-btn" class="btn btn-secondary my-3" type="button" value="Добавить информацию об образовании">
+                                        <input id="add-education-btn" class="btn btn-secondary my-3" type="button" value="<@spring.message'edit.resume.add.info.for.education'/>">
                                     </div>
                                 </div>
 
                                 <hr class="my-4">
                                 <input type="hidden" name="${(_csrf.parameterName)!'csrf-param-name'}" value="${(_csrf.token)!'csrf-token'}" />
                                 <div class="d-grid gap-2">
-                                    <button type="submit" class="btn btn-secondary btn-md">Редакитровать</button>
+                                    <button type="submit" class="btn btn-secondary btn-md"><@spring.message'edit.resume.submit'/></button>
                                 </div>
                             </div>
                         </form>
