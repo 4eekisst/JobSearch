@@ -1,9 +1,9 @@
 <#import "../layout.ftlh" as main>
-<@main.layout>
+<@main.layout ; spring>
 
     <div class="text-center">
 
-        <h2>Сбросить пароль</h2>
+        <h2><@spring.message'reset.password.reset.your.password'/></h2>
 
         <#if error??>
 
@@ -35,11 +35,11 @@
 
                     <input type="password" name="password" class="form-control"
 
-                           placeholder="Введите новый пароль" required autofocus/>
+                           placeholder="<@spring.message'reset.password.password'/>" required autofocus/>
 
                     <p class="text-center">
 
-                        <button type="submit" class="btn btn-primary mt-3">Изменить пароль</button>
+                        <button type="submit" class="btn btn-primary mt-3"><@spring.message'reset.password.change.password'/></button>
 
                     </p>
 

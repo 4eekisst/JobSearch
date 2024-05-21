@@ -1,3 +1,4 @@
+<#import "spring.ftl" as spring>
 <#macro layout>
     <!doctype html>
     <html lang="en" xmlns:th="http://www.thymeleaf.org">
@@ -15,11 +16,8 @@
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
         <link rel="stylesheet" href="/style.css">
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
-                integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
-                crossorigin="anonymous"></script>
         <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js" integrity="sha384-IQsoLXl5PILFhosVNubq5LC7Qb9DXgDA9i+tQ8Zj3iwWAwPtgFTxbJ8NT4GN1R8p" crossorigin="anonymous"></script>
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js" integrity="sha384-cVKIPhGWiC2Al4u+LWgxfKTRIcfu0JTxR+EQDz/bgldoEyl4H0zUF0QKbrJ0EcQF" crossorigin="anonymous"></script>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
     </head>
 
     <header>
@@ -34,43 +32,59 @@
                 </button>
                 <div class="collapse navbar-collapse" id="navbarNav">
                     <ul class="navbar-nav fw-medium mx-auto">
-                        <li class="mx-3 nav-item">
-                            <a class="nav-link" href="/vacancies">Список вакансий</a>
+
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                <@spring.message'layout.dropdown'/>
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="navbarDropdown">
+                                <li><a class="dropdown-item" href="?lang=ru"><@spring.message'layout.ru'/></a></li>
+                                <li><a class="dropdown-item" href="?lang=en"><@spring.message'layout.en'/></a></li>
+                            </ul>
                         </li>
+
+                        <li class="mx-3 nav-item">
+                            <a class="nav-link" href="/vacancies"><@spring.message'layout.list.of.vacancies'/></a>
+                        </li>
+
                         <#if known>
                             <li class="mx-3 nav-item">
-                                <a class="nav-link" href="/profile">Перейти в личный кабинет</a>
+                                <a class="nav-link" href="/profile"><@spring.message'layout.profile'/></a>
                             </li>
-                            <#assign user = SPRING_SECURITY_CONTEXT.authentication.principal>
+                            <#assign user = SPRING_SECURITY_CONTEXT.authentication.principal
+                            name = user.getUsername()
+                            >
                             <#if user.authorities?has_content>
                                 <#list user.authorities as authority>
                                     <#if authority.authority == 'employer'>
                                         <li class="mx-3 nav-item">
-                                            <a class="nav-link" href="/resume">Список резюме</a>
+                                            <a class="nav-link" href="/resume"><@spring.message'layout.list.of.resumes'/></a>
                                         </li>
                                     </#if>
                                 </#list>
                             </#if>
                             <li class="mx-3 nav-item">
-                                <a class="nav-link" href="/logout">Выход</a>
+                                <a class="nav-link" href="/logout"><@spring.message'layout.logout'/></a>
                             </li>
                         <#else>
                             <li class="mx-3 nav-item">
-                                <a class="nav-link" href="/login">Войти</a>
+                                <a class="nav-link" href="/login"><@spring.message'layout.login'/></a>
                             </li>
                             <li class="mx-3 nav-item">
-                                <a class="nav-link" href="/register">Зарегистрироваться</a>
+                                <a class="nav-link" href="/register"><@spring.message'layout.register'/></a>
                             </li>
                         </#if>
                     </ul>
                 </div>
             </div>
         </nav>
+
+
     </header>
     <body>
     <div class="py-5">
         <div class="container">
-            <#nested springMacroRequestContext>
+            <#nested spring>
         </div>
     </div>
     </body>
