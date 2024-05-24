@@ -2,53 +2,40 @@
 <@main.layout ; spring>
 
     <div class="text-center">
-
         <h2><@spring.message'reset.password.reset.your.password'/></h2>
-
         <#if error??>
-
             <b class="text-danger">${error}</b>
-
         </#if>
-
     </div>
-
-
 
     <div class="py-5 h-100">
-
         <div class="row d-flex align-items-center justify-content-center h-100">
-
             <div class="col-md-7 col-lg-5 col-xl-5">
-
-                <form action="/reset_password" method="post">
-
+                <form id="resetPasswordForm" action="/reset_password" method="post" onsubmit="return validatePassword()">
                     <#if _csrf??>
-
                         <input type="hidden" name="${(_csrf.parameterName)!'csrf-param-name'}"
-
                                value="${(_csrf.token)!'csrf-token'}"/>
-
                     </#if>
-
                     <input type="hidden" name="token" value="${token!}">
-
-                    <input type="password" name="password" class="form-control"
-
+                    <input type="password" id="password" name="password" class="form-control"
                            placeholder="<@spring.message'reset.password.password'/>" required autofocus/>
-
                     <p class="text-center">
-
                         <button type="submit" class="btn btn-primary mt-3"><@spring.message'reset.password.change.password'/></button>
-
                     </p>
-
                 </form>
-
+                <p id="passwordError" class="text-danger"></p>
             </div>
-
         </div>
-
     </div>
 
+    <script>
+        function validatePassword() {
+            const password = document.getElementById('password').value.trim();
+            if (password === '') {
+                document.getElementById('passwordError').textContent = 'Пароль не может быть пустым или содержать пробелы';
+                return false;
+            }
+            return true;
+        }
+    </script>
 </@main.layout>
